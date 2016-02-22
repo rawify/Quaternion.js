@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.org/infusion/Quaternion.js.svg?branch=master)](https://travis-ci.org/infusion/Quaternion.js)
 [![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
 
-
+Quaternion.js is a well tested JavaScript library for 3D rotations. Quaternions can be used everywhere, from the rotation of your mobile phone over computer games to the rotation of satellites. The library comes with examples to make you get started much quicker without worrying about the math behind. However, all methods are proven and tested.
 
 Example with HTML5 Device Orientation
 ---

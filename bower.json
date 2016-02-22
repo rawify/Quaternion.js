@@ -1,9 +1,9 @@
 {
     "name": "quaternion",
     "main": "quaternion.js",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "homepage": "https://github.com/infusion/Quaternion.js",
-    "description": "A quaternion library",
+    "description": "A rotation library using quaternions",
     "keywords": [
        "math", "quaternion", "number", "vector", "spherical interpolation", "parser", "slerp", "quat"
     ],
