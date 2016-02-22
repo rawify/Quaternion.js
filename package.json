@@ -1,0 +1,29 @@
+{
+    "name": "quaternion.js",
+    "title": "quaternion.js",
+    "version": "0.0.0",
+    "homepage": "https://github.com/infusion/Quaternion.js",
+    "bugs": "https://github.com/infusion/Quaternion.js/issues",
+    "description": "A quaternion library",
+    "keywords": ["math", "quaternion", "number", "vector", "spherical interpolation", "parser", "slerp", "quat"],
+    "author": "Robert Eisele <robert@xarg.org> (http://www.xarg.org/)",
+    "main": "quaternion",
+    "readmeFilename": "README.md",
+    "directories": {
+        "example": "examples"
+    },
+    "license": "MIT OR GPL-2.0",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/infusion/Complex.js.git"
+    },
+    "engines": {
+        "node": "*"
+    },
+    "scripts": {
+        "test": "mocha tests/*.js"
+    },
+    "devDependencies": {
+        "mocha": "*"
+    }
+}
