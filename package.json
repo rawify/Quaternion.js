@@ -1,7 +1,7 @@
 {
     "name": "quaternion",
-    "title": "quaternion",
-    "version": "1.0.0",
+    "title": "Quaternion.js",
+    "version": "1.0.1",
     "homepage": "https://github.com/infusion/Quaternion.js",
     "bugs": "https://github.com/infusion/Quaternion.js/issues",
     "description": "A quaternion library",
