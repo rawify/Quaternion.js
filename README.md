@@ -1,6 +1,6 @@
 # Quaternion.js - ℍ in JavaScript
 
-[![NPM Package](https://img.shields.io/npm/v/quaternion.js.svg?style=flat)](https://npmjs.org/package/quaternion.js "View this project on npm")
+[![NPM Package](https://img.shields.io/npm/v/quaternion.svg?style=flat)](https://npmjs.org/package/quaternion "View this project on npm")
 [![Build Status](https://travis-ci.org/infusion/Quaternion.js.svg?branch=master)](https://travis-ci.org/infusion/Quaternion.js)
 [![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
 
