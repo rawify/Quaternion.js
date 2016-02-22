@@ -306,7 +306,7 @@
       var norm = Math.sqrt(w * w + x * x + y * y + z * z);
 
       if (norm === 0) {
-        return Quaternion.ZERO; // TODO: Is the result zero or one when the norm is zero?
+        return Quaternion.ZERO; // TODO: Is the result zero or one when the norm is zero? -> limes
       }
 
       norm = 1 / norm;
@@ -625,8 +625,8 @@
     },
   };
 
-  Quaternion['ZERO'] = new Quaternion(0, 0, 0, 0);
-  Quaternion['ONE'] = new Quaternion(1, 0, 0, 0); // This is the identity Quaternion
+  Quaternion['ZERO'] = new Quaternion(0, 0, 0, 0); // This is the additive identity Quaternion
+  Quaternion['ONE'] = new Quaternion(1, 0, 0, 0); // This is the multiplicative identity Quaternion
   Quaternion['I'] = new Quaternion(0, 1, 0, 0);
   Quaternion['J'] = new Quaternion(0, 0, 1, 0);
   Quaternion['K'] = new Quaternion(0, 0, 0, 1);
