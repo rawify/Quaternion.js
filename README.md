@@ -4,9 +4,12 @@
 [![Build Status](https://travis-ci.org/infusion/Quaternion.js.svg?branch=master)](https://travis-ci.org/infusion/Quaternion.js)
 [![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
 
-Quaternion.js is a well tested JavaScript library for 3D rotations. Quaternions can be used everywhere, from the rotation of your mobile phone over computer games to the rotation of satellites. The library comes with examples to make you get started much quicker without worrying about the math behind. However, all methods are proven and tested.
+Quaternion.js is a well tested JavaScript library for 3D rotations. Quaternions can be used everywhere, from the rotation calculation of your mobile phone over computer games to the rotation of satellites and all by avoiding the [Gimbal lock](https://en.wikipedia.org/wiki/Gimbal_lock). The library comes with examples to make you get started much quicker without worrying about the math behind.
 
-Example with HTML5 Device Orientation
+
+# Examples
+
+HTML5 Device Orientation
 ---
 In order to create a HTML element, which always rotates in 3D with your mobile device, all you need is the following snippet. Look at the examples folder for a complete version.
 
