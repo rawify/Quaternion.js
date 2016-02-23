@@ -79,9 +79,9 @@
 
       // Reset the current state
       dest['w'] =
-      dest['x'] =
-      dest['y'] =
-      dest['z'] = 0;
+              dest['x'] =
+              dest['y'] =
+              dest['z'] = 0;
 
       for (var i = 0; i < tokens.length; i++) {
 
@@ -300,7 +300,7 @@
     },
     /**
      * Normalizes the quaternion to have |Q| = 1 as long as the norm is not zero
-     * Alternative names are the signum or versor
+     * Alternative names are the signum, unit or versor
      * 
      * @returns {Quaternion}
      */
@@ -352,8 +352,7 @@
       var z2 = P['z'];
 
       return new Quaternion(
-              w2 * w1 - x1 * x2 - y1 * y2 - z1 * z2,
-              //	
+              w1 * w2 - x1 * x2 - y1 * y2 - z1 * z2,
               w1 * x2 + x1 * w2 + y1 * z2 - z1 * y2,
               w1 * y2 + y1 * w2 + z1 * x2 - x1 * z2,
               w1 * z2 + z1 * w2 + x1 * y2 - y1 * x2);
@@ -441,11 +440,10 @@
       normSq = 1 / normSq;
 
       return new Quaternion(
-              (w2 * w1 + x1 * x2 + y1 * y2 + z1 * z2) * normSq,
-              //	
-                      (-w1 * x2 + x1 * w2 + y1 * z2 - z1 * y2) * normSq,
-                      (-w1 * y2 + y1 * w2 + z1 * x2 - x1 * z2) * normSq,
-                      (-w1 * z2 + z1 * w2 + x1 * y2 - y1 * x2) * normSq);
+              (w1 * w2 + x1 * x2 + y1 * y2 + z1 * z2) * normSq,
+              (x1 * w2 - w1 * x2 + y1 * z2 - z1 * y2) * normSq,
+              (y1 * w2 - w1 * y2 + z1 * x2 - x1 * z2) * normSq,
+              (z1 * w2 - w1 * z2 + x1 * y2 - y1 * x2) * normSq);
     },
     /**
      * Calculates the conjugate of a quaternion
