@@ -493,7 +493,26 @@
 
       parse(P, w, x, y, z);
 
+      // maybe check for NaN's here?
       return Math.abs(P['w'] - this['w']) < EPSILON && Math.abs(P['x'] - this['x']) < EPSILON && Math.abs(P['y'] - this['y']) < EPSILON && Math.abs(P['z'] - this['z']) < EPSILON;
+    },
+    /**
+     * Checks if all parts of a quaternion are finite
+     * 
+     * @returns {boolean}
+     */
+    'isFinite': function() {
+
+      return isFinite(this['w']) && isFinite(this['x']) && isFinite(this['y']) && isFinite(this['z']);
+    },
+    /**
+     * Checks if any of the parts of the quaternion is not a number
+     * 
+     * @returns {boolean}
+     */
+    'isNaN': function() {
+
+      return isNaN(this['w']) || isNaN(this['x']) || isNaN(this['y']) || isNaN(this['z']);
     },
     /**
      * Gets the Quaternion as a well formatted string
