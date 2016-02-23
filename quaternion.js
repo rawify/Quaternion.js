@@ -526,6 +526,28 @@
       return ret;
     },
     /**
+     * Returns the real part of the quaternion
+     * 
+     * @returns {number}
+     */
+    'real': function() {
+
+      return this['w'];
+    },
+    /**
+     * Returns the imaginary part of the quaternion as a new quaternion with real part zero
+     * 
+     * @returns {Quaternion}
+     */
+    'imag': function() {
+
+      return new Quaternion(
+              0,
+              this['x'],
+              this['y'],
+              this['z']);
+    },
+    /**
      * Gets the actual quaternion as an array
      * 
      * @returns {Array}

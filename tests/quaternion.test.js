@@ -68,7 +68,15 @@ describe("Quaternions", function() {
     assert.equal('1 - 2i - 3j - 4k', Quaternion(1, 2, 3, 4).conjugate().toString());
   });
 
-  it("should result in the same", function() {
+  it("should return the real and imaginary part", function() {
+
+    var q = new Quaternion(7, 2, 3, 4);
+
+    assert.equal(q.imag().toString(), '2i + 3j + 4k');
+    assert.equal(q.real(), 7);
+  });
+
+  it("should result in the same for the inverse of normalized quats", function() {
 
     var q = Quaternion(9, 8, 7, 6).normalize();
 
@@ -77,26 +85,26 @@ describe("Quaternions", function() {
 
   it("should work to check if two quats are the same", function() {
 
-    assert.equal(true, Quaternion(9, 8, 7, 6).equals(9, 8, 7, 6));
-    assert.equal(false, Quaternion(8, 8, 7, 6).equals(9, 8, 7, 6));
-    assert.equal(false, Quaternion(9, 7, 7, 6).equals(9, 8, 7, 6));
-    assert.equal(false, Quaternion(9, 8, 6, 6).equals(9, 8, 7, 6));
-    assert.equal(false, Quaternion(9, 8, 7, 5).equals(9, 8, 7, 6));
+    assert.equal(Quaternion(9, 8, 7, 6).equals(9, 8, 7, 6), true);
+    assert.equal(Quaternion(8, 8, 7, 6).equals(9, 8, 7, 6), false);
+    assert.equal(Quaternion(9, 7, 7, 6).equals(9, 8, 7, 6), false);
+    assert.equal(Quaternion(9, 8, 6, 6).equals(9, 8, 7, 6), false);
+    assert.equal(Quaternion(9, 8, 7, 5).equals(9, 8, 7, 6), false);
   });
 
   it("should calculate the dot product", function() {
 
-    assert.equal('70', Quaternion(9, 8, 7, 6).dot(1, 2, 3, 4).toString());
+    assert.equal(Quaternion(9, 8, 7, 6).dot(1, 2, 3, 4).toString(), '70');
     assert.deepEqual(Quaternion(9, 8, 7, 6).normSq(), Quaternion(9, 8, 7, 6).dot(9, 8, 7, 6));
   });
 
   it("should calculate the product", function() {
 
-    assert.equal('30', Quaternion(5).mul(6).toString());
-    assert.equal('6 + 12i + 18j + 24k', Quaternion(1, 2, 3, 4).mul(6).toString()); // scale
-    assert.equal('6 + 12i + 18j + 24k', Quaternion(6).mul(1, 2, 3, 4).toString()); // scale
-    assert.equal('-12 + 71i', Quaternion(5, 6).mul(6, 7).toString());
-    assert.equal('-4 + 4i + 4j + 4k', Quaternion(1, 1, 1, 1).mul(2, 2, 2, 2).toString());
+    assert.equal(Quaternion(5).mul(6).toString(), '30');
+    assert.equal(Quaternion(1, 2, 3, 4).mul(6).toString(), '6 + 12i + 18j + 24k'); // scale
+    assert.equal(Quaternion(6).mul(1, 2, 3, 4).toString(), '6 + 12i + 18j + 24k'); // scale
+    assert.equal(Quaternion(5, 6).mul(6, 7).toString(), '-12 + 71i');
+    assert.equal(Quaternion(1, 1, 1, 1).mul(2, 2, 2, 2).toString(), '-4 + 4i + 4j + 4k');
   });
 
   it("should scale a quaternion", function() {
@@ -106,12 +114,12 @@ describe("Quaternions", function() {
 
   it("should calculate the quotient", function() {
 
-    assert.equal('3', Quaternion(6).div(2).toString());
-    assert.equal('0.5', Quaternion(1).div(2).toString());
-    assert.equal('0.5', Quaternion(1).div(2).toString());
-    assert.equal('3 - i', Quaternion(4, 2).div(1, 1).toString());
-    assert.equal('-2 - 3i', Quaternion(3, -2).div(Quaternion.I).toString());
-    assert.equal('3 + 4i', Quaternion(25).div(3, -4).toString());
+    assert.equal(Quaternion(6).div(2).toString(), '3');
+    assert.equal(Quaternion(1).div(2).toString(), '0.5');
+    assert.equal(Quaternion(1).div(2).toString(), '0.5');
+    assert.equal(Quaternion(4, 2).div(1, 1).toString(), '3 - i');
+    assert.equal(Quaternion(3, -2).div(Quaternion.I).toString(), '-2 - 3i');
+    assert.equal(Quaternion(25).div(3, -4).toString(), '3 + 4i');
   });
 
 });
