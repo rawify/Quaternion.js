@@ -324,7 +324,7 @@
       return new Quaternion(w * norm, x * norm, y * norm, z * norm);
     },
     /**
-     * Calculates the product of two quaternions
+     * Calculates the Hamilton product of two quaternions
      * Leaving out the imaginary part results in just scaling the quat
      * 
      * @param {number|Object|string} w real
@@ -356,6 +356,20 @@
               w1 * x2 + x1 * w2 + y1 * z2 - z1 * y2,
               w1 * y2 + y1 * w2 + z1 * x2 - x1 * z2,
               w1 * z2 + z1 * w2 + x1 * y2 - y1 * x2);
+    },
+    /**
+     * Scales a quaternion by a scalar, faster than using multiplication
+     * 
+     * @param {number} s scaling factor
+     * @returns {Quaternion}
+     */
+    'scale': function(s) {
+
+      return new Quaternion(
+              this['w'] * s,
+              this['x'] * s,
+              this['y'] * s,
+              this['z'] * s);
     },
     /**
      * Calculates the dot product of two quaternions

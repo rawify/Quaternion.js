@@ -99,6 +99,11 @@ describe("Quaternions", function() {
     assert.equal('-4 + 4i + 4j + 4k', Quaternion(1, 1, 1, 1).mul(2, 2, 2, 2).toString());
   });
 
+  it("should scale a quaternion", function() {
+
+    assert.deepEqual(Quaternion([3, 2, 5, 4]).scale(3).toArray(), [9, 6, 15, 12]);
+  });
+
   it("should calculate the quotient", function() {
 
     assert.equal('3', Quaternion(6).div(2).toString());
