@@ -643,8 +643,8 @@
 
       var norm = 1 / Math.sqrt(axis[0] * axis[0] + axis[1] * axis[1] + axis[2] * axis[2]);
 
-      var sin = Math.sin(angle / 2);
-      var cos = Math.cos(angle / 2);
+      var sin = Math.sin(angle * 0.5);
+      var cos = Math.cos(angle * 0.5);
 
       this['w'] = cos;
       this['x'] = axis[0] * sin * norm;
@@ -667,13 +667,13 @@
       var _y = gamma;
       var _z = alpha;
 
-      var cX = Math.cos(_x / 2);
-      var cY = Math.cos(_y / 2);
-      var cZ = Math.cos(_z / 2);
+      var cX = Math.cos(_x * 0.5);
+      var cY = Math.cos(_y * 0.5);
+      var cZ = Math.cos(_z * 0.5);
 
-      var sX = Math.sin(_x / 2);
-      var sY = Math.sin(_y / 2);
-      var sZ = Math.sin(_z / 2);
+      var sX = Math.sin(_x * 0.5);
+      var sY = Math.sin(_y * 0.5);
+      var sZ = Math.sin(_z * 0.5);
 
       //
       // ZXY quaternion construction.
