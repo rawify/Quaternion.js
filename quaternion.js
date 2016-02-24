@@ -380,7 +380,7 @@
      * @param {number=} z imag
      * @returns {number}
      */
-    dot: function(w, x, y, z) {
+    'dot': function(w, x, y, z) {
 
       parse(P, w, x, y, z);
 
