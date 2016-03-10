@@ -633,23 +633,63 @@
       return new Quaternion(this);
     },
     /**
+     * Rotates a vector according to the current quaternion
+     * 
+     * @param {Array} v The vector to be rotated
+     * @returns {Array}
+     */
+    'rotateVector': function(v) {
+
+      // [0, v'] = Q * [0, v] * Q'
+
+      // Q
+      var w1 = this['w'];
+      var x1 = this['x'];
+      var y1 = this['y'];
+      var z1 = this['z'];
+
+      // [0, v]
+      var w2 = 0;
+      var x2 = v[0];
+      var y2 = v[1];
+      var z2 = v[2];
+
+      // Q * [0, v]
+      var w3 = /*w1 * w2*/ -x1 * x2 - y1 * y2 - z1 * z2;
+      var x3 = w1 * x2 + /*x1 * w2 +*/ y1 * z2 - z1 * y2;
+      var y3 = w1 * y2 + /*y1 * w2 +*/ z1 * x2 - x1 * z2;
+      var z3 = w1 * z2 + /*z1 * w2 +*/ x1 * y2 - y1 * x2;
+
+      var w4 = w3 * w1 + x3 * x1 + y3 * y1 + z3 * z1;
+      var x4 = x3 * w1 - w3 * x1 - y3 * z1 + z3 * y1;
+      var y4 = y3 * w1 - w3 * y1 - z3 * x1 + x3 * z1;
+      var z4 = z3 * w1 - w3 * z1 - x3 * y1 + y3 * x1;
+
+      return [x4, y4, z4];
+    },
+    /**
      * Replaces the quaternion by a rotation given by axis and angle
      * 
-     * @param {Array} axis
-     * @param {number} angle
+     * @see http://www.euclideanspace.com/maths/geometry/rotations/conversions/angleToQuaternion/index.htm
+     * @param {Array} axis The axis around which to rotate
+     * @param {number} angle The angle in radians
      * @returns {Quaternion}
      */
     'setFromAxisAngle': function(axis, angle) {
 
-      var norm = 1 / Math.sqrt(axis[0] * axis[0] + axis[1] * axis[1] + axis[2] * axis[2]);
+      var a = axis[0];
+      var b = axis[1];
+      var c = axis[2];
 
       var sin = Math.sin(angle * 0.5);
       var cos = Math.cos(angle * 0.5);
 
+      var sin_norm = sin / Math.sqrt(a * a + b * b + c * c);
+
       this['w'] = cos;
-      this['x'] = axis[0] * sin * norm;
-      this['y'] = axis[1] * sin * norm;
-      this['z'] = axis[2] * sin * norm;
+      this['x'] = a * sin_norm;
+      this['y'] = b * sin_norm;
+      this['z'] = c * sin_norm;
 
       return this;
     },
