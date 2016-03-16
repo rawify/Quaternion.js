@@ -13,7 +13,7 @@ HTML5 Device Orientation
 ---
 In order to create a HTML element, which always rotates in 3D with your mobile device, all you need is the following snippet. Look at the examples folder for a complete version.
 
-```
+```javascript
 var q = new Quaternion;
 var rad = Math.PI / 180;
 window.addEventListener("deviceorientation", function(ev) {
