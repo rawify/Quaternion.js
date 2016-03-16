@@ -5,7 +5,7 @@
     "homepage": "https://github.com/infusion/Quaternion.js",
     "description": "A rotation library using quaternions",
     "keywords": [
-       "math", "quaternion", "number", "vector", "spherical interpolation", "parser", "slerp", "quat"
+        "math", "quaternion", "number", "vector", "spherical interpolation", "parser", "slerp", "quat"
     ],
     "authors": [
         "Robert Eisele <robert@xarg.org> (http://www.xarg.org/)"

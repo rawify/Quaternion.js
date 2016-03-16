@@ -677,12 +677,16 @@
      */
     'setFromAxisAngle': function(axis, angle) {
 
+      // Q = [cos(angle / 2), v * sin(angle / 2)]
+
+      var halfAngle = angle * 0.5;
+
       var a = axis[0];
       var b = axis[1];
       var c = axis[2];
 
-      var sin = Math.sin(angle * 0.5);
-      var cos = Math.cos(angle * 0.5);
+      var sin = Math.sin(halfAngle);
+      var cos = Math.cos(halfAngle);
 
       var sin_norm = sin / Math.sqrt(a * a + b * b + c * c);
 
