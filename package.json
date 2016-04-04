@@ -8,6 +8,7 @@
     "keywords": ["math", "quaternion", "number", "vector", "spherical interpolation", "parser", "slerp", "quat"],
     "author": "Robert Eisele <robert@xarg.org> (http://www.xarg.org/)",
     "main": "quaternion",
+    "private": false,
     "readmeFilename": "README.md",
     "directories": {
         "example": "examples"
