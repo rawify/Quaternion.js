@@ -13,7 +13,7 @@ HTML5 Device Orientation
 ---
 In order to create a HTML element, which always rotates in 3D with your mobile device, all you need is the following snippet. Look at the examples folder for a complete version.
 
-```
+```javascript
 var q = new Quaternion;
 var rad = Math.PI / 180;
 window.addEventListener("deviceorientation", function(ev) {
@@ -44,22 +44,24 @@ npm install --save quaternion
 
 Using Quaternion.js with the browser
 ===
-    <script src="quaternion.js"></script>
-    <script>
-        console.log(Quaternion("1 + 2i - 3j + 4k"));
-    </script>
-
+```html
+<script src="quaternion.js"></script>
+<script>
+    console.log(Quaternion("1 + 2i - 3j + 4k"));
+</script>
+```
 
 Using Quaternion.js with require.js
 ===
-    <script src="require.js"></script>
-    <script>
-    requirejs(['quaternion.js'],
-    function(Quaternion) {
-        console.log(Quaternion("1 + 2i - 3j + 4k"));
-    });
-    </script>
-
+```html
+<script src="require.js"></script>
+<script>
+requirejs(['quaternion.js'],
+function(Quaternion) {
+    console.log(Quaternion("1 + 2i - 3j + 4k"));
+});
+</script>
+```
 Coding Style
 ===
 As every library I publish, Quaternion.js is also built to be as small as possible after compressing it with Google Closure Compiler in advanced mode. Thus the coding style orientates a little on maxing-out the compression rate. Please make sure you keep this style if you plan to extend the library.
