@@ -10,6 +10,15 @@
 
   var EPSILON = 1e-16;
 
+  Math.hypot = Math.hypot || function() {
+
+    var sum = 0;
+    for (var i = 0; i < arguments.length; i++) {
+      sum += arguments[i] * arguments[i];
+    }
+    return Math.sqrt(sum);
+  };
+
   /*
    * Default is the multiplicative one element
    * 
@@ -275,7 +284,7 @@
       var y = this['y'];
       var z = this['z'];
 
-      return Math.sqrt(w * w + x * x + y * y + z * z);
+      return Math.hypot(w, x, y, z);
     },
     /**
      * Calculates the squared length/modulus or the norm of a quaternion
@@ -313,7 +322,7 @@
       var y = this['y'];
       var z = this['z'];
 
-      var norm = Math.sqrt(w * w + x * x + y * y + z * z);
+      var norm = Math.hypot(w, x, y, z);
 
       if (norm === 0) {
         return Quaternion['ZERO']; // TODO: Is the result zero or one when the norm is zero? -> limes
@@ -688,7 +697,7 @@
       var sin = Math.sin(halfAngle);
       var cos = Math.cos(halfAngle);
 
-      var sin_norm = sin / Math.sqrt(a * a + b * b + c * c);
+      var sin_norm = sin / Math.hypot(a, b, c);
 
       this['w'] = cos;
       this['x'] = a * sin_norm;
