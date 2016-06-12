@@ -7,6 +7,11 @@
     "keywords": [
         "math", "quaternion", "number", "vector", "spherical interpolation", "parser", "slerp", "quat"
     ],
+    "moduleType": [
+      "amd",
+      "globals",
+      "node"
+    ],
     "authors": [
         "Robert Eisele <robert@xarg.org> (http://www.xarg.org/)"
     ],
