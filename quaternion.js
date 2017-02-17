@@ -266,7 +266,7 @@
 
       // -Q := [-w, -v]
 
-      return new Quaternion(-this['s'], -this['x'], -this['y'], -this['z']);
+      return new Quaternion(-this['w'], -this['x'], -this['y'], -this['z']);
     },
     /**
      * Calculates the length/modulus or the norm of a quaternion
