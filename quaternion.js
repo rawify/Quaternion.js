@@ -12,16 +12,16 @@
 
   Math.hypot = Math.hypot || function() {
 
-    var sum = 0;
-    for (var i = 0; i < arguments.length; i++) {
-      sum += arguments[i] * arguments[i];
-    }
-    return Math.sqrt(sum);
-  };
+      var sum = 0;
+      for (var i = 0; i < arguments.length; i++) {
+        sum += arguments[i] * arguments[i];
+      }
+      return Math.sqrt(sum);
+    };
 
   /*
    * Default is the multiplicative one element
-   * 
+   *
    * Proof: TODO
    */
   var P = {
@@ -88,9 +88,9 @@
 
       // Reset the current state
       dest['w'] =
-              dest['x'] =
-              dest['y'] =
-              dest['z'] = 0;
+        dest['x'] =
+          dest['y'] =
+            dest['z'] = 0;
 
       for (var i = 0; i < tokens.length; i++) {
 
@@ -192,7 +192,7 @@
 
   /**
    * Quaternion constructor
-   * 
+   *
    * @constructor
    * @param {number|Object|string} w real
    * @param {number=} x imag
@@ -216,7 +216,7 @@
     'z': 0,
     /**
      * Adds two quaternions Q1 and Q2
-     * 
+     *
      * @param {number|Object|string} w real
      * @param {number=} x imag
      * @param {number=} y imag
@@ -230,14 +230,14 @@
       // Q1 + Q2 := [w1, v1] + [w2, v2] = [w1 + w2, v1 + v2]
 
       return new Quaternion(
-              this['w'] + P['w'],
-              this['x'] + P['x'],
-              this['y'] + P['y'],
-              this['z'] + P['z']);
+        this['w'] + P['w'],
+        this['x'] + P['x'],
+        this['y'] + P['y'],
+        this['z'] + P['z']);
     },
     /**
      * Subtracts a quaternions Q2 from Q1
-     * 
+     *
      * @param {number|Object|string} w real
      * @param {number=} x imag
      * @param {number=} y imag
@@ -252,14 +252,14 @@
       //          = [w1, v1] - [w2, v2] = [w1 - w2, v1 - v2]
 
       return new Quaternion(
-              this['w'] - P['w'],
-              this['x'] - P['x'],
-              this['y'] - P['y'],
-              this['z'] - P['z']);
+        this['w'] - P['w'],
+        this['x'] - P['x'],
+        this['y'] - P['y'],
+        this['z'] - P['z']);
     },
     /**
      * Calculates the additive inverse, or simply it negates the quaternion
-     * 
+     *
      * @returns {Quaternion}
      */
     'neg': function() {
@@ -270,7 +270,7 @@
     },
     /**
      * Calculates the length/modulus or the norm of a quaternion
-     * 
+     *
      * @returns {number}
      */
     'norm': function() {
@@ -288,7 +288,7 @@
     },
     /**
      * Calculates the squared length/modulus or the norm of a quaternion
-     * 
+     *
      * @returns {number}
      */
     'normSq': function() {
@@ -310,7 +310,7 @@
     /**
      * Normalizes the quaternion to have |Q| = 1 as long as the norm is not zero
      * Alternative names are the signum, unit or versor
-     * 
+     *
      * @returns {Quaternion}
      */
     'normalize': function() {
@@ -335,7 +335,7 @@
     /**
      * Calculates the Hamilton product of two quaternions
      * Leaving out the imaginary part results in just scaling the quat
-     * 
+     *
      * @param {number|Object|string} w real
      * @param {number=} x imag
      * @param {number=} y imag
@@ -361,28 +361,28 @@
       var z2 = P['z'];
 
       return new Quaternion(
-              w1 * w2 - x1 * x2 - y1 * y2 - z1 * z2,
-              w1 * x2 + x1 * w2 + y1 * z2 - z1 * y2,
-              w1 * y2 + y1 * w2 + z1 * x2 - x1 * z2,
-              w1 * z2 + z1 * w2 + x1 * y2 - y1 * x2);
+        w1 * w2 - x1 * x2 - y1 * y2 - z1 * z2,
+        w1 * x2 + x1 * w2 + y1 * z2 - z1 * y2,
+        w1 * y2 + y1 * w2 + z1 * x2 - x1 * z2,
+        w1 * z2 + z1 * w2 + x1 * y2 - y1 * x2);
     },
     /**
      * Scales a quaternion by a scalar, faster than using multiplication
-     * 
+     *
      * @param {number} s scaling factor
      * @returns {Quaternion}
      */
     'scale': function(s) {
 
       return new Quaternion(
-              this['w'] * s,
-              this['x'] * s,
-              this['y'] * s,
-              this['z'] * s);
+        this['w'] * s,
+        this['x'] * s,
+        this['y'] * s,
+        this['z'] * s);
     },
     /**
      * Calculates the dot product of two quaternions
-     * 
+     *
      * @param {number|Object|string} w real
      * @param {number=} x imag
      * @param {number=} y imag
@@ -398,9 +398,9 @@
       return this['w'] * P['w'] + this['x'] * P['x'] + this['y'] * P['y'] + this['z'] * P['z'];
     },
     /**
-     * Calculates the inverse of a quat such that 
+     * Calculates the inverse of a quat such that
      * Q^-1 * Q = 1 and Q * Q^-1 = 1
-     * 
+     *
      * @returns {Quaternion}
      */
     'inverse': function() {
@@ -408,7 +408,7 @@
       // Q^-1 := Q' / |Q|^2
       //       = [w / (w^2 + |v|^2), -v / (w^2 + |v|^2)]
 
-      // Proof: 
+      // Proof:
       // Q * Q^-1 = [w, v] * [w / (w^2 + |v|^2), -v / (w^2 + |v|^2)]
       //          = [1, 0]
       // Q^-1 * Q = [w / (w^2 + |v|^2), -v / (w^2 + |v|^2)] * [w, v]
@@ -431,7 +431,7 @@
     },
     /**
      * Multiplies a quaternion with the inverse of a second quaternion
-     * 
+     *
      * @param {number|Object|string} w real
      * @param {number=} x imag
      * @param {number=} y imag
@@ -463,14 +463,14 @@
       normSq = 1 / normSq;
 
       return new Quaternion(
-              (w1 * w2 + x1 * x2 + y1 * y2 + z1 * z2) * normSq,
-              (x1 * w2 - w1 * x2 + y1 * z2 - z1 * y2) * normSq,
-              (y1 * w2 - w1 * y2 + z1 * x2 - x1 * z2) * normSq,
-              (z1 * w2 - w1 * z2 + x1 * y2 - y1 * x2) * normSq);
+        (w1 * w2 + x1 * x2 + y1 * y2 + z1 * z2) * normSq,
+        (x1 * w2 - w1 * x2 + y1 * z2 - z1 * y2) * normSq,
+        (y1 * w2 - w1 * y2 + z1 * x2 - x1 * z2) * normSq,
+        (z1 * w2 - w1 * z2 + x1 * y2 - y1 * x2) * normSq);
     },
     /**
      * Calculates the conjugate of a quaternion
-     * 
+     *
      * @returns {Quaternion}
      */
     'conjugate': function() {
@@ -491,7 +491,7 @@
     },
     /**
      * Checks if two quats are the same
-     * 
+     *
      * @param {number|Object|string} w real
      * @param {number=} x imag
      * @param {number=} y imag
@@ -507,7 +507,7 @@
     },
     /**
      * Checks if all parts of a quaternion are finite
-     * 
+     *
      * @returns {boolean}
      */
     'isFinite': function() {
@@ -516,7 +516,7 @@
     },
     /**
      * Checks if any of the parts of the quaternion is not a number
-     * 
+     *
      * @returns {boolean}
      */
     'isNaN': function() {
@@ -525,7 +525,7 @@
     },
     /**
      * Gets the Quaternion as a well formatted string
-     * 
+     *
      * @returns {string}
      */
     'toString': function() {
@@ -555,7 +555,7 @@
     },
     /**
      * Returns the real part of the quaternion
-     * 
+     *
      * @returns {number}
      */
     'real': function() {
@@ -564,20 +564,20 @@
     },
     /**
      * Returns the imaginary part of the quaternion as a new quaternion with real part zero
-     * 
+     *
      * @returns {Quaternion}
      */
     'imag': function() {
 
       return new Quaternion(
-              0,
-              this['x'],
-              this['y'],
-              this['z']);
+        0,
+        this['x'],
+        this['y'],
+        this['z']);
     },
     /**
      * Gets the actual quaternion as an array
-     * 
+     *
      * @returns {Array}
      */
     'toArray': function() {
@@ -586,7 +586,7 @@
     },
     /**
      * Calculates the 3x3 rotation matrix for the current quat
-     * 
+     *
      * @see https://en.wikipedia.org/wiki/Rotation_matrix#Quaternion
      * @returns {Array}
      */
@@ -610,7 +610,7 @@
     },
     /**
      * Calculates the 4x4 rotation matrix for the current quat
-     * 
+     *
      * @returns {Array}
      */
     'toMatrix4': function() {
@@ -634,7 +634,7 @@
     },
     /**
      * Clones the actual object
-     * 
+     *
      * @returns {Quaternion}
      */
     'clone': function() {
@@ -643,7 +643,7 @@
     },
     /**
      * Rotates a vector according to the current quaternion
-     * 
+     *
      * @param {Array} v The vector to be rotated
      * @returns {Array}
      */
@@ -678,7 +678,7 @@
     },
     /**
      * Replaces the quaternion by a rotation given by axis and angle
-     * 
+     *
      * @see http://www.euclideanspace.com/maths/geometry/rotations/conversions/angleToQuaternion/index.htm
      * @param {Array} axis The axis around which to rotate
      * @param {number} angle The angle in radians
@@ -708,7 +708,7 @@
     },
     /**
      * Replaces the quaternion by a rotation given by Euler angles
-     * 
+     *
      * @param {number} alpha
      * @param {number} beta
      * @param {number} gamma
