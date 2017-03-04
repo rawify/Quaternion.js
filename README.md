@@ -186,13 +186,13 @@ Array toVector()
 ---
 Gets the actual quaternion as an array
 
-Array toMatrix()
+Array toMatrix(2d=false)
 ---
-Calculates the 3x3 rotation matrix for the current quat
+Calculates the 3x3 rotation matrix for the current quat as a 9 element array or alternatively as a 2d array
 
-Array toMatrix4()
+Array toMatrix4(2d=false)
 ---
-Calculates the harmonic 4x4 rotation matrix for the current quat
+Calculates the homogeneous 4x4 rotation matrix for the current quat as a 16 element array or alternatively as a 2d array
 
 Quaternion clone()
 ---
@@ -206,9 +206,37 @@ Quaternion.fromAxisAngle(axis, angle)
 ---
 Sets the quaternion by a rotation given as axis and angle
 
-Quaternion.fromEuler(alpha, beta, gamma)
+Quaternion.fromEuler(alpha, beta, gamma[, order="ZXY"])
 ---
-Creates a quaternion by a rotation given by Euler angles
+Creates a quaternion by a rotation given by Euler angles. Optional the order of the axis can be provided.
+
+
+Constants
+===
+
+Quaternion.ZERO
+---
+A quaternion zero instance (additive identity)
+
+Quaternion.ONE
+---
+A quaternion one instance (multiplicative identity)
+
+Quaternion.I
+---
+An imaginary number i instance
+
+Quaternion.J
+---
+An imaginary number j instance
+
+Quaternion.K
+---
+An imaginary number k instance
+
+Quaternion.EPSILON
+---
+A small epsilon value used for `equals()` comparison in order to circumvent double inprecision.
 
 
 

@@ -150,10 +150,10 @@ describe("Quaternions", function() {
 
     var q = Quaternion("1+2i+3j+4k").normalize();
 
-    var a = q.mul(v).mul(q.conjugate());
+    var a = q.mul(v).mul(q.conjugate()).toVector();
     var b = q.rotateVector(v);
 
-    assert.deepEqual([a.x, a.y, a.z], b);
+    assert.deepEqual(a.slice(1), b);
   });
 
 });

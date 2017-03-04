@@ -8,8 +8,6 @@
 
   'use strict';
 
-  var EPSILON = 1e-16;
-
   Math.hypot = Math.hypot || function() {
 
       var sum = 0;
@@ -481,8 +479,6 @@
         (y1 * w2 - w1 * y2 + z1 * x2 - x1 * z2) * normSq,
         (z1 * w2 - w1 * z2 + x1 * y2 - y1 * x2) * normSq);
     },
-
-
     /**
      * Calculates the conjugate of a quaternion
      *
@@ -517,8 +513,13 @@
 
       parse(P, w, x, y, z);
 
+      var eps = Quaternion['EPSILON'];
+
       // maybe check for NaN's here?
-      return Math.abs(P['w'] - this['w']) < EPSILON && Math.abs(P['x'] - this['x']) < EPSILON && Math.abs(P['y'] - this['y']) < EPSILON && Math.abs(P['z'] - this['z']) < EPSILON;
+      return Math.abs(P['w'] - this['w']) < eps
+        && Math.abs(P['x'] - this['x']) < eps
+        && Math.abs(P['y'] - this['y']) < eps
+        && Math.abs(P['z'] - this['z']) < eps;
     },
     /**
      * Checks if all parts of a quaternion are finite
@@ -602,10 +603,11 @@
     /**
      * Calculates the 3x3 rotation matrix for the current quat
      *
+     * @param {boolean=} d2
      * @see https://en.wikipedia.org/wiki/Rotation_matrix#Quaternion
      * @returns {Array}
      */
-    'toMatrix': function() {
+    'toMatrix': function(d2) {
 
       var w = this['w'];
       var x = this['x'];
@@ -617,6 +619,13 @@
       var wx = s * w * x, wy = s * w * y, wz = s * w * z;
       var xx = s * x * x, xy = s * x * y, xz = s * x * z;
       var yy = s * y * y, yz = s * y * z, zz = s * z * z;
+
+      if (d2) {
+        return [
+          [1 - (yy + zz), xy - wz, xz + wy],
+          [xy + wz, 1 - (xx + zz), yz - wx],
+          [xz - wy, yz + wx, 1 - (xx + yy)]];
+      }
 
       return [
         1 - (yy + zz), xy - wz, xz + wy,
@@ -624,11 +633,12 @@
         xz - wy, yz + wx, 1 - (xx + yy)];
     },
     /**
-     * Calculates the harmonic 4x4 rotation matrix for the current quat
+     * Calculates the homogeneous 4x4 rotation matrix for the current quat
      *
+     * @param {boolean=} d2
      * @returns {Array}
      */
-    'toMatrix4': function() {
+    'toMatrix4': function(d2) {
 
       var w = this['w'];
       var x = this['x'];
@@ -640,6 +650,14 @@
       var wx = s * w * x, wy = s * w * y, wz = s * w * z;
       var xx = s * x * x, xy = s * x * y, xz = s * x * z;
       var yy = s * y * y, yz = s * y * z, zz = s * z * z;
+
+      if (d2) {
+        return [
+          [1 - (yy + zz), xy - wz, xz + wy, 0],
+          [xy + wz, 1 - (xx + zz), yz - wx, 0],
+          [xz - wy, yz + wx, 1 - (xx + yy), 0],
+          [0, 0, 0, 1]];
+      }
 
       return [
         1 - (yy + zz), xy - wz, xz + wy, 0,
@@ -698,6 +716,7 @@
   Quaternion['I'] = new Quaternion(0, 1, 0, 0);
   Quaternion['J'] = new Quaternion(0, 0, 1, 0);
   Quaternion['K'] = new Quaternion(0, 0, 0, 1);
+  Quaternion['EPSILON'] = 1e-16;
 
   /**
    * Creates quaternion by a rotation given as axis and angle
@@ -730,6 +749,7 @@
    * @param {number} alpha
    * @param {number} beta
    * @param {number} gamma
+   * @param {String=} order
    * @returns {Quaternion}
    */
   Quaternion['fromEuler'] = function(alpha, beta, gamma, order) {
@@ -745,18 +765,55 @@
     var sX = Math.sin(_x);
     var sY = Math.sin(_y);
     var sZ = Math.sin(_z);
+    
+    if (order === undefined || order === 'ZXY') {
+      return new Quaternion(
+        cX * cY * cZ - sX * sY * sZ,
+        sX * cY * cZ - cX * sY * sZ,
+        cX * sY * cZ + sX * cY * sZ,
+        cX * cY * sZ + sX * sY * cZ);
+    }
 
-    var cXcY = cX * cY;
-    var sXsY = sX * sY;
+    if (order === 'XYZ') {
+      return new Quaternion(
+        cX * cY * cZ - sX * sY * sZ,
+        sX * cY * cZ + cX * sY * sZ,
+        cX * sY * cZ - sX * cY * sZ,
+        cX * cY * sZ + sX * sY * cZ);
+    }
 
-    //
-    // ZXY quaternion construction.
-    //
-    return new Quaternion(
-      cXcY * cZ - sXsY * sZ,
-      sX * cY * cZ - cX * sY * sZ,
-      cX * sY * cZ + sX * cY * sZ,
-      cXcY * sZ + sXsY * cZ);
+    if (order === 'YXZ') {
+      return new Quaternion(
+        cX * cY * cZ + sX * sY * sZ,
+        sX * cY * cZ + cX * sY * sZ,
+        cX * sY * cZ - sX * cY * sZ,
+        cX * cY * sZ - sX * sY * cZ);
+    }
+
+    if (order === 'ZYX') {
+      return new Quaternion(
+        cX * cY * cZ + sX * sY * sZ,
+        sX * cY * cZ - cX * sY * sZ,
+        cX * sY * cZ + sX * cY * sZ,
+        cX * cY * sZ - sX * sY * cZ);
+    }
+
+    if (order === 'YZX') {
+      return new Quaternion(
+        cX * cY * cZ - sX * sY * sZ,
+        sX * cY * cZ + cX * sY * sZ,
+        cX * sY * cZ + sX * cY * sZ,
+        cX * cY * sZ - sX * sY * cZ);
+    }
+
+    if (order === 'XZY') {
+      return new Quaternion(
+        cX * cY * cZ + sX * sY * sZ,
+        sX * cY * cZ - cX * sY * sZ,
+        cX * sY * cZ - sX * cY * sZ,
+        cX * cY * sZ + sX * sY * cZ);
+    }
+    return null;
   };
 
   if (typeof define === 'function' && define['amd']) {
