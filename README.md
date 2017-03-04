@@ -48,8 +48,6 @@ Arguments
 
 Calling the constructor will create a quaternion 1-element.
 
-**Note:** Calling a method like *add()* without parameters results in a quaternion with all elements zero! 
-
 ```javascript
 new Quaternion() // 1 + 0i + 0j + 0k
 ```
@@ -62,19 +60,30 @@ new Quaternion(w, x, y, z)
 
 Objects
 ---
+Quaternion as angle and vector. **Note:** This is not equivalent to *Quaternion.fromAxisAngle()*!
+
 ```javascript
-// Quaternion as angle and vector
 new Quaternion(w, [x, y, z])
-// Quaternion as object (it's ok to leave components out)
-new Quaternion({w: w, x: x, y: y, z: z})
-// Quaternion out of a complex number, e.g. Complex.js
-new Quaternion({re: real, im: imaginary})
-// Quaternion out of an array
-new Quaternion([w, x, y, z])
-// Quaternion out of a vector
-new Quaternion([x, y, z])
 ```
 
+Quaternion as an object (it's ok to leave components out)
+```javascript
+new Quaternion({w: w, x: x, y: y, z: z})
+```
+
+Quaternion out of a complex number, e.g. [Complex.js](https://github.com/infusion/Complex.js).
+```javascript
+new Quaternion({re: real, im: imaginary})
+```
+
+Quaternion out of a 4 elements vector
+```javascript
+new Quaternion([w, x, y, z])
+```
+Quaternion out of a 3 elements vector
+```javascript
+new Quaternion([x, y, z])
+```
 
 Doubles
 ---
@@ -94,6 +103,10 @@ new Quaternion("i");
 
 Functions
 ===
+
+Every stated parameter *n* in the following list of functions behaves in the same way as the constructor examples above
+
+**Note:** Calling a method like *add()* without parameters results in a quaternion with all elements zero, not one! 
 
 Quaternion add(n)
 ---

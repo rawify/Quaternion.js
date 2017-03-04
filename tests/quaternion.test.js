@@ -109,7 +109,7 @@ describe("Quaternions", function() {
 
   it("should scale a quaternion", function() {
 
-    assert.deepEqual(Quaternion([3, 2, 5, 4]).scale(3).toArray(), [9, 6, 15, 12]);
+    assert.deepEqual(Quaternion([3, 2, 5, 4]).scale(3).toVector(), [9, 6, 15, 12]);
   });
 
   it("should calculate the quotient", function() {
@@ -142,6 +142,18 @@ describe("Quaternions", function() {
     assert(Math.abs(r[0] - 1) < 1e-13);
     assert(Math.abs(r[1] - 1) < 1e-13);
     assert(Math.abs(r[2] - 1) < 1e-13);
+  });
+
+  it("should rotate a vector in direct and indirect manner", function() {
+
+    var v = [1, 2, 3];
+
+    var q = Quaternion("1+2i+3j+4k").normalize();
+
+    var a = q.mul(v).mul(q.conjugate());
+    var b = q.rotateVector(v);
+
+    assert.deepEqual([a.x, a.y, a.z], b);
   });
 
 });
