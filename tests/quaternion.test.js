@@ -127,7 +127,7 @@ describe("Quaternions", function() {
     var axis = [1, 1, 1];
     var angle = Math.PI;
 
-    assert.equal(Quaternion().setFromAxisAngle(axis, angle).norm(), 1);
+    assert.equal(Quaternion.fromAxisAngle(axis, angle).norm(), 1);
   });
 
   it("should have no effect to rotate on axis parallel to vector direction", function() {
@@ -137,7 +137,7 @@ describe("Quaternions", function() {
     var angle = Math.random();
     var axis = [1, 1, 1];
 
-    var r = Quaternion().setFromAxisAngle(axis, angle).rotateVector(v);
+    var r = Quaternion.fromAxisAngle(axis, angle).rotateVector(v);
 
     assert(Math.abs(r[0] - 1) < 1e-13);
     assert(Math.abs(r[1] - 1) < 1e-13);

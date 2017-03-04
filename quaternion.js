@@ -149,9 +149,9 @@
     // If no single variable was given AND it was the constructor, set it to the identity
     if (w === undefined && dest !== P) {
       dest['w'] = 1;
-      dest['x'] = 0;
-      dest['y'] = 0;
-      dest['z'] = 0;
+      dest['x'] =
+        dest['y'] =
+          dest['z'] = 0;
     } else {
 
       dest['w'] = w || 0;
@@ -398,7 +398,7 @@
       return this['w'] * P['w'] + this['x'] * P['x'] + this['y'] * P['y'] + this['z'] * P['z'];
     },
     /**
-     * Calculates the inverse of a quat such that
+     * Calculates the inverse of a quat such that for non-normalized quats
      * Q^-1 * Q = 1 and Q * Q^-1 = 1
      *
      * @returns {Quaternion}
@@ -675,70 +675,7 @@
       var z4 = z3 * w1 - w3 * z1 - x3 * y1 + y3 * x1;
 
       return [x4, y4, z4];
-    },
-    /**
-     * Replaces the quaternion by a rotation given by axis and angle
-     *
-     * @see http://www.euclideanspace.com/maths/geometry/rotations/conversions/angleToQuaternion/index.htm
-     * @param {Array} axis The axis around which to rotate
-     * @param {number} angle The angle in radians
-     * @returns {Quaternion}
-     */
-    'setFromAxisAngle': function(axis, angle) {
-
-      // Q = [cos(angle / 2), v * sin(angle / 2)]
-
-      var halfAngle = angle * 0.5;
-
-      var a = axis[0];
-      var b = axis[1];
-      var c = axis[2];
-
-      var sin = Math.sin(halfAngle);
-      var cos = Math.cos(halfAngle);
-
-      var sin_norm = sin / Math.hypot(a, b, c);
-
-      this['w'] = cos;
-      this['x'] = a * sin_norm;
-      this['y'] = b * sin_norm;
-      this['z'] = c * sin_norm;
-
-      return this;
-    },
-    /**
-     * Replaces the quaternion by a rotation given by Euler angles
-     *
-     * @param {number} alpha
-     * @param {number} beta
-     * @param {number} gamma
-     * @returns {Quaternion}
-     */
-    'setFromEuler': function(alpha, beta, gamma, order) {
-
-      var _x = beta;
-      var _y = gamma;
-      var _z = alpha;
-
-      var cX = Math.cos(_x * 0.5);
-      var cY = Math.cos(_y * 0.5);
-      var cZ = Math.cos(_z * 0.5);
-
-      var sX = Math.sin(_x * 0.5);
-      var sY = Math.sin(_y * 0.5);
-      var sZ = Math.sin(_z * 0.5);
-
-      //
-      // ZXY quaternion construction.
-      //
-
-      this['w'] = cX * cY * cZ - sX * sY * sZ;
-      this['x'] = sX * cY * cZ - cX * sY * sZ;
-      this['y'] = cX * sY * cZ + sX * cY * sZ;
-      this['z'] = cX * cY * sZ + sX * sY * cZ;
-
-      return this;
-    },
+    }
   };
 
   Quaternion['ZERO'] = new Quaternion(0, 0, 0, 0); // This is the additive identity Quaternion
@@ -746,6 +683,63 @@
   Quaternion['I'] = new Quaternion(0, 1, 0, 0);
   Quaternion['J'] = new Quaternion(0, 0, 1, 0);
   Quaternion['K'] = new Quaternion(0, 0, 0, 1);
+
+  /**
+   * Sets the quaternion by a rotation given as axis and angle
+   *
+   * @param {Array} axis The axis around which to rotate
+   * @param {number} angle The angle in radians
+   * @returns {Quaternion}
+   */
+  Quaternion['fromAxisAngle'] = function(axis, angle) {
+
+    // Q = [cos(angle / 2), v * sin(angle / 2)]
+
+    var halfAngle = angle * 0.5;
+
+    var a = axis[0];
+    var b = axis[1];
+    var c = axis[2];
+
+    var sin = Math.sin(halfAngle);
+    var cos = Math.cos(halfAngle);
+
+    var sin_norm = sin / Math.hypot(a, b, c);
+
+    return new Quaternion(cos, a * sin_norm, b * sin_norm, c * sin_norm);
+  };
+
+  /**
+   * Replaces the quaternion by a rotation given by Euler angles
+   *
+   * @param {number} alpha
+   * @param {number} beta
+   * @param {number} gamma
+   * @returns {Quaternion}
+   */
+  Quaternion['fromEuler'] = function(alpha, beta, gamma, order) {
+
+    var _x = beta;
+    var _y = gamma;
+    var _z = alpha;
+
+    var cX = Math.cos(_x * 0.5);
+    var cY = Math.cos(_y * 0.5);
+    var cZ = Math.cos(_z * 0.5);
+
+    var sX = Math.sin(_x * 0.5);
+    var sY = Math.sin(_y * 0.5);
+    var sZ = Math.sin(_z * 0.5);
+
+    //
+    // ZXY quaternion construction.
+    //
+    return new Quaternion(
+      cX * cY * cZ - sX * sY * sZ,
+      sX * cY * cZ - cX * sY * sZ,
+      cX * sY * cZ + sX * cY * sZ,
+      cX * cY * sZ + sX * sY * cZ);
+  };
 
   if (typeof define === 'function' && define['amd']) {
     define([], function() {
