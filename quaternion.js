@@ -70,7 +70,7 @@
         dest['z'] = w[3];
         return;
       }
-      throw 'Invalid object';
+      throw new Error('Invalid object');
     }
 
     // Parse string values
@@ -83,7 +83,7 @@
       var iMap = {'i': 'x', 'j': 'y', 'k': 'z'};
 
       if (tokens === null) {
-        throw 'Parse error';
+        throw new Error('Parse error');
       }
 
       // Reset the current state
@@ -106,7 +106,7 @@
         } else {
 
           if (plus + minus === 0) {
-            throw 'Parse error' + c;
+            throw new Error('Parse error' + c);
           }
           var g = iMap[c];
 
@@ -124,7 +124,7 @@
           } else {
 
             if (isNaN(c)) {
-              throw 'Parser error';
+              throw new Error('Parser error');
             }
 
             g = iMap[d];
@@ -141,7 +141,7 @@
 
       // Still something on the stack
       if (plus + minus > 0) {
-        throw 'Parser error';
+        throw new Error('Parser error');
       }
       return;
     }
@@ -156,6 +156,7 @@
 
       dest['w'] = w || 0;
 
+      // Note: This isn't setFromAxis, it's just syntactic sugar!
       if (x && x.length === 3) {
         dest['x'] = x[0];
         dest['y'] = x[1];
@@ -468,6 +469,46 @@
         (y1 * w2 - w1 * y2 + z1 * x2 - x1 * z2) * normSq,
         (z1 * w2 - w1 * z2 + x1 * y2 - y1 * x2) * normSq);
     },
+
+
+    'exp': function() {
+      var w = this['w'];
+      var x = this['x'];
+      var y = this['y'];
+      var z = this['z'];
+
+      var norm = Math.hypot(x, y, z);
+
+      var expW = Math.exp(w);
+      var sinNorm = Math.sin(norm) / norm;
+
+      return new Quaternion(
+        expW * Math.cos(norm),
+        sinNorm * x,
+        sinNorm * y,
+        sinNorm * z);
+    },
+
+    'log': function() {
+
+      var w = this['w'];
+      var x = this['x'];
+      var y = this['y'];
+      var z = this['z'];
+
+      var quatNorm = Math.hypot(w, x, y, z);
+      var vectNorm = Math.hypot(w, x, y, z);
+
+      var acos = Math.acos(w / quatNorm) / vectNorm;
+
+      return new Quaternion(
+        Math.log(quatNorm),
+        acos * x,
+        acos * y,
+        acos * z);
+    },
+
+
     /**
      * Calculates the conjugate of a quaternion
      *
@@ -719,26 +760,29 @@
    */
   Quaternion['fromEuler'] = function(alpha, beta, gamma, order) {
 
-    var _x = beta;
-    var _y = gamma;
-    var _z = alpha;
+    var _x = beta * 0.5;
+    var _y = gamma * 0.5;
+    var _z = alpha * 0.5;
 
-    var cX = Math.cos(_x * 0.5);
-    var cY = Math.cos(_y * 0.5);
-    var cZ = Math.cos(_z * 0.5);
+    var cX = Math.cos(_x);
+    var cY = Math.cos(_y);
+    var cZ = Math.cos(_z);
 
-    var sX = Math.sin(_x * 0.5);
-    var sY = Math.sin(_y * 0.5);
-    var sZ = Math.sin(_z * 0.5);
+    var sX = Math.sin(_x);
+    var sY = Math.sin(_y);
+    var sZ = Math.sin(_z);
+
+    var cXcY = cX * cY;
+    var sXsY = sX * sY;
 
     //
     // ZXY quaternion construction.
     //
     return new Quaternion(
-      cX * cY * cZ - sX * sY * sZ,
+      cXcY * cZ - sXsY * sZ,
       sX * cY * cZ - cX * sY * sZ,
       cX * sY * cZ + sX * cY * sZ,
-      cX * cY * sZ + sX * sY * cZ);
+      cXcY * sZ + sXsY * cZ);
   };
 
   if (typeof define === 'function' && define['amd']) {
