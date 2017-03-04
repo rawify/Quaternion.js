@@ -270,7 +270,7 @@
       return new Quaternion(-this['w'], -this['x'], -this['y'], -this['z']);
     },
     /**
-     * Calculates the length/modulus or the norm of a quaternion
+     * Calculates the length/modulus/magnitude or the norm of a quaternion
      *
      * @returns {number}
      */
@@ -288,7 +288,7 @@
       return Math.hypot(w, x, y, z);
     },
     /**
-     * Calculates the squared length/modulus or the norm of a quaternion
+     * Calculates the squared length/modulus/magnitude or the norm of a quaternion
      *
      * @returns {number}
      */
@@ -317,6 +317,8 @@
     'normalize': function() {
 
       // Q* := Q / |Q|
+
+      // unrolled Q.scale(1 / Q.norm())
 
       var w = this['w'];
       var x = this['x'];
@@ -471,44 +473,6 @@
     },
 
 
-    'exp': function() {
-      var w = this['w'];
-      var x = this['x'];
-      var y = this['y'];
-      var z = this['z'];
-
-      var norm = Math.hypot(x, y, z);
-
-      var expW = Math.exp(w);
-      var sinNorm = Math.sin(norm) / norm;
-
-      return new Quaternion(
-        expW * Math.cos(norm),
-        sinNorm * x,
-        sinNorm * y,
-        sinNorm * z);
-    },
-
-    'log': function() {
-
-      var w = this['w'];
-      var x = this['x'];
-      var y = this['y'];
-      var z = this['z'];
-
-      var quatNorm = Math.hypot(w, x, y, z);
-      var vectNorm = Math.hypot(w, x, y, z);
-
-      var acos = Math.acos(w / quatNorm) / vectNorm;
-
-      return new Quaternion(
-        Math.log(quatNorm),
-        acos * x,
-        acos * y,
-        acos * z);
-    },
-
-
     /**
      * Calculates the conjugate of a quaternion
      *
@@ -621,7 +585,7 @@
      *
      * @returns {Array}
      */
-    'toArray': function() {
+    'toVector': function() {
 
       return [this['w'], this['x'], this['y'], this['z']];
     },
