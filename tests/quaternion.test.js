@@ -1,4 +1,3 @@
-
 var assert = require("assert");
 
 var Quaternion = require("../quaternion");
@@ -19,6 +18,7 @@ describe("Quaternions", function() {
 
     assert.equal(Quaternion(1, [2, 3, 4]).equals(1, 2, 3, 4), true);
     assert.equal(Quaternion([1, 2, 3, 4]).equals(1, 2, 3, 4), true);
+    assert.equal(Quaternion([1, 2, 3]).equals(0, 1, 2, 3), true);
 
   });
 

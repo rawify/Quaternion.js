@@ -13,19 +13,189 @@ HTML5 Device Orientation
 ---
 In order to create a HTML element, which always rotates in 3D with your mobile device, all you need is the following snippet. Look at the examples folder for a complete version.
 
+
+```js
+var Quaternion = require('quaternion');
+
+var q = new Quaternion("99.3+8i");
+c.mul(1,2,3,4).div([3,4,1]).sub(7, [1, 2, 3]);
+```
+
 ```javascript
-var q = new Quaternion;
 var rad = Math.PI / 180;
 window.addEventListener("deviceorientation", function(ev) {
 
   // Update the rotation object
-  q.setFromEuler(ev.alpha * rad, ev.beta * rad, ev.gamma * rad, 'ZXY');
+  var q = Quaternion.fromEuler(ev.alpha * rad, ev.beta * rad, ev.gamma * rad, 'ZXY');
 
   // Set the CSS style to the element you want to rotate
   elm.style.transform = "matrix3d(" + q.conjugate().toMatrix4() + ")";
 
 }, true);
 ```
+
+
+Parser
+===
+
+Any function (see below) as well as the constructor of the *Quaternion* class parses its input like this.
+
+You can pass either Objects, Doubles or Strings.
+
+
+Arguments
+---
+
+Calling the constructor will create a quaternion 1-element.
+
+**Note:** Calling a method like *add()* without parameters results in a quaternion with all elements zero! 
+
+```javascript
+new Quaternion() // 1 + 0i + 0j + 0k
+```
+
+The typical use case contains all quaternion parameters
+
+```javascript
+new Quaternion(w, x, y, z)
+```
+
+Objects
+---
+```javascript
+// Quaternion as angle and vector
+new Quaternion(w, [x, y, z])
+// Quaternion as object (it's ok to leave components out)
+new Quaternion({w: w, x: x, y: y, z: z})
+// Quaternion out of a complex number, e.g. Complex.js
+new Quaternion({re: real, im: imaginary})
+// Quaternion out of an array
+new Quaternion([w, x, y, z])
+// Quaternion out of a vector
+new Quaternion([x, y, z])
+```
+
+
+Doubles
+---
+```javascript
+new Quaternion(55.4);
+```
+
+Strings
+---
+```javascript
+new Quaternion('1 - 2i - 3j - 4k')
+new Quaternion("123.45");
+new Quaternion("15+3i");
+new Quaternion("i");
+```
+
+
+Functions
+===
+
+Quaternion add(n)
+---
+Adds two quaternions Q1 and Q2
+
+Quaternion sub(n)
+---
+Subtracts a quaternions Q2 from Q1
+
+Quaternion neg()
+---
+Calculates the additive inverse, or simply it negates the quaternion
+
+Quaternion norm()
+---
+Calculates the length/modulus/magnitude or the norm of a quaternion
+
+Quaternion normSq()
+---
+Calculates the squared length/modulus/magnitude or the norm of a quaternion
+
+Quaternion normalize()
+---
+Normalizes the quaternion to have |Q| = 1 as long as the norm is not zero. Alternative names are the signum, unit or versor
+
+Quaternion mul(n)
+---
+Calculates the Hamilton product of two quaternions. Leaving out the imaginary part results in just scaling the quat.
+
+**Note:** This function is not commutative, i.e. order matters!
+
+Quaternion scale(s)
+---
+Scales a quaternion by a scalar, faster than using multiplication
+
+Quaternion dot()
+---
+Calculates the dot product of two quaternions
+
+Quaternion inverse()
+---
+Calculates the inverse of a quat for non-normalized quats such that *Q^-1 * Q = 1* and *Q * Q^-1 = 1*
+
+Quaternion div(n)
+---
+Multiplies a quaternion with the inverse of a second quaternion
+
+Quaternion conjugate()
+---
+Calculates the conjugate of a quaternion. If the quaternion is normalized, the conjugate is the inverse of the quaternion - but faster.
+
+double real()
+---
+Returns the real part of the quaternion
+
+Quaternion imag()
+---
+Returns the imaginary part of the quaternion as a new quaternion with real part zero
+
+boolean equals(n)
+---
+Checks if two quats are the same
+
+boolean isFinite
+---
+Checks if all parts of a quaternion are finite
+
+boolean isNaN
+---
+Checks if any of the parts of the quaternion is not a number
+
+String toString()
+---
+Gets the Quaternion as a well formatted string
+
+Array toVector()
+---
+Gets the actual quaternion as an array
+
+Array toMatrix()
+---
+Calculates the 3x3 rotation matrix for the current quat
+
+Array toMatrix4()
+---
+Calculates the harmonic 4x4 rotation matrix for the current quat
+
+Quaternion clone()
+---
+Clones the actual object
+
+Array rotateVector(v)
+---
+Rotates a 3 component vector, represented as an array by the current quaternion
+
+Quaternion.fromAxisAngle(axis, angle)
+---
+Sets the quaternion by a rotation given as axis and angle
+
+Quaternion.fromEuler(alpha, beta, gamma)
+---
+Creates a quaternion by a rotation given by Euler angles
 
 
 
@@ -77,5 +247,5 @@ npm test
 
 Copyright and licensing
 ===
-Copyright (c) 2016, Robert Eisele (robert@xarg.org)
+Copyright (c) 2017, Robert Eisele (robert@xarg.org)
 Dual licensed under the MIT or GPL Version 2 licenses.

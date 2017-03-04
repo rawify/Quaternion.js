@@ -1,5 +1,5 @@
 /**
- * @license Quaternion.js v0.0.0 22/02/2016
+ * @license Quaternion.js v1.0.0 22/02/2016
  *
  * Copyright (c) 2016, Robert Eisele (robert@xarg.org)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -42,14 +42,14 @@
       return;
     }
 
-    if (typeof w === 'object') {
+    if (typeof w === 'object' && y === undefined) {
 
       // Check for quats, for example when an object gets cloned
-      if ('w' in w && 'x' in w && 'y' in w && 'z' in w) {
-        dest['w'] = w['w'];
-        dest['x'] = w['x'];
-        dest['y'] = w['y'];
-        dest['z'] = w['z'];
+      if ('w' in w || 'x' in w || 'y' in w || 'z' in w) {
+        dest['w'] = w['w'] || 0;
+        dest['x'] = w['x'] || 0;
+        dest['y'] = w['y'] || 0;
+        dest['z'] = w['z'] || 0;
         return;
       }
 
@@ -62,7 +62,7 @@
         return;
       }
 
-      // Check for arrays
+      // Check for array
       if (w.length === 4) {
         dest['w'] = w[0];
         dest['x'] = w[1];
@@ -70,11 +70,21 @@
         dest['z'] = w[3];
         return;
       }
+
+      // Check for vector
+      if (w.length === 3) {
+        dest['w'] = 0;
+        dest['x'] = w[0];
+        dest['y'] = w[1];
+        dest['z'] = w[2];
+        return;
+      }
+
       throw new Error('Invalid object');
     }
 
     // Parse string values
-    if (typeof w === 'string') {
+    if (typeof w === 'string' && y === undefined) {
 
       var tokens = w.match(/\d+\.?\d*e[+-]?\d+|\d+\.?\d*|\.\d+|./g);
       var plus = 1;
@@ -401,7 +411,7 @@
       return this['w'] * P['w'] + this['x'] * P['x'] + this['y'] * P['y'] + this['z'] * P['z'];
     },
     /**
-     * Calculates the inverse of a quat such that for non-normalized quats
+     * Calculates the inverse of a quat for non-normalized quats such that
      * Q^-1 * Q = 1 and Q * Q^-1 = 1
      *
      * @returns {Quaternion}
@@ -614,7 +624,7 @@
         xz - wy, yz + wx, 1 - (xx + yy)];
     },
     /**
-     * Calculates the 4x4 rotation matrix for the current quat
+     * Calculates the harmonic 4x4 rotation matrix for the current quat
      *
      * @returns {Array}
      */
@@ -690,7 +700,7 @@
   Quaternion['K'] = new Quaternion(0, 0, 0, 1);
 
   /**
-   * Sets the quaternion by a rotation given as axis and angle
+   * Creates quaternion by a rotation given as axis and angle
    *
    * @param {Array} axis The axis around which to rotate
    * @param {number} angle The angle in radians
@@ -715,7 +725,7 @@
   };
 
   /**
-   * Replaces the quaternion by a rotation given by Euler angles
+   * Creates a quaternion by a rotation given by Euler angles
    *
    * @param {number} alpha
    * @param {number} beta
