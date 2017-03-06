@@ -501,6 +501,59 @@
       return new Quaternion(this['w'], -this['x'], -this['y'], -this['z']);
     },
     /**
+     * Calculates the natural exponentiation of the quaternion
+     *
+     * @returns {Quaternion}
+     */
+    'exp': function() {
+
+      var w = this['w'];
+      var x = this['x'];
+      var y = this['y'];
+      var z = this['z'];
+
+      var vNorm = Math.hypot(x, y, z);
+      var wExp = Math.exp(w);
+      var scale = wExp / vNorm * Math.sin(vNorm);
+
+      if (vNorm === 0) {
+        return new Quaternion(wExp * Math.cos(vNorm), 0, 0, 0);
+      }
+
+      return new Quaternion(
+        wExp * Math.cos(vNorm),
+        x * scale,
+        y * scale,
+        z * scale);
+    },
+    /**
+     * Calculates the natural logarithm of the quaternion
+     *
+     * @returns {Quaternion}
+     */
+    'log': function() {
+
+      var w = this['w'];
+      var x = this['x'];
+      var y = this['y'];
+      var z = this['z'];
+
+      var qNorm = Math.hypot(x, y, z, w);
+      var vNorm = Math.hypot(x, y, z);
+
+      var scale = Math.acos(w / qNorm) / vNorm;
+
+      if (vNorm === 0) {
+        return new Quaternion(Math.log(qNorm), 0, 0, 0);
+      }
+
+      return new Quaternion(
+        Math.log(qNorm),
+        x * scale,
+        y * scale,
+        z * scale);
+    },
+    /**
      * Checks if two quats are the same
      *
      * @param {number|Object|string} w real
@@ -746,17 +799,17 @@
   /**
    * Creates a quaternion by a rotation given by Euler angles
    *
-   * @param {number} alpha
-   * @param {number} beta
-   * @param {number} gamma
+   * @param {number} phi
+   * @param {number} theta
+   * @param {number} psi
    * @param {String=} order
    * @returns {Quaternion}
    */
-  Quaternion['fromEuler'] = function(alpha, beta, gamma, order) {
+  Quaternion['fromEuler'] = function(phi, theta, psi, order) {
 
-    var _x = beta * 0.5;
-    var _y = gamma * 0.5;
-    var _z = alpha * 0.5;
+    var _x = theta * 0.5;
+    var _y = psi * 0.5;
+    var _z = phi * 0.5;
 
     var cX = Math.cos(_x);
     var cY = Math.cos(_y);
@@ -765,7 +818,7 @@
     var sX = Math.sin(_x);
     var sY = Math.sin(_y);
     var sZ = Math.sin(_z);
-    
+
     if (order === undefined || order === 'ZXY') {
       return new Quaternion(
         cX * cY * cZ - sX * sY * sZ,

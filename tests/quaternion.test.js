@@ -144,6 +144,13 @@ describe("Quaternions", function() {
     assert(Math.abs(r[2] - 1) < 1e-13);
   });
 
+  it("should generate a unit quaternion from euler angle", function() {
+
+    var n = Quaternion.fromEuler(Math.PI, Math.PI, Math.PI).norm();
+
+    assert.equal(n, 1);
+  });
+
   it("should rotate a vector in direct and indirect manner", function() {
 
     var v = [1, 2, 3];
@@ -154,6 +161,53 @@ describe("Quaternions", function() {
     var b = q.rotateVector(v);
 
     assert.deepEqual(a.slice(1), b);
+  });
+
+  it("should rotate a vector correctly", function() {
+
+    var theta = 2 * Math.PI / 3.0;
+    var axis = [1.0, 1.0, 1.0];
+    var vector = [3.0, 4.0, 5.0];
+
+    var p = Quaternion.fromAxisAngle(axis, theta).rotateVector(vector);
+
+    assert.deepEqual(p, [5.0, 3.0000000000000004, 4.0]);
+  });
+
+  it("should rotate a vector correctly", function() {
+
+    var v = [1.0, 1.0, 1.0];
+    var q = Quaternion.fromAxisAngle([0.0, 1.0, 0.0], Math.PI);
+    var p = q.rotateVector(v);
+
+    assert.deepEqual(p, [-0.9999999999999998, 1, -1]);
+  });
+
+  it("should rotate a vector correctly based on Euler angles", function() {
+
+    var v = [1.0, 1.0, 1.0];
+    var q = Quaternion.fromEuler(0.0, Math.PI, 0.0);
+    var p = q.rotateVector(v);
+
+    assert.deepEqual(p, [1, -1, -0.9999999999999998]);
+  });
+
+  it("should exp and log a quaternion", function() {
+
+    var q = Quaternion(Math.random() * 10, Math.random() * 10, Math.random() * 10, Math.random() * 10);
+
+    assert(
+      q.toVector().reduce((a, b) => a + b, 0) -
+      q.log().exp().toVector().reduce((a, b) => a + b, 0) < 0.00001);
+  });
+
+  it("should exp and log rational numbers", function() {
+
+    var n = Math.random() * 10;
+    var q = Quaternion(n);
+
+    assert.deepEqual(q.exp().toVector(), [Math.exp(n), 0, 0, 0]);
+    assert.deepEqual(q.log().toVector(), [Math.log(n), 0, 0, 0]);
   });
 
 });

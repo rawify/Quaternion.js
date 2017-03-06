@@ -158,6 +158,14 @@ Quaternion conjugate()
 ---
 Calculates the conjugate of a quaternion. If the quaternion is normalized, the conjugate is the inverse of the quaternion - but faster.
 
+Quaternion exp()
+---
+Calculates the natural exponentiation of the quaternion
+
+Quaternion log()
+---
+Calculates the natural logarithm of the quaternion
+
 double real()
 ---
 Returns the real part of the quaternion
@@ -206,7 +214,7 @@ Quaternion.fromAxisAngle(axis, angle)
 ---
 Sets the quaternion by a rotation given as axis and angle
 
-Quaternion.fromEuler(alpha, beta, gamma[, order="ZXY"])
+Quaternion.fromEuler(Φ, θ, ψ[, order="ZXY"])
 ---
 Creates a quaternion by a rotation given by Euler angles. Optional the order of the axis can be provided.
 
