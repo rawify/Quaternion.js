@@ -2,6 +2,15 @@ var assert = require("assert");
 
 var Quaternion = require("../quaternion");
 
+function CQ(a, b) {
+
+  var e = 1e-5;
+  return Math.abs(a.w - b.w) < e &&
+    Math.abs(a.x - b.x) < e &&
+    Math.abs(a.y - b.y) < e &&
+    Math.abs(a.z - b.z) < e;
+}
+
 describe("Quaternions", function() {
 
   it("should work with different params", function() {
@@ -194,11 +203,9 @@ describe("Quaternions", function() {
 
   it("should exp and log a quaternion", function() {
 
-    var q = Quaternion(Math.random() * 10, Math.random() * 10, Math.random() * 10, Math.random() * 10);
+    var q = new Quaternion(Math.random() * 10, Math.random() * 10, Math.random() * 10, Math.random() * 10);
 
-    assert(
-      q.toVector().reduce((a, b) => a + b, 0) -
-      q.log().exp().toVector().reduce((a, b) => a + b, 0) < 0.00001);
+    assert(CQ(q, q.log().exp()));
   });
 
   it("should exp and log rational numbers", function() {
@@ -208,6 +215,13 @@ describe("Quaternions", function() {
 
     assert.deepEqual(q.exp().toVector(), [Math.exp(n), 0, 0, 0]);
     assert.deepEqual(q.log().toVector(), [Math.log(n), 0, 0, 0]);
+  });
+
+  it("should work with scalar powers", function() {
+
+    var q = new Quaternion(Math.random() * 10, Math.random() * 10, Math.random() * 10, Math.random() * 10);
+
+    assert(CQ(q.pow(3), q.mul(q).mul(q)));
   });
 
 });

@@ -541,7 +541,8 @@
       var qNorm = Math.hypot(x, y, z, w);
       var vNorm = Math.hypot(x, y, z);
 
-      var scale = Math.acos(w / qNorm) / vNorm;
+      //var scale = Math.acos(w / qNorm) / vNorm;
+      var scale = Math.atan2(vNorm, w) / vNorm;
 
       if (vNorm === 0) {
         return new Quaternion(Math.log(qNorm), 0, 0, 0);
@@ -552,6 +553,18 @@
         x * scale,
         y * scale,
         z * scale);
+    },
+    /**
+     * Calculates the power of a quaternion raised to a real number or another quaternion
+     *
+     * @param {number|Object|string} w real
+     * @param {number=} x imag
+     * @param {number=} y imag
+     * @param {number=} z imag
+     * @returns {Quaternion}
+     */
+    'pow': function(w, x, y, z) {
+        return this.log().mul(w, x, y, z).exp();
     },
     /**
      * Checks if two quats are the same
