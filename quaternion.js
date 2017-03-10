@@ -815,7 +815,7 @@
    * @param {number} phi
    * @param {number} theta
    * @param {number} psi
-   * @param {String=} order
+   * @param {string=} order
    * @returns {Quaternion}
    */
   Quaternion['fromEuler'] = function(phi, theta, psi, order) {

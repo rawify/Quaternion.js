@@ -9,17 +9,17 @@ Quaternion.js is a well tested JavaScript library for 3D rotations. Quaternions 
 
 # Examples
 
-HTML5 Device Orientation
----
-In order to create a HTML element, which always rotates in 3D with your mobile device, all you need is the following snippet. Look at the examples folder for a complete version.
-
-
 ```js
 var Quaternion = require('quaternion');
 
 var q = new Quaternion("99.3+8i");
 c.mul(1,2,3,4).div([3,4,1]).sub(7, [1, 2, 3]);
 ```
+
+
+HTML5 Device Orientation
+---
+In order to create a HTML element, which always rotates in 3D with your mobile device, all you need is the following snippet. Look at the examples folder for a complete version.
 
 ```javascript
 var rad = Math.PI / 180;
@@ -106,7 +106,7 @@ Functions
 
 Every stated parameter *n* in the following list of functions behaves in the same way as the constructor examples above
 
-**Note:** Calling a method like *add()* without parameters results in a quaternion with all elements zero, not one! 
+**Note:** Calling a method like *add()* without parameters results in a quaternion with all elements zero, not one!
 
 Quaternion add(n)
 ---
