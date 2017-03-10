@@ -614,7 +614,7 @@
           var b = this['x'];
 
           if (a === 0 && b === 0) {
-            return new Quaternion(0, 0, 0, 0);
+            return Quaternion['ZERO'];
           }
 
           var arg = Math.atan2(b, a);
