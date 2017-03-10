@@ -158,6 +158,21 @@ describe("Quaternions", function() {
     assert.deepEqual(q.inverse(), q.conjugate());
   });
 
+  it("should normalize quaternion", function() {
+
+    var q = Quaternion(Math.random() * 1000, Math.random() * 1000, Math.random() * 1000, Math.random() * 1000).normalize();
+
+    assert(CQ(Quaternion(q.norm()), Quaternion(1, 0, 0, 0)));
+  });
+
+  it("should invert quaternion", function() {
+
+    var q = Quaternion(Math.random() * 1000, Math.random() * 1000, Math.random() * 1000, Math.random() * 1000);
+
+    assert(CQ(q.mul(q.inverse()), Quaternion(1, 0, 0, 0)));
+    assert(CQ(q.inverse().mul(q), Quaternion(1, 0, 0, 0)));
+  });
+
   it("should work to check if two quats are the same", function() {
 
     assert.equal(Quaternion(9, 8, 7, 6).equals(9, 8, 7, 6), true);
@@ -317,7 +332,7 @@ describe("Quaternions", function() {
     assert(CQ(q, q.log().exp()));
   });
 
-  it("should exp and log rational numbers", function() {
+  it("should exp and log real numbers", function() {
 
     var n = Math.random() * 10;
     var q = Quaternion(n);
@@ -348,10 +363,10 @@ describe("Quaternions", function() {
 
   it('should square Quaternions', function() {
 
-    assert(CQ(Quaternion({x: 1}).pow(2), Quaternion({w: -1})));
-    assert(CQ(Quaternion({y: 1}).pow(2), Quaternion({w: -1})));
-    assert(CQ(Quaternion({z: 1}).pow(2), Quaternion({w: -1})));
-    assert(CQ(Quaternion({w: 1}).pow(2), Quaternion({w: 1})));
+    assert(CQ(Quaternion("i").pow(2), Quaternion(-1)));
+    assert(CQ(Quaternion("j").pow(2), Quaternion(-1)));
+    assert(CQ(Quaternion("k").pow(2), Quaternion(-1)));
+    assert(CQ(Quaternion(1).pow(2), Quaternion({w: 1})));
 
     assert(CQ(Quaternion(3, -2, -3, 4).pow(2), Quaternion(-20, -12, -18, 24)));
 
@@ -392,9 +407,7 @@ describe("Quaternions", function() {
 
   it('should raise reals to quaternion powers', function() {
     assert(CQ(Quaternion(1).pow(Quaternion(3, 4, 5, 9)), Quaternion(1)));
-
-    // TODO: assert(CQ(Quaternion(-2).pow(Quaternion(4, 2, 1, 1.5)), Quaternion(-0.024695944127665907, 0.015530441791896946, -0.004473740387907085, 0.004654139181719533)));
-
+    assert(CQ(Quaternion(-2).pow(Quaternion(4, 2, 1, 1.5)), Quaternion(-0.024695944127665907, 0.015530441791896946, -0.004473740387907085, 0.004654139181719533)));
     assert(CQ(Quaternion(2, 0, 0, 0).pow(Quaternion(1, 0, 0, 0)), Quaternion(2, 0, 0, 0)));
     assert(CQ(Quaternion(2, 0, 0, 0).pow(Quaternion(0, 1, 0, 0)), Quaternion(0.7692389013639721, 0.6389612763136348, 0, 0)));
     assert(CQ(Quaternion(2, 0, 0, 0).pow(Quaternion(0, 0, 1, 0)), Quaternion(0.769238901363972, 0, 0.638961276313635, 0)));
@@ -405,14 +418,12 @@ describe("Quaternions", function() {
     assert(CQ(Quaternion(1, 2, 3, 4).pow(1 / 2), Quaternion(1.7996146219471072, 0.5556745248702426, 0.8335117873053639, 1.1113490497404852)));
     assert(CQ(Quaternion(-1, -2, -3, -4).pow(1 / 2).pow(2), Quaternion(-1, -2, -3, -4)));
     assert(CQ(Quaternion().pow(1 / 2), Quaternion()));
-
     assert(CQ(Quaternion(1, 0, 0, 0).pow(1 / 2), Quaternion(1, 0, 0, 0)));
     assert(CQ(Quaternion(0, 1, 0, 0).pow(1 / 2), Quaternion(0.7071067811865476, 0.7071067811865475, 0, 0)));
+    assert(CQ(Quaternion("1-2i").pow(1 / 2), Quaternion("1.272019649514069 - 0.7861513777574233i")))
     assert(CQ(Quaternion(0, 0, 1, 0).pow(1 / 2), Quaternion(0.7071067811865476, 0, 0.7071067811865475, 0)));
     assert(CQ(Quaternion(0, 0, 0, 1).pow(1 / 2), Quaternion(0.7071067811865476, 0, 0, 0.7071067811865475)));
-
-    // TODO: assert(CQ(Quaternion(-1).pow(1 / 2), Quaternion(1)));
-
+    assert(CQ(Quaternion(-1).pow(1 / 2), Quaternion("i")));
   });
 
   it('should return the log base e of a quaternion', function() {

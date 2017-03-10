@@ -17,10 +17,36 @@
       return Math.sqrt(sum);
     };
 
+  /**
+   * Calculates log(sqrt(a^2+b^2)) in a way to avoid overflows
+   *
+   * @param {number} a
+   * @param {number} b
+   * @returns {number}
+   */
+  function logHypot(a, b) {
+
+    var _a = Math.abs(a);
+    var _b = Math.abs(b);
+
+    if (a === 0) {
+      return Math.log(_b);
+    }
+
+    if (b === 0) {
+      return Math.log(_a);
+    }
+
+    if (_a < 3000 && _b < 3000) {
+      return Math.log(a * a + b * b) * 0.5;
+    }
+
+    return Math.log(a / Math.cos(Math.atan2(b, a)));
+  }
+
   /*
    * Default is the multiplicative one element
    *
-   * Proof: TODO
    */
   var P = {
     'w': 1,
@@ -517,7 +543,8 @@
       var scale = wExp / vNorm * Math.sin(vNorm);
 
       if (vNorm === 0) {
-        return new Quaternion(wExp * Math.cos(vNorm), 0, 0, 0);
+        //return new Quaternion(wExp * Math.cos(vNorm), 0, 0, 0);
+        return new Quaternion(wExp, 0, 0, 0);
       }
 
       return new Quaternion(
@@ -538,15 +565,17 @@
       var y = this['y'];
       var z = this['z'];
 
+      if (y === 0 && z === 0) {
+        return new Quaternion(
+          logHypot(w, x),
+          Math.atan2(x, w), 0, 0);
+      }
+
       var qNorm = Math.hypot(x, y, z, w);
       var vNorm = Math.hypot(x, y, z);
 
       //var scale = Math.acos(w / qNorm) / vNorm;
       var scale = Math.atan2(vNorm, w) / vNorm;
-
-      if (vNorm === 0) {
-        return new Quaternion(Math.log(qNorm), 0, 0, 0);
-      }
 
       return new Quaternion(
         Math.log(qNorm),
@@ -564,7 +593,65 @@
      * @returns {Quaternion}
      */
     'pow': function(w, x, y, z) {
-        return this.log().mul(w, x, y, z).exp();
+
+      parse(P, w, x, y, z);
+
+      if (P['y'] === 0 && P['z'] === 0) {
+
+        if (P['w'] === 1 && P['x'] === 0) {
+          return this;
+        }
+
+        if (P['w'] === 0 && P['x'] === 0) {
+          return Quaternion['ONE'];
+        }
+
+        // Check if we can operate in C
+        // Borrowed from complex.js
+        if (this['y'] === 0 && this['z'] === 0) {
+
+          var a = this['w'];
+          var b = this['x'];
+
+          if (a === 0 && b === 0) {
+            return new Quaternion(0, 0, 0, 0);
+          }
+
+          var arg = Math.atan2(b, a);
+          var loh = logHypot(a, b);
+
+          if (P['x'] === 0) {
+
+            if (b === 0 && a >= 0) {
+
+              return new Quaternion(Math.pow(a, P['w']), 0, 0, 0);
+
+            } else if (a === 0) {
+
+              switch (P['w'] % 4) {
+                case 0:
+                  return new Quaternion(Math.pow(b, P['w']), 0, 0, 0);
+                case 1:
+                  return new Quaternion(0, Math.pow(b, P['w']), 0, 0);
+                case 2:
+                  return new Quaternion(-Math.pow(b, P['w']), 0, 0, 0);
+                case 3:
+                  return new Quaternion(0, -Math.pow(b, P['w']), 0, 0);
+              }
+            }
+          }
+
+          a = Math.exp(P['w'] * loh - P['x'] * arg);
+          b = P['x'] * loh + P['w'] * arg;
+          return new Quaternion(
+            a * Math.cos(b),
+            a * Math.sin(b));
+        }
+      }
+
+      // Normal quaternion behavior
+      // q^p = e^ln(q^p) = e^(ln(q)*p)
+      return this.log().mul(P).exp();
     },
     /**
      * Checks if two quats are the same
