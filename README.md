@@ -218,6 +218,9 @@ Quaternion.fromEuler(Φ, θ, ψ[, order="ZXY"])
 ---
 Creates a quaternion by a rotation given by Euler angles. Optional the order of the axis can be provided.
 
+Quaternion.fromBetweenVectors(u, v)
+---
+Calculates the quaternion to rotate one vector onto the other
 
 Constants
 ===

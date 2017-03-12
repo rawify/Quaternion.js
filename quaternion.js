@@ -897,7 +897,7 @@
   };
 
   /**
-   * Calculates the quaternion to rotate on vector onto the other
+   * Calculates the quaternion to rotate one vector onto the other
    *
    * @param {Array} u
    * @param {Array} v
