@@ -645,7 +645,7 @@
           b = P['x'] * loh + P['w'] * arg;
           return new Quaternion(
             a * Math.cos(b),
-            a * Math.sin(b));
+            a * Math.sin(b), 0, 0);
         }
       }
 
@@ -894,6 +894,45 @@
     var sin_norm = sin / Math.hypot(a, b, c);
 
     return new Quaternion(cos, a * sin_norm, b * sin_norm, c * sin_norm);
+  };
+
+  /**
+   * Calculates the quaternion to rotate on vector onto the other
+   *
+   * @param {Array} u
+   * @param {Array} v
+   */
+  Quaternion['fromBetweenVectors'] = function(u, v) {
+
+    var a = u[0];
+    var b = u[1];
+    var c = u[2];
+
+    var x = v[0];
+    var y = v[1];
+    var z = v[2];
+
+    var L1 = Math.hypot(a, b, c);
+    var L2 = Math.hypot(x, y, z);
+
+    var a_ = a / L1;
+    var b_ = b / L1;
+    var c_ = c / L1;
+
+    var x_ = x / L2;
+    var y_ = y / L2;
+    var z_ = z / L2;
+
+    var w0 = b * z - c * y;
+    var w1 = c * x - a * z;
+    var w2 = a * y - b * x;
+
+    var L3 = Math.hypot(w0, w1, w2);
+    
+    return Quaternion.fromAxisAngle(
+      [w0 / L3, w1 / L3, w2 / L3],
+      Math.acos(a_ * x_ + b_ * y_ + c_ * z_)
+    );
   };
 
   /**

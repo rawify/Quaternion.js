@@ -286,7 +286,7 @@ describe("Quaternions", function() {
 
   it("should rotate a vector in direct and indirect manner", function() {
 
-    var v = [1, 2, 3];
+    var v = [1, 9, 3];
 
     var q = Quaternion("1+2i+3j+4k").normalize();
 
@@ -475,6 +475,21 @@ describe("Quaternions", function() {
     assert(CQ(Quaternion(1, 2, 3, 4).pow(0), Quaternion({w: 1})));
     assert(CQ(Quaternion(1, 2, 3, 4).pow(2.5), Quaternion(-66.50377063575604, -8.360428208578368, -12.54064231286755, -16.720856417156735)));
     assert(CQ(Quaternion(1, 2, 3, 4).pow(-2.5), Quaternion(-0.0134909686430938, 0.0016959981926818065, 0.0025439972890227095, 0.003391996385363613)));
+  });
+
+  it('should rotate one vector onto the other', function() {
+
+    var u = [1, 2, 3];
+    var v = [9, 8, 7];
+
+    var q = Quaternion.fromBetweenVectors(u, v);
+    var vPrime = q.rotateVector(u);
+
+    // Do they look in the same direction?
+    assert(CQ(Quaternion(v).normalize(), Quaternion(vPrime).normalize()));
+
+    // Is the length of rotated equal to the original?
+    assert((Quaternion(u).norm() - Quaternion(vPrime).norm()) < 1e-6);
   });
 
 });
