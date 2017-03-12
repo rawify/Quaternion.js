@@ -2,13 +2,26 @@ var assert = require("assert");
 
 var Quaternion = require("../quaternion");
 
-function CQ(a, b) {
 
-  var e = 1e-5;
-  return Math.abs(a.w - b.w) < e &&
+assert.q = function(a, b) {
+  var e = 1e-9;
+  if (Math.abs(a.w - b.w) < e &&
     Math.abs(a.x - b.x) < e &&
     Math.abs(a.y - b.y) < e &&
-    Math.abs(a.z - b.z) < e;
+    Math.abs(a.z - b.z) < e) {
+  } else {
+    assert.equal(a.toString(), b.toString());
+  }
+};
+
+assert.approx = function(is, should) {
+  if (Math.abs(is - should) > 1e-9)
+    assert.equal(is, should);
+};
+
+function CQ(a, b) {
+  assert.q(a, b);
+  return true;
 }
 
 describe("Quaternions", function() {
@@ -50,6 +63,7 @@ describe("Quaternions", function() {
     assert.equal("1", Quaternion(2, 0, 0, 0).add(-1, 0, 0, 0).toString());
     assert.equal("-1 + k", Quaternion(0, 0, 0, 1).add(-1, 0, 0, 0).toString());
 
+    assert.deepEqual(Quaternion(1).add("i"), Quaternion(1, 1, 0, 0));
     assert.deepEqual(Quaternion(1, 2, 3, 4).add(Quaternion(5, 6, 7, 8)), Quaternion(6, 8, 10, 12));
     assert.deepEqual(Quaternion(-1, 2, 3, 4).add(Quaternion(5, 6, 7, 8)), Quaternion(4, 8, 10, 12));
     assert.deepEqual(Quaternion(1, -2, 3, 4).add(Quaternion(5, 6, 7, 8)), Quaternion(6, 4, 10, 12));
@@ -87,6 +101,7 @@ describe("Quaternions", function() {
 
     assert.equal(1, Quaternion().norm());
     assert.equal(2, Quaternion(1, 1, 1, 1).norm());
+    assert.equal(1, Quaternion([3, 2, 5, 4]).normalize().norm());
     assert.equal(Math.sqrt(1 + 4 + 9 + 16), Quaternion(1, 2, 3, 4).norm());
     assert.equal(1 + 4 + 9 + 16, Quaternion(1, 2, 3, 4).normSq());
 
@@ -110,11 +125,22 @@ describe("Quaternions", function() {
     assert.equal(Quaternion(20, 1, 2, 6).norm(), 21);
     assert.equal(Quaternion(6, 20, 1, 2).norm(), 21);
     assert.equal(Quaternion(2, 6, 20, 1).norm(), 21);
+
+    assert.equal(Quaternion(1).norm(), 1);
+    assert.equal(Quaternion("i").norm(), 1);
+    assert.equal(Quaternion([3, 2, 5, 4]).norm(), 7.3484692283495345);
   });
 
   it("should calculate the inverse of a quat", function() {
 
     assert.equal('0.03333333333333333 - 0.06666666666666667i - 0.1j - 0.13333333333333333k', Quaternion(1, 2, 3, 4).inverse().toString());
+
+    var p = Quaternion([3, 2, 5, 4]);
+    var p_ = Quaternion(p).conjugate();
+    var l = p.norm();
+    var r = 1 / (l * l);
+
+    assert.deepEqual(p.inverse(), p_.scale(r));
   });
 
   it("should calculate the conjugate of a quat", function() {
@@ -134,6 +160,44 @@ describe("Quaternions", function() {
     assert.deepEqual(Quaternion(0, -1, 0, 0).conjugate(), Quaternion(0, 1, 0, 0));
     assert.deepEqual(Quaternion(0, 0, -1, 0).conjugate(), Quaternion(0, 0, 1, 0));
     assert.deepEqual(Quaternion(0, 0, 0, -1).conjugate(), Quaternion(0, 0, 0, 1));
+
+    assert.deepEqual(Quaternion(1).conjugate(), Quaternion([1, -0, -0, -0]));
+    assert.deepEqual(Quaternion("i").conjugate(), Quaternion([0, -1, -0, -0]));
+    assert.deepEqual(Quaternion("j").conjugate(), Quaternion([0, -0, -1, -0]));
+    assert.deepEqual(Quaternion("k").conjugate(), Quaternion([0, -0, -0, -1]));
+    assert.deepEqual(Quaternion([3, 2, 5, 4]).conjugate(), Quaternion([3, -2, -5, -4]));
+  });
+
+  it('should pass hamilton rules', function() {
+
+    var i2 = Quaternion("i").mul("i");
+    var j2 = Quaternion("j").mul("j");
+    var k2 = Quaternion("k").mul("k");
+    var ijk = Quaternion("i").mul("j").mul("k");
+
+    assert.deepEqual(i2, j2);
+    assert.deepEqual(j2, k2);
+    assert.deepEqual(k2, ijk);
+    assert.deepEqual(ijk, Quaternion([-1, 0, 0, 0]));
+
+    var q = Quaternion(1, 0, 0, 0);
+    var qI = Quaternion(0, 1, 0, 0);
+    var qJ = Quaternion(0, 0, 1, 0);
+    var qK = Quaternion(0, 0, 0, 1);
+
+    var qTip = Quaternion(2, 3, 5, 7);
+
+    assert.q(qI.mul(qI), Quaternion(-1));
+    assert.q(qJ.mul(qJ), Quaternion(-1));
+    assert.q(qK.mul(qK), Quaternion(-1));
+
+    assert.q(qI.mul(qJ), Quaternion("k"));
+    assert.q(qJ.mul(qI), Quaternion("-k"));
+    assert.q(qJ.mul(qK), Quaternion("i"));
+    assert.q(qK.mul(qJ), Quaternion("-i"));
+    assert.q(qK.mul(qI), Quaternion("j"));
+    assert.q(qI.mul(qK), Quaternion("-j"));
+
   });
 
   it('should add a number to a Quaternion', function() {
@@ -188,6 +252,47 @@ describe("Quaternions", function() {
     assert.deepEqual(Quaternion(9, 8, 7, 6).normSq(), Quaternion(9, 8, 7, 6).dot(9, 8, 7, 6));
   });
 
+  it('should pass trivial cases', function() {
+
+    var q0 = new Quaternion(0);
+    var q1 = Quaternion(Math.random(), Math.random(), Math.random(), Math.random());
+    var q2 = Quaternion(Math.random(), Math.random(), Math.random(), Math.random());
+    var l = Math.random() * 2.0 - 1.0;
+    var lp = Math.random();
+
+    assert.q(q1.add(q2), (q2.add(q1)));
+    assert.q(q0.sub(q1), (q1.neg()));
+    assert.q(q1.conjugate().conjugate(), (q1));
+    assert.approx(q1.normalize().norm(), 1);
+    assert.q(q1.inverse(), (q1.conjugate().scale(1 / Math.pow(q1.norm(), 2))));
+    //assert.q(q1.div(q2), q1.mul(q2.inverse()));
+    assert.approx(q1.scale(l).norm(), Math.abs(q1.norm() * l));
+    assert.approx(q1.mul(q2).norm(), q1.norm() * q2.norm());
+    assert.q((new Quaternion(l)).exp(), (new Quaternion(Math.exp(l))));
+    assert.q((new Quaternion(lp)).log(), (new Quaternion(Math.log(lp))));
+    assert.q(q1.exp().log(), q1);
+    assert.q(q1.log().exp(), q1);
+    // TODO: assert.q(q1.add(q2).exp(), q1.exp().mul(q2.exp()));
+    assert.q(q1.pow(2.0), q1.mul(q1));
+    assert.q(q1.mul(q1.inverse()), (Quaternion.ONE));
+    assert.q(q1.inverse().mul(q1), Quaternion.ONE);
+    assert.q(q1.add(q1.conjugate()), Quaternion(2 * q1.w));
+  });
+
+  it('should pass other trivial cases', function() {
+
+    var x = Quaternion(1, 2, -0.5, -1);
+    var y = Quaternion(-3, 4, 0, 2);
+    var z = Quaternion(-2, 1, 2, -4);
+
+    assert.approx(y.normSq(), 29);
+    assert.approx(z.normSq(), 25);
+    assert.q(z.normalize(), Quaternion(-0.4, 0.2, 0.4, -0.8));
+    assert.q(x.exp().log(), x);
+    assert.q(x.mul(y), Quaternion(-9.0, -3.0, -6.5, 7.0));
+    assert.approx(y.dot(y), 29);
+  });
+
   it("should calculate the product", function() {
 
     assert.equal(Quaternion(5).mul(6).toString(), '30');
@@ -196,6 +301,8 @@ describe("Quaternions", function() {
     assert.equal(Quaternion(5, 6).mul(6, 7).toString(), '-12 + 71i');
     assert.equal(Quaternion(1, 1, 1, 1).mul(2, 2, 2, 2).toString(), '-4 + 4i + 4j + 4k');
 
+    assert.deepEqual(Quaternion(1, 2, 3, 4).mul(5, 6, 7, 8), Quaternion(-60, 12, 30, 24));
+    assert.deepEqual(Quaternion(3, 2, 5, 4).mul(4, 5, 3, 1), Quaternion(-17, 16, 47, 0));
     assert.deepEqual(Quaternion().mul(Quaternion(1, 2, 3, 4)), Quaternion(1, 2, 3, 4));
     assert.deepEqual(Quaternion().mul(Quaternion()), Quaternion());
 
@@ -272,9 +379,9 @@ describe("Quaternions", function() {
 
     var r = Quaternion.fromAxisAngle(axis, angle).rotateVector(v);
 
-    assert(Math.abs(r[0] - 1) < 1e-13);
-    assert(Math.abs(r[1] - 1) < 1e-13);
-    assert(Math.abs(r[2] - 1) < 1e-13);
+    assert.approx(r[0], 1);
+    assert.approx(r[1], 1);
+    assert.approx(r[2], 1);
   });
 
   it("should generate a unit quaternion from euler angle", function() {
@@ -458,11 +565,11 @@ describe("Quaternions", function() {
   });
 
   it('should divide quaternions by each other', function() {
-    // TODO
-    //assert(CQ(Quaternion({z: 1}).div(Quaternion({y: 1})), Quaternion({x: 1})));
-    //assert(CQ(Quaternion({x: 1}).div(Quaternion({z: 1})), Quaternion({y: 1})));
+
+    assert(CQ(Quaternion({z: 1}).div(Quaternion({y: 1})), Quaternion({x: 1})));
+    assert(CQ(Quaternion({x: 1}).div(Quaternion({z: 1})), Quaternion({y: 1})));
     assert(CQ(Quaternion(3, -2, -3, 4).div(Quaternion(3, -2, -3, 4)), Quaternion(1, 0, 0, 0)));
-    //assert(CQ(Quaternion(1, 2, 3, 4).div(Quaternion(-1, 1, 2, 3)), Quaternion(19 / 15, -4 / 15, -1 / 5, -8 / 15)));
+    assert(CQ(Quaternion(1, 2, 3, 4).div(Quaternion(-1, 1, 2, 3)), Quaternion(19 / 15, -4 / 15, -1 / 5, -8 / 15)));
 
     assert(CQ(Quaternion(1, 0, 0, 0).div(Quaternion(1, 0, 0, 0)), Quaternion(1, 0, 0, 0)));
     assert(CQ(Quaternion(1, 0, 0, 0).div(Quaternion(0, 1, 0, 0)), Quaternion(0, -1, 0, 0)));
@@ -489,7 +596,8 @@ describe("Quaternions", function() {
     assert(CQ(Quaternion(v).normalize(), Quaternion(vPrime).normalize()));
 
     // Is the length of rotated equal to the original?
-    assert((Quaternion(u).norm() - Quaternion(vPrime).norm()) < 1e-6);
+    assert.approx(Quaternion(u).norm(), Quaternion(vPrime).norm());
+
   });
 
 });
