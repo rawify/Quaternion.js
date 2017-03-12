@@ -912,27 +912,14 @@
     var y = v[1];
     var z = v[2];
 
-    var L1 = Math.hypot(a, b, c);
-    var L2 = Math.hypot(x, y, z);
+    var L = Math.sqrt((a * a + b * b + c * c) * (x * x + y * y + z * z));
 
-    var a_ = a / L1;
-    var b_ = b / L1;
-    var c_ = c / L1;
-
-    var x_ = x / L2;
-    var y_ = y / L2;
-    var z_ = z / L2;
-
-    var w0 = b * z - c * y;
-    var w1 = c * x - a * z;
-    var w2 = a * y - b * x;
-
-    var L3 = Math.hypot(w0, w1, w2);
-    
-    return Quaternion.fromAxisAngle(
-      [w0 / L3, w1 / L3, w2 / L3],
-      Math.acos(a_ * x_ + b_ * y_ + c_ * z_)
-    );
+    return new Quaternion(
+      L + a * x + b * y + c * z,
+      b * z - c * y,
+      c * x - a * z,
+      a * y - b * x
+    ).normalize();
   };
 
   /**
