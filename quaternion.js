@@ -912,13 +912,16 @@
     var y = v[1];
     var z = v[2];
 
-    var L = Math.sqrt((a * a + b * b + c * c) * (x * x + y * y + z * z));
+    var dot = a * x + b * y + c * z;
+    var w1 = b * z - c * y;
+    var w2 = c * x - a * z;
+    var w3 = a * y - b * x;
 
     return new Quaternion(
-      L + a * x + b * y + c * z,
-      b * z - c * y,
-      c * x - a * z,
-      a * y - b * x
+      dot + Math.hypot(dot, w1, w2, w3),
+      w1,
+      w2,
+      w3
     ).normalize();
   };
 

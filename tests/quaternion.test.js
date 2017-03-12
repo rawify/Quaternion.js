@@ -479,8 +479,8 @@ describe("Quaternions", function() {
 
   it('should rotate one vector onto the other', function() {
 
-    var u = [1, 2, 3];
-    var v = [9, 8, 7];
+    var u = [Math.random() * 100, Math.random() * 100, Math.random() * 100];
+    var v = [Math.random() * 100, Math.random() * 100, Math.random() * 100];
 
     var q = Quaternion.fromBetweenVectors(u, v);
     var vPrime = q.rotateVector(u);
