@@ -2,7 +2,6 @@ var assert = require("assert");
 
 var Quaternion = require("../quaternion");
 
-
 assert.q = function(a, b) {
   var e = 1e-9;
   if (Math.abs(a.w - b.w) < e &&
@@ -63,23 +62,23 @@ describe("Quaternions", function() {
     assert.equal("1", Quaternion(2, 0, 0, 0).add(-1, 0, 0, 0).toString());
     assert.equal("-1 + k", Quaternion(0, 0, 0, 1).add(-1, 0, 0, 0).toString());
 
-    assert.deepEqual(Quaternion(1).add("i"), Quaternion(1, 1, 0, 0));
-    assert.deepEqual(Quaternion(1, 2, 3, 4).add(Quaternion(5, 6, 7, 8)), Quaternion(6, 8, 10, 12));
-    assert.deepEqual(Quaternion(-1, 2, 3, 4).add(Quaternion(5, 6, 7, 8)), Quaternion(4, 8, 10, 12));
-    assert.deepEqual(Quaternion(1, -2, 3, 4).add(Quaternion(5, 6, 7, 8)), Quaternion(6, 4, 10, 12));
-    assert.deepEqual(Quaternion(1, 2, -3, 4).add(Quaternion(5, 6, 7, 8)), Quaternion(6, 8, 4, 12));
-    assert.deepEqual(Quaternion(1, 2, 3, -4).add(Quaternion(5, 6, 7, 8)), Quaternion(6, 8, 10, 4));
+    assert.q(Quaternion(1).add("i"), Quaternion(1, 1, 0, 0));
+    assert.q(Quaternion(1, 2, 3, 4).add(Quaternion(5, 6, 7, 8)), Quaternion(6, 8, 10, 12));
+    assert.q(Quaternion(-1, 2, 3, 4).add(Quaternion(5, 6, 7, 8)), Quaternion(4, 8, 10, 12));
+    assert.q(Quaternion(1, -2, 3, 4).add(Quaternion(5, 6, 7, 8)), Quaternion(6, 4, 10, 12));
+    assert.q(Quaternion(1, 2, -3, 4).add(Quaternion(5, 6, 7, 8)), Quaternion(6, 8, 4, 12));
+    assert.q(Quaternion(1, 2, 3, -4).add(Quaternion(5, 6, 7, 8)), Quaternion(6, 8, 10, 4));
 
-    assert.deepEqual(Quaternion(0, 0, 0, 0).add(Quaternion(0, 0, 0, 0)), Quaternion(0, 0, 0, 0));
-    assert.deepEqual(Quaternion(1, 0, 0, 0).add(Quaternion(-1, 0, 0, 0)), Quaternion(0, 0, 0, 0));
-    assert.deepEqual(Quaternion(0, 1, 0, 0).add(Quaternion(0, -1, 0, 0)), Quaternion(0, 0, 0, 0));
-    assert.deepEqual(Quaternion(0, 0, 1, 0).add(Quaternion(0, 0, -1, 0)), Quaternion(0, 0, 0, 0));
-    assert.deepEqual(Quaternion(0, 0, 0, 1).add(Quaternion(0, 0, 0, -1)), Quaternion(0, 0, 0, 0));
+    assert.q(Quaternion(0, 0, 0, 0).add(Quaternion(0, 0, 0, 0)), Quaternion(0, 0, 0, 0));
+    assert.q(Quaternion(1, 0, 0, 0).add(Quaternion(-1, 0, 0, 0)), Quaternion(0, 0, 0, 0));
+    assert.q(Quaternion(0, 1, 0, 0).add(Quaternion(0, -1, 0, 0)), Quaternion(0, 0, 0, 0));
+    assert.q(Quaternion(0, 0, 1, 0).add(Quaternion(0, 0, -1, 0)), Quaternion(0, 0, 0, 0));
+    assert.q(Quaternion(0, 0, 0, 1).add(Quaternion(0, 0, 0, -1)), Quaternion(0, 0, 0, 0));
 
-    assert.deepEqual(Quaternion(1, 0, 0, 0).add(Quaternion(0, 0, 0, 0)), Quaternion(1, 0, 0, 0));
-    assert.deepEqual(Quaternion(0, 1, 0, 0).add(Quaternion(0, 0, 0, 0)), Quaternion(0, 1, 0, 0));
-    assert.deepEqual(Quaternion(0, 0, 1, 0).add(Quaternion(0, 0, 0, 0)), Quaternion(0, 0, 1, 0));
-    assert.deepEqual(Quaternion(0, 0, 0, 1).add(Quaternion(0, 0, 0, 0)), Quaternion(0, 0, 0, 1));
+    assert.q(Quaternion(1, 0, 0, 0).add(Quaternion(0, 0, 0, 0)), Quaternion(1, 0, 0, 0));
+    assert.q(Quaternion(0, 1, 0, 0).add(Quaternion(0, 0, 0, 0)), Quaternion(0, 1, 0, 0));
+    assert.q(Quaternion(0, 0, 1, 0).add(Quaternion(0, 0, 0, 0)), Quaternion(0, 0, 1, 0));
+    assert.q(Quaternion(0, 0, 0, 1).add(Quaternion(0, 0, 0, 0)), Quaternion(0, 0, 0, 1));
   });
 
   it("should subtract two quats", function() {
@@ -91,10 +90,10 @@ describe("Quaternions", function() {
     assert.equal("3", Quaternion(2, 0, 0, 0).sub(-1, 0, 0, 0).toString());
     assert.equal("1 + k", Quaternion(0, 0, 0, 1).sub(-1, 0, 0, 0).toString());
 
-    assert.deepEqual(Quaternion(0).sub(Quaternion(0)), Quaternion(0));
-    assert.deepEqual(Quaternion(0).sub(Quaternion(1, 2, 3, 4)), Quaternion(-1, -2, -3, -4));
-    assert.deepEqual(Quaternion(0).sub(Quaternion(-1, -2, -3, -4)), Quaternion(1, 2, 3, 4));
-    assert.deepEqual(Quaternion(10, 9, 8, 7).sub(Quaternion(1, 2, 3, 4)), Quaternion(9, 7, 5, 3));
+    assert.q(Quaternion(0).sub(Quaternion(0)), Quaternion(0));
+    assert.q(Quaternion(0).sub(Quaternion(1, 2, 3, 4)), Quaternion(-1, -2, -3, -4));
+    assert.q(Quaternion(0).sub(Quaternion(-1, -2, -3, -4)), Quaternion(1, 2, 3, 4));
+    assert.q(Quaternion(10, 9, 8, 7).sub(Quaternion(1, 2, 3, 4)), Quaternion(9, 7, 5, 3));
   });
 
   it("should calculate the norm of a quat", function() {
@@ -140,7 +139,7 @@ describe("Quaternions", function() {
     var l = p.norm();
     var r = 1 / (l * l);
 
-    assert.deepEqual(p.inverse(), p_.scale(r));
+    assert.q(p.inverse(), p_.scale(r));
   });
 
   it("should calculate the conjugate of a quat", function() {
@@ -205,10 +204,10 @@ describe("Quaternions", function() {
     var k2 = Quaternion("k").mul("k");
     var ijk = Quaternion("i").mul("j").mul("k");
 
-    assert.deepEqual(i2, j2);
-    assert.deepEqual(j2, k2);
-    assert.deepEqual(k2, ijk);
-    assert.deepEqual(ijk, Quaternion([-1, 0, 0, 0]));
+    assert.q(i2, j2);
+    assert.q(j2, k2);
+    assert.q(k2, ijk);
+    assert.q(ijk, Quaternion([-1, 0, 0, 0]));
 
     var q = Quaternion(1, 0, 0, 0);
     var qI = Quaternion(0, 1, 0, 0);
@@ -231,10 +230,10 @@ describe("Quaternions", function() {
   });
 
   it('should add a number to a Quaternion', function() {
-    assert.deepEqual(Quaternion(1, 2, 3, 4).add(5), Quaternion(6, 2, 3, 4));
-    assert.deepEqual(Quaternion(1, 2, 3, 4).add(-5), Quaternion(-4, 2, 3, 4));
-    assert.deepEqual(Quaternion(1, 2, 3, 4).add(0), Quaternion(1, 2, 3, 4));
-    assert.deepEqual(Quaternion(0, 0, 0, 0).add(5), Quaternion(5, 0, 0, 0));
+    assert.q(Quaternion(1, 2, 3, 4).add(5), Quaternion(6, 2, 3, 4));
+    assert.q(Quaternion(1, 2, 3, 4).add(-5), Quaternion(-4, 2, 3, 4));
+    assert.q(Quaternion(1, 2, 3, 4).add(0), Quaternion(1, 2, 3, 4));
+    assert.q(Quaternion(0, 0, 0, 0).add(5), Quaternion(5, 0, 0, 0));
   });
 
   it("should return the real and imaginary part", function() {
@@ -249,7 +248,7 @@ describe("Quaternions", function() {
 
     var q = Quaternion(9, 8, 7, 6).normalize();
 
-    assert.deepEqual(q.inverse(), q.conjugate());
+    assert.q(q.inverse(), q.conjugate());
   });
 
   it("should normalize quaternion", function() {
@@ -279,7 +278,7 @@ describe("Quaternions", function() {
   it("should calculate the dot product", function() {
 
     assert.equal(Quaternion(9, 8, 7, 6).dot(1, 2, 3, 4).toString(), '70');
-    assert.deepEqual(Quaternion(9, 8, 7, 6).normSq(), Quaternion(9, 8, 7, 6).dot(9, 8, 7, 6));
+    assert.q(Quaternion(9, 8, 7, 6).normSq(), Quaternion(9, 8, 7, 6).dot(9, 8, 7, 6));
   });
 
   it('should pass trivial cases', function() {
@@ -331,55 +330,55 @@ describe("Quaternions", function() {
     assert.equal(Quaternion(5, 6).mul(6, 7).toString(), '-12 + 71i');
     assert.equal(Quaternion(1, 1, 1, 1).mul(2, 2, 2, 2).toString(), '-4 + 4i + 4j + 4k');
 
-    assert.deepEqual(Quaternion(1, 2, 3, 4).mul(5, 6, 7, 8), Quaternion(-60, 12, 30, 24));
-    assert.deepEqual(Quaternion(3, 2, 5, 4).mul(4, 5, 3, 1), Quaternion(-17, 16, 47, 0));
-    assert.deepEqual(Quaternion().mul(Quaternion(1, 2, 3, 4)), Quaternion(1, 2, 3, 4));
-    assert.deepEqual(Quaternion().mul(Quaternion()), Quaternion());
+    assert.q(Quaternion(1, 2, 3, 4).mul(5, 6, 7, 8), Quaternion(-60, 12, 30, 24));
+    assert.q(Quaternion(3, 2, 5, 4).mul(4, 5, 3, 1), Quaternion(-17, 16, 47, 0));
+    assert.q(Quaternion().mul(Quaternion(1, 2, 3, 4)), Quaternion(1, 2, 3, 4));
+    assert.q(Quaternion().mul(Quaternion()), Quaternion());
 
-    assert.deepEqual(Quaternion(1, 0, 0, 0).mul(Quaternion(1, 0, 0, 0)), Quaternion(1, 0, 0, 0));
-    assert.deepEqual(Quaternion(0, 1, 0, 0).mul(Quaternion(1, 0, 0, 0)), Quaternion(0, 1, 0, 0));
-    assert.deepEqual(Quaternion(0, 0, 1, 0).mul(Quaternion(1, 0, 0, 0)), Quaternion(0, 0, 1, 0));
-    assert.deepEqual(Quaternion(0, 0, 0, 1).mul(Quaternion(1, 0, 0, 0)), Quaternion(0, 0, 0, 1));
+    assert.q(Quaternion(1, 0, 0, 0).mul(Quaternion(1, 0, 0, 0)), Quaternion(1, 0, 0, 0));
+    assert.q(Quaternion(0, 1, 0, 0).mul(Quaternion(1, 0, 0, 0)), Quaternion(0, 1, 0, 0));
+    assert.q(Quaternion(0, 0, 1, 0).mul(Quaternion(1, 0, 0, 0)), Quaternion(0, 0, 1, 0));
+    assert.q(Quaternion(0, 0, 0, 1).mul(Quaternion(1, 0, 0, 0)), Quaternion(0, 0, 0, 1));
 
-    assert.deepEqual(Quaternion(1, 0, 0, 0).mul(Quaternion(0, 1, 0, 0)), Quaternion(0, 1, 0, 0));
-    assert.deepEqual(Quaternion(0, 1, 0, 0).mul(Quaternion(0, 1, 0, 0)), Quaternion(-1, 0, 0, 0));
-    assert.deepEqual(Quaternion(0, 0, 1, 0).mul(Quaternion(0, 1, 0, 0)), Quaternion(0, 0, 0, -1));
-    assert.deepEqual(Quaternion(0, 0, 0, 1).mul(Quaternion(0, 1, 0, 0)), Quaternion(0, 0, 1, 0));
+    assert.q(Quaternion(1, 0, 0, 0).mul(Quaternion(0, 1, 0, 0)), Quaternion(0, 1, 0, 0));
+    assert.q(Quaternion(0, 1, 0, 0).mul(Quaternion(0, 1, 0, 0)), Quaternion(-1, 0, 0, 0));
+    assert.q(Quaternion(0, 0, 1, 0).mul(Quaternion(0, 1, 0, 0)), Quaternion(0, 0, 0, -1));
+    assert.q(Quaternion(0, 0, 0, 1).mul(Quaternion(0, 1, 0, 0)), Quaternion(0, 0, 1, 0));
 
-    assert.deepEqual(Quaternion(1, 0, 0, 0).mul(Quaternion(0, 0, 1, 0)), Quaternion(0, 0, 1, 0));
-    assert.deepEqual(Quaternion(0, 1, 0, 0).mul(Quaternion(0, 0, 1, 0)), Quaternion(0, 0, 0, 1));
-    assert.deepEqual(Quaternion(0, 0, 1, 0).mul(Quaternion(0, 0, 1, 0)), Quaternion(-1, 0, 0, 0));
-    assert.deepEqual(Quaternion(0, 0, 0, 1).mul(Quaternion(0, 0, 1, 0)), Quaternion(0, -1, 0, 0));
+    assert.q(Quaternion(1, 0, 0, 0).mul(Quaternion(0, 0, 1, 0)), Quaternion(0, 0, 1, 0));
+    assert.q(Quaternion(0, 1, 0, 0).mul(Quaternion(0, 0, 1, 0)), Quaternion(0, 0, 0, 1));
+    assert.q(Quaternion(0, 0, 1, 0).mul(Quaternion(0, 0, 1, 0)), Quaternion(-1, 0, 0, 0));
+    assert.q(Quaternion(0, 0, 0, 1).mul(Quaternion(0, 0, 1, 0)), Quaternion(0, -1, 0, 0));
 
-    assert.deepEqual(Quaternion(1, 0, 0, 0).mul(Quaternion(0, 0, 0, 1)), Quaternion(0, 0, 0, 1));
-    assert.deepEqual(Quaternion(0, 1, 0, 0).mul(Quaternion(0, 0, 0, 1)), Quaternion(0, 0, -1, 0));
-    assert.deepEqual(Quaternion(0, 0, 1, 0).mul(Quaternion(0, 0, 0, 1)), Quaternion(0, 1, 0, 0));
-    assert.deepEqual(Quaternion(0, 0, 0, 1).mul(Quaternion(0, 0, 0, 1)), Quaternion(-1, 0, 0, 0));
+    assert.q(Quaternion(1, 0, 0, 0).mul(Quaternion(0, 0, 0, 1)), Quaternion(0, 0, 0, 1));
+    assert.q(Quaternion(0, 1, 0, 0).mul(Quaternion(0, 0, 0, 1)), Quaternion(0, 0, -1, 0));
+    assert.q(Quaternion(0, 0, 1, 0).mul(Quaternion(0, 0, 0, 1)), Quaternion(0, 1, 0, 0));
+    assert.q(Quaternion(0, 0, 0, 1).mul(Quaternion(0, 0, 0, 1)), Quaternion(-1, 0, 0, 0));
 
-    assert.deepEqual(Quaternion(1, 0, 0, 0).mul(Quaternion(-1, 0, 0, 0)), Quaternion(-1, 0, 0, 0));
-    assert.deepEqual(Quaternion(0, 1, 0, 0).mul(Quaternion(-1, 0, 0, 0)), Quaternion(0, -1, 0, 0));
-    assert.deepEqual(Quaternion(0, 0, 1, 0).mul(Quaternion(-1, 0, 0, 0)), Quaternion(0, 0, -1, 0));
-    assert.deepEqual(Quaternion(0, 0, 0, 1).mul(Quaternion(-1, 0, 0, 0)), Quaternion(0, 0, 0, -1));
+    assert.q(Quaternion(1, 0, 0, 0).mul(Quaternion(-1, 0, 0, 0)), Quaternion(-1, 0, 0, 0));
+    assert.q(Quaternion(0, 1, 0, 0).mul(Quaternion(-1, 0, 0, 0)), Quaternion(0, -1, 0, 0));
+    assert.q(Quaternion(0, 0, 1, 0).mul(Quaternion(-1, 0, 0, 0)), Quaternion(0, 0, -1, 0));
+    assert.q(Quaternion(0, 0, 0, 1).mul(Quaternion(-1, 0, 0, 0)), Quaternion(0, 0, 0, -1));
 
-    assert.deepEqual(Quaternion(1, 0, 0, 0).mul(Quaternion(0, -1, 0, 0)), Quaternion(0, -1, 0, 0));
-    assert.deepEqual(Quaternion(0, 1, 0, 0).mul(Quaternion(0, -1, 0, 0)), Quaternion(1, 0, 0, 0));
-    assert.deepEqual(Quaternion(0, 0, 1, 0).mul(Quaternion(0, -1, 0, 0)), Quaternion(0, 0, 0, 1));
-    assert.deepEqual(Quaternion(0, 0, 0, 1).mul(Quaternion(0, -1, 0, 0)), Quaternion(0, 0, -1, 0));
+    assert.q(Quaternion(1, 0, 0, 0).mul(Quaternion(0, -1, 0, 0)), Quaternion(0, -1, 0, 0));
+    assert.q(Quaternion(0, 1, 0, 0).mul(Quaternion(0, -1, 0, 0)), Quaternion(1, 0, 0, 0));
+    assert.q(Quaternion(0, 0, 1, 0).mul(Quaternion(0, -1, 0, 0)), Quaternion(0, 0, 0, 1));
+    assert.q(Quaternion(0, 0, 0, 1).mul(Quaternion(0, -1, 0, 0)), Quaternion(0, 0, -1, 0));
 
-    assert.deepEqual(Quaternion(1, 0, 0, 0).mul(Quaternion(0, 0, -1, 0)), Quaternion(0, 0, -1, 0));
-    assert.deepEqual(Quaternion(0, 1, 0, 0).mul(Quaternion(0, 0, -1, 0)), Quaternion(0, 0, 0, -1));
-    assert.deepEqual(Quaternion(0, 0, 1, 0).mul(Quaternion(0, 0, -1, 0)), Quaternion(1, 0, 0, 0));
-    assert.deepEqual(Quaternion(0, 0, 0, 1).mul(Quaternion(0, 0, -1, 0)), Quaternion(0, 1, 0, 0));
+    assert.q(Quaternion(1, 0, 0, 0).mul(Quaternion(0, 0, -1, 0)), Quaternion(0, 0, -1, 0));
+    assert.q(Quaternion(0, 1, 0, 0).mul(Quaternion(0, 0, -1, 0)), Quaternion(0, 0, 0, -1));
+    assert.q(Quaternion(0, 0, 1, 0).mul(Quaternion(0, 0, -1, 0)), Quaternion(1, 0, 0, 0));
+    assert.q(Quaternion(0, 0, 0, 1).mul(Quaternion(0, 0, -1, 0)), Quaternion(0, 1, 0, 0));
 
-    assert.deepEqual(Quaternion(1, 0, 0, 0).mul(Quaternion(0, 0, 0, -1)), Quaternion(0, 0, 0, -1));
-    assert.deepEqual(Quaternion(0, 1, 0, 0).mul(Quaternion(0, 0, 0, -1)), Quaternion(0, 0, 1, 0));
-    assert.deepEqual(Quaternion(0, 0, 1, 0).mul(Quaternion(0, 0, 0, -1)), Quaternion(0, -1, 0, 0));
-    assert.deepEqual(Quaternion(0, 0, 0, 1).mul(Quaternion(0, 0, 0, -1)), Quaternion(1, 0, 0, 0));
+    assert.q(Quaternion(1, 0, 0, 0).mul(Quaternion(0, 0, 0, -1)), Quaternion(0, 0, 0, -1));
+    assert.q(Quaternion(0, 1, 0, 0).mul(Quaternion(0, 0, 0, -1)), Quaternion(0, 0, 1, 0));
+    assert.q(Quaternion(0, 0, 1, 0).mul(Quaternion(0, 0, 0, -1)), Quaternion(0, -1, 0, 0));
+    assert.q(Quaternion(0, 0, 0, 1).mul(Quaternion(0, 0, 0, -1)), Quaternion(1, 0, 0, 0));
   });
 
   it("should scale a quaternion", function() {
 
-    assert.deepEqual(Quaternion([3, 2, 5, 4]).scale(3).toVector(), [9, 6, 15, 12]);
+    assert.q(Quaternion([3, 2, 5, 4]).scale(3).toVector(), [9, 6, 15, 12]);
   });
 
   it("should calculate the quotient", function() {
@@ -430,7 +429,7 @@ describe("Quaternions", function() {
     var a = q.mul(v).mul(q.conjugate()).toVector();
     var b = q.rotateVector(v);
 
-    assert.deepEqual(a.slice(1), b);
+    assert.q(a.slice(1), b);
   });
 
   it("should rotate a vector correctly", function() {
@@ -441,7 +440,7 @@ describe("Quaternions", function() {
 
     var p = Quaternion.fromAxisAngle(axis, theta).rotateVector(vector);
 
-    assert.deepEqual(p, [5.0, 3.0000000000000004, 4.0]);
+    assert.q(p, [5.0, 3.0000000000000004, 4.0]);
   });
 
   it("should rotate a vector correctly", function() {
@@ -450,7 +449,7 @@ describe("Quaternions", function() {
     var q = Quaternion.fromAxisAngle([0.0, 1.0, 0.0], Math.PI);
     var p = q.rotateVector(v);
 
-    assert.deepEqual(p, [-0.9999999999999998, 1, -1]);
+    assert.q(p, [-0.9999999999999998, 1, -1]);
   });
 
   it("should rotate a vector correctly based on Euler angles", function() {
@@ -459,7 +458,7 @@ describe("Quaternions", function() {
     var q = Quaternion.fromEuler(0.0, Math.PI, 0.0);
     var p = q.rotateVector(v);
 
-    assert.deepEqual(p, [1, -1, -0.9999999999999998]);
+    assert.q(p, [1, -1, -0.9999999999999998]);
   });
 
   it("should exp and log a quaternion", function() {
@@ -474,8 +473,8 @@ describe("Quaternions", function() {
     var n = Math.random() * 10;
     var q = Quaternion(n);
 
-    assert.deepEqual(q.exp().toVector(), [Math.exp(n), 0, 0, 0]);
-    assert.deepEqual(q.log().toVector(), [Math.log(n), 0, 0, 0]);
+    assert.q(q.exp().toVector(), [Math.exp(n), 0, 0, 0]);
+    assert.q(q.log().toVector(), [Math.log(n), 0, 0, 0]);
   });
 
   it("should work with scalar powers", function() {
