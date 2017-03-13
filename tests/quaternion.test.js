@@ -147,25 +147,55 @@ describe("Quaternions", function() {
 
     assert.equal('1 - 2i - 3j - 4k', Quaternion(1, 2, 3, 4).conjugate().toString());
 
-    assert.deepEqual(Quaternion(1, 2, 3, 4).conjugate(), Quaternion(1, -2, -3, -4));
-    assert.deepEqual(Quaternion(-1, -2, -3, -4).conjugate(), Quaternion(-1, 2, 3, 4));
+    assert.q(Quaternion(1, 2, 3, 4).conjugate(), Quaternion(1, -2, -3, -4));
+    assert.q(Quaternion(-1, -2, -3, -4).conjugate(), Quaternion(-1, 2, 3, 4));
 
-    assert.deepEqual(Quaternion(0, 0, 0, 0).conjugate(), Quaternion(0, 0, 0, 0));
-    assert.deepEqual(Quaternion(1, 0, 0, 0).conjugate(), Quaternion(1, 0, 0, 0));
-    assert.deepEqual(Quaternion(0, 1, 0, 0).conjugate(), Quaternion(0, -1, 0, 0));
-    assert.deepEqual(Quaternion(0, 0, 1, 0).conjugate(), Quaternion(0, 0, -1, 0));
-    assert.deepEqual(Quaternion(0, 0, 0, 1).conjugate(), Quaternion(0, 0, 0, -1));
+    assert.q(Quaternion(0, 0, 0, 0).conjugate(), Quaternion(0, 0, 0, 0));
+    assert.q(Quaternion(1, 0, 0, 0).conjugate(), Quaternion(1, 0, 0, 0));
+    assert.q(Quaternion(0, 1, 0, 0).conjugate(), Quaternion(0, -1, 0, 0));
+    assert.q(Quaternion(0, 0, 1, 0).conjugate(), Quaternion(0, 0, -1, 0));
+    assert.q(Quaternion(0, 0, 0, 1).conjugate(), Quaternion(0, 0, 0, -1));
 
-    assert.deepEqual(Quaternion(-1, 0, 0, 0).conjugate(), Quaternion(-1, 0, 0, 0));
-    assert.deepEqual(Quaternion(0, -1, 0, 0).conjugate(), Quaternion(0, 1, 0, 0));
-    assert.deepEqual(Quaternion(0, 0, -1, 0).conjugate(), Quaternion(0, 0, 1, 0));
-    assert.deepEqual(Quaternion(0, 0, 0, -1).conjugate(), Quaternion(0, 0, 0, 1));
+    assert.q(Quaternion(-1, 0, 0, 0).conjugate(), Quaternion(-1, 0, 0, 0));
+    assert.q(Quaternion(0, -1, 0, 0).conjugate(), Quaternion(0, 1, 0, 0));
+    assert.q(Quaternion(0, 0, -1, 0).conjugate(), Quaternion(0, 0, 1, 0));
+    assert.q(Quaternion(0, 0, 0, -1).conjugate(), Quaternion(0, 0, 0, 1));
 
-    assert.deepEqual(Quaternion(1).conjugate(), Quaternion([1, -0, -0, -0]));
-    assert.deepEqual(Quaternion("i").conjugate(), Quaternion([0, -1, -0, -0]));
-    assert.deepEqual(Quaternion("j").conjugate(), Quaternion([0, -0, -1, -0]));
-    assert.deepEqual(Quaternion("k").conjugate(), Quaternion([0, -0, -0, -1]));
-    assert.deepEqual(Quaternion([3, 2, 5, 4]).conjugate(), Quaternion([3, -2, -5, -4]));
+    assert.q(Quaternion(1).conjugate(), Quaternion([1, -0, -0, -0]));
+    assert.q(Quaternion("i").conjugate(), Quaternion([0, -1, -0, -0]));
+    assert.q(Quaternion("j").conjugate(), Quaternion([0, -0, -1, -0]));
+    assert.q(Quaternion("k").conjugate(), Quaternion([0, -0, -0, -1]));
+    assert.q(Quaternion([3, 2, 5, 4]).conjugate(), Quaternion([3, -2, -5, -4]));
+  });
+
+  it('should pass conjugate properties', function() {
+
+    var p1 = new Quaternion(8, 1, 2, 3);
+    var p2 = new Quaternion(6, 9, 8, 7);
+
+    // Test multiplicative property
+    assert.q(p1.mul(p2).conjugate(), p2.conjugate().mul(p1.conjugate()));
+
+    var p = new Quaternion(Math.random(), Math.random(), Math.random(), Math.random()).normalize();
+
+    // Test unit quaternion property as inverse
+    assert.q(p.conjugate().mul(p), p.mul(p.conjugate()));
+
+    var q = Quaternion(1);
+
+    // Test one element
+    assert.q(q, q.conjugate());
+
+    var q = Quaternion(0);
+
+    // Test zero element
+    assert.q(q, q.conjugate());
+
+    // Test pure quats
+    var q1 = new Quaternion(0, 1, 2, 3);
+    var q2 = new Quaternion(0, 9, 8, 7);
+
+    assert.q(q2.mul(q1), q1.mul(q2).conjugate());
   });
 
   it('should pass hamilton rules', function() {
