@@ -8,15 +8,6 @@
 
   'use strict';
 
-  Math.hypot = Math.hypot || function() {
-
-      var sum = 0;
-      for (var i = 0; i < arguments.length; i++) {
-        sum += arguments[i] * arguments[i];
-      }
-      return Math.sqrt(sum);
-    };
-
   /**
    * Calculates log(sqrt(a^2+b^2)) in a way to avoid overflows
    *
@@ -122,9 +113,9 @@
 
       // Reset the current state
       dest['w'] =
-        dest['x'] =
-          dest['y'] =
-            dest['z'] = 0;
+      dest['x'] =
+      dest['y'] =
+      dest['z'] = 0;
 
       for (var i = 0; i < tokens.length; i++) {
 
@@ -319,7 +310,7 @@
       var y = this['y'];
       var z = this['z'];
 
-      return Math.hypot(w, x, y, z);
+      return Math.sqrt(w * w + x * x + y * y + z * z);
     },
     /**
      * Calculates the squared length/modulus/magnitude or the norm of a quaternion
@@ -359,10 +350,10 @@
       var y = this['y'];
       var z = this['z'];
 
-      var norm = Math.hypot(w, x, y, z);
+      var norm = Math.sqrt(w * w + x * x + y * y + z * z);
 
-      if (norm === 0) {
-        return Quaternion['ZERO']; // TODO: Is the result zero or one when the norm is zero? -> limes
+      if (norm < Quaternion['EPSILON']) {
+        return Quaternion['ZERO'];
       }
 
       norm = 1 / norm;
@@ -538,7 +529,7 @@
       var y = this['y'];
       var z = this['z'];
 
-      var vNorm = Math.hypot(x, y, z);
+      var vNorm = Math.sqrt(x * x + y * y + z * z);
       var wExp = Math.exp(w);
       var scale = wExp / vNorm * Math.sin(vNorm);
 
@@ -571,13 +562,13 @@
           Math.atan2(x, w), 0, 0);
       }
 
-      var qNorm = Math.hypot(x, y, z, w);
-      var vNorm = Math.hypot(x, y, z);
+      var qNorm2 = x * x + y * y + z * z + w * w;
+      var vNorm = Math.sqrt(x * x + y * y + z * z);
 
       var scale = Math.atan2(vNorm, w) / vNorm;
 
       return new Quaternion(
-        Math.log(qNorm),
+        Math.log(qNorm2) * 0.5,
         x * scale,
         y * scale,
         z * scale);
@@ -890,7 +881,7 @@
     var sin = Math.sin(halfAngle);
     var cos = Math.cos(halfAngle);
 
-    var sin_norm = sin / Math.hypot(a, b, c);
+    var sin_norm = sin / Math.sqrt(a * a + b * b + c * c);
 
     return new Quaternion(cos, a * sin_norm, b * sin_norm, c * sin_norm);
   };
@@ -917,7 +908,7 @@
     var w3 = a * y - b * x;
 
     return new Quaternion(
-      dot + Math.hypot(dot, w1, w2, w3),
+      dot + Math.sqrt(dot * dot + w1 * w1 + w2 * w2 + w3 * w3),
       w1,
       w2,
       w3
