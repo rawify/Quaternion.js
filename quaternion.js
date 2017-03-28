@@ -574,7 +574,6 @@
       var qNorm = Math.hypot(x, y, z, w);
       var vNorm = Math.hypot(x, y, z);
 
-      //var scale = Math.acos(w / qNorm) / vNorm;
       var scale = Math.atan2(vNorm, w) / vNorm;
 
       return new Quaternion(
