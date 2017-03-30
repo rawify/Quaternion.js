@@ -86,7 +86,7 @@
         return;
       }
 
-      // Check for vector
+      // Check for augmented vector
       if (w.length === 3) {
         dest['w'] = 0;
         dest['x'] = w[0];
@@ -722,20 +722,16 @@
       return this['w'];
     },
     /**
-     * Returns the imaginary part of the quaternion as a new quaternion with real part zero
+     * Returns the imaginary part of the quaternion as a 3D vector / array
      *
      * @returns {Quaternion}
      */
     'imag': function() {
 
-      return new Quaternion(
-        0,
-        this['x'],
-        this['y'],
-        this['z']);
+      return [this['x'], this['y'], this['z']];
     },
     /**
-     * Gets the actual quaternion as an array
+     * Gets the actual quaternion as a 4D vector / array
      *
      * @returns {Array}
      */

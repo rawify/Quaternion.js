@@ -3,11 +3,28 @@ var assert = require("assert");
 var Quaternion = require("../quaternion");
 
 assert.q = function(a, b) {
-  var e = 1e-9;
+
+  if ('w' in a && 'w' in b) {
+
+  } else {
+    assert(false);
+  }
+
+  var e = 1e-12;
   if (Math.abs(a.w - b.w) < e &&
     Math.abs(a.x - b.x) < e &&
     Math.abs(a.y - b.y) < e &&
     Math.abs(a.z - b.z) < e) {
+  } else {
+    assert.equal(a.toString(), b.toString());
+  }
+};
+
+assert.v = function(a, b) {
+  var e = 1e-12;
+  if (Math.abs(a[0] - b[0]) < e &&
+    Math.abs(a[1] - b[1]) < e &&
+    Math.abs(a[2] - b[2]) < e) {
   } else {
     assert.equal(a.toString(), b.toString());
   }
@@ -240,7 +257,7 @@ describe("Quaternions", function() {
 
     var q = new Quaternion(7, 2, 3, 4);
 
-    assert.equal(q.imag().toString(), '2i + 3j + 4k');
+    assert.equal(Quaternion(q.imag()).toString(), '2i + 3j + 4k');
     assert.equal(q.real(), 7);
   });
 
@@ -278,7 +295,7 @@ describe("Quaternions", function() {
   it("should calculate the dot product", function() {
 
     assert.equal(Quaternion(9, 8, 7, 6).dot(1, 2, 3, 4).toString(), '70');
-    assert.q(Quaternion(9, 8, 7, 6).normSq(), Quaternion(9, 8, 7, 6).dot(9, 8, 7, 6));
+    assert.equal(Quaternion(9, 8, 7, 6).normSq(), Quaternion(9, 8, 7, 6).dot(9, 8, 7, 6));
   });
 
   it('should pass trivial cases', function() {
@@ -378,7 +395,7 @@ describe("Quaternions", function() {
 
   it("should scale a quaternion", function() {
 
-    assert.q(Quaternion([3, 2, 5, 4]).scale(3).toVector(), [9, 6, 15, 12]);
+    assert.q(Quaternion([3, 2, 5, 4]).scale(3), Quaternion([9, 6, 15, 12]));
   });
 
   it("should calculate the quotient", function() {
@@ -408,9 +425,7 @@ describe("Quaternions", function() {
 
     var r = Quaternion.fromAxisAngle(axis, angle).rotateVector(v);
 
-    assert.approx(r[0], 1);
-    assert.approx(r[1], 1);
-    assert.approx(r[2], 1);
+    assert.v(r, [1,1,1]);
   });
 
   it("should generate a unit quaternion from euler angle", function() {
@@ -429,7 +444,7 @@ describe("Quaternions", function() {
     var a = q.mul(v).mul(q.conjugate()).toVector();
     var b = q.rotateVector(v);
 
-    assert.q(a.slice(1), b);
+    assert.v(a.slice(1), b);
   });
 
   it("should rotate a vector correctly", function() {
@@ -440,7 +455,7 @@ describe("Quaternions", function() {
 
     var p = Quaternion.fromAxisAngle(axis, theta).rotateVector(vector);
 
-    assert.q(p, [5.0, 3.0000000000000004, 4.0]);
+    assert.v(p, [5.0, 3.0, 4.0]);
   });
 
   it("should rotate a vector correctly", function() {
@@ -449,7 +464,7 @@ describe("Quaternions", function() {
     var q = Quaternion.fromAxisAngle([0.0, 1.0, 0.0], Math.PI);
     var p = q.rotateVector(v);
 
-    assert.q(p, [-0.9999999999999998, 1, -1]);
+    assert.v(p, [-1, 1, -1]);
   });
 
   it("should rotate a vector correctly based on Euler angles", function() {
@@ -458,7 +473,7 @@ describe("Quaternions", function() {
     var q = Quaternion.fromEuler(0.0, Math.PI, 0.0);
     var p = q.rotateVector(v);
 
-    assert.q(p, [1, -1, -0.9999999999999998]);
+    assert.v(p, [1, -1, -1]);
   });
 
   it("should exp and log a quaternion", function() {
@@ -473,8 +488,8 @@ describe("Quaternions", function() {
     var n = Math.random() * 10;
     var q = Quaternion(n);
 
-    assert.q(q.exp().toVector(), [Math.exp(n), 0, 0, 0]);
-    assert.q(q.log().toVector(), [Math.log(n), 0, 0, 0]);
+    assert.v(q.exp().toVector(), [Math.exp(n), 0, 0, 0]);
+    assert.v(q.log().toVector(), [Math.log(n), 0, 0, 0]);
   });
 
   it("should work with scalar powers", function() {
@@ -622,11 +637,22 @@ describe("Quaternions", function() {
     var vPrime = q.rotateVector(u);
 
     // Do they look in the same direction?
-    assert(CQ(Quaternion(v).normalize(), Quaternion(vPrime).normalize()));
+    assert.q(Quaternion(v).normalize(), Quaternion(vPrime).normalize());
 
     // Is the length of rotated equal to the original?
     assert.approx(Quaternion(u).norm(), Quaternion(vPrime).norm());
 
+  });
+
+  it('should rotate additive inverse to the same point', function() {
+
+    var q1 = Quaternion(Math.random(),Math.random(),Math.random(),Math.random()).normalize();
+    var q2 = Quaternion(Math.random(),Math.random(),Math.random(),Math.random()).normalize();
+
+    var v = [Math.random(),Math.random(),Math.random()];
+
+    assert.v(q1.neg().rotateVector(v), q1.rotateVector(v));
+    assert.v(q1.conjugate().neg().rotateVector(v), q1.conjugate().rotateVector(v));
   });
 
 });

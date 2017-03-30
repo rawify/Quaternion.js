@@ -172,7 +172,7 @@ Returns the real part of the quaternion
 
 Quaternion imag()
 ---
-Returns the imaginary part of the quaternion as a new quaternion with real part zero
+Returns the imaginary part of the quaternion as a 3D vector / array
 
 boolean equals(n)
 ---
@@ -192,7 +192,7 @@ Gets the Quaternion as a well formatted string
 
 Array toVector()
 ---
-Gets the actual quaternion as an array
+Gets the actual quaternion as a 4D vector / array
 
 Array toMatrix(2d=false)
 ---
