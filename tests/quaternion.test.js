@@ -10,7 +10,7 @@ assert.q = function(a, b) {
     assert(false);
   }
 
-  var e = 1e-12;
+  var e = 1e-11;
   if (Math.abs(a.w - b.w) < e &&
     Math.abs(a.x - b.x) < e &&
     Math.abs(a.y - b.y) < e &&
@@ -21,7 +21,7 @@ assert.q = function(a, b) {
 };
 
 assert.v = function(a, b) {
-  var e = 1e-12;
+  var e = 1e-11;
   if (Math.abs(a[0] - b[0]) < e &&
     Math.abs(a[1] - b[1]) < e &&
     Math.abs(a[2] - b[2]) < e) {
@@ -31,7 +31,7 @@ assert.v = function(a, b) {
 };
 
 assert.approx = function(is, should) {
-  if (Math.abs(is - should) > 1e-9)
+  if (Math.abs(is - should) > 1e-11)
     assert.equal(is, should);
 };
 
