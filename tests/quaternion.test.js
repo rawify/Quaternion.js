@@ -1,6 +1,7 @@
 var assert = require("assert");
 
 var Quaternion = require("../quaternion");
+var EPS = 1e-11;
 
 assert.q = function(a, b) {
 
@@ -10,7 +11,7 @@ assert.q = function(a, b) {
     assert(false);
   }
 
-  var e = 1e-11;
+  var e = EPS;
   if (Math.abs(a.w - b.w) < e &&
     Math.abs(a.x - b.x) < e &&
     Math.abs(a.y - b.y) < e &&
@@ -21,7 +22,7 @@ assert.q = function(a, b) {
 };
 
 assert.v = function(a, b) {
-  var e = 1e-11;
+  var e = EPS;
   if (Math.abs(a[0] - b[0]) < e &&
     Math.abs(a[1] - b[1]) < e &&
     Math.abs(a[2] - b[2]) < e) {
@@ -31,7 +32,7 @@ assert.v = function(a, b) {
 };
 
 assert.approx = function(is, should) {
-  if (Math.abs(is - should) > 1e-11)
+  if (Math.abs(is - should) > EPS)
     assert.equal(is, should);
 };
 
@@ -156,6 +157,7 @@ describe("Quaternions", function() {
     var l = p.norm();
     var r = 1 / (l * l);
 
+    assert.approx(l, p_.norm());
     assert.q(p.inverse(), p_.scale(r));
   });
 
@@ -311,7 +313,7 @@ describe("Quaternions", function() {
     assert.q(q1.conjugate().conjugate(), (q1));
     assert.approx(q1.normalize().norm(), 1);
     assert.q(q1.inverse(), (q1.conjugate().scale(1 / Math.pow(q1.norm(), 2))));
-    //assert.q(q1.div(q2), q1.mul(q2.inverse()));
+    assert.q(q1.div(q2), q1.mul(q2.inverse()));
     assert.approx(q1.scale(l).norm(), Math.abs(q1.norm() * l));
     assert.approx(q1.mul(q2).norm(), q1.norm() * q2.norm());
     assert.q((new Quaternion(l)).exp(), (new Quaternion(Math.exp(l))));
