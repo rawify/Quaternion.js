@@ -261,7 +261,7 @@ bower install quaternion
 or
 
 ```
-npm install --save quaternion
+npm install quaternion
 ```
 
 Using Quaternion.js with the browser
