@@ -158,6 +158,10 @@ Quaternion conjugate()
 ---
 Calculates the conjugate of a quaternion. If the quaternion is normalized, the conjugate is the inverse of the quaternion - but faster.
 
+Quaternion pow(n)
+---
+Calculates the power of a quaternion raised to the quaternion n
+
 Quaternion exp()
 ---
 Calculates the natural exponentiation of the quaternion
