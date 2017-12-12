@@ -80,7 +80,7 @@ Quaternion out of a 4 elements vector
 ```javascript
 new Quaternion([w, x, y, z])
 ```
-Quaternion out of a 3 elements vector
+Augmented Quaternion out of a 3 elements vector
 ```javascript
 new Quaternion([x, y, z])
 ```
