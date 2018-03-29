@@ -1,5 +1,5 @@
 /**
- * @license Quaternion.js v1.0.0 22/02/2016
+ * @license Quaternion.js v1.0.3 22/02/2016
  *
  * Copyright (c) 2016, Robert Eisele (robert@xarg.org)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -989,7 +989,10 @@
       return Quaternion;
     });
   } else if (typeof exports === 'object') {
+    Object.defineProperty(exports, "__esModule", {'value': true});
     module['exports'] = Quaternion;
+    exports['Angles'] = Quaternion;
+    exports['default'] = Quaternion;
   } else {
     root['Quaternion'] = Quaternion;
   }
