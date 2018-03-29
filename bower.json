@@ -1,7 +1,7 @@
 {
     "name": "quaternion",
     "main": "quaternion.js",
-    "version": "1.0.2",
+    "version": "1.0.4",
     "homepage": "https://github.com/infusion/Quaternion.js",
     "description": "A rotation library using quaternions",
     "keywords": [
