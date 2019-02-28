@@ -656,5 +656,15 @@ describe("Quaternions", function() {
     assert.v(q1.neg().rotateVector(v), q1.rotateVector(v));
     assert.v(q1.conjugate().neg().rotateVector(v), q1.conjugate().rotateVector(v));
   });
+  
+  it('should slerp around', function() {
+
+    var q1 = Quaternion(Math.random(),Math.random(),Math.random(),Math.random()).normalize();
+    var q2 = Quaternion(Math.random(),Math.random(),Math.random(),Math.random()).normalize();
+
+    assert.q(q1.slerp(q2)(0), q1);
+    assert.q(q1.slerp(q2)(1), q2);
+
+  });
 
 });

@@ -214,6 +214,10 @@ Array rotateVector(v)
 ---
 Rotates a 3 component vector, represented as an array by the current quaternion
 
+Quaternion slerp(q)(pct)
+---
+Returns a function to interpolate spherical between two quaternions. Called with a percentag, the function returns the interpolated Quaternion.
+
 Quaternion.fromAxisAngle(axis, angle)
 ---
 Sets the quaternion by a rotation given as axis and angle

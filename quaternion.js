@@ -1,5 +1,5 @@
 /**
- * @license Quaternion.js v1.0.5 22/02/2016
+ * @license Quaternion.js v1.1.0 22/02/2016
  *
  * Copyright (c) 2016, Robert Eisele (robert@xarg.org)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -113,9 +113,9 @@
 
       // Reset the current state
       dest['w'] =
-      dest['x'] =
-      dest['y'] =
-      dest['z'] = 0;
+              dest['x'] =
+              dest['y'] =
+              dest['z'] = 0;
 
       for (var i = 0; i < tokens.length; i++) {
 
@@ -175,8 +175,8 @@
     if (w === undefined && dest !== P) {
       dest['w'] = 1;
       dest['x'] =
-        dest['y'] =
-          dest['z'] = 0;
+              dest['y'] =
+              dest['z'] = 0;
     } else {
 
       dest['w'] = w || 0;
@@ -256,10 +256,10 @@
       // Q1 + Q2 := [w1, v1] + [w2, v2] = [w1 + w2, v1 + v2]
 
       return new Quaternion(
-        this['w'] + P['w'],
-        this['x'] + P['x'],
-        this['y'] + P['y'],
-        this['z'] + P['z']);
+              this['w'] + P['w'],
+              this['x'] + P['x'],
+              this['y'] + P['y'],
+              this['z'] + P['z']);
     },
     /**
      * Subtracts a quaternions Q2 from Q1
@@ -278,10 +278,10 @@
       //          = [w1, v1] - [w2, v2] = [w1 - w2, v1 - v2]
 
       return new Quaternion(
-        this['w'] - P['w'],
-        this['x'] - P['x'],
-        this['y'] - P['y'],
-        this['z'] - P['z']);
+              this['w'] - P['w'],
+              this['x'] - P['x'],
+              this['y'] - P['y'],
+              this['z'] - P['z']);
     },
     /**
      * Calculates the additive inverse, or simply it negates the quaternion
@@ -389,10 +389,10 @@
       var z2 = P['z'];
 
       return new Quaternion(
-        w1 * w2 - x1 * x2 - y1 * y2 - z1 * z2,
-        w1 * x2 + x1 * w2 + y1 * z2 - z1 * y2,
-        w1 * y2 + y1 * w2 + z1 * x2 - x1 * z2,
-        w1 * z2 + z1 * w2 + x1 * y2 - y1 * x2);
+              w1 * w2 - x1 * x2 - y1 * y2 - z1 * z2,
+              w1 * x2 + x1 * w2 + y1 * z2 - z1 * y2,
+              w1 * y2 + y1 * w2 + z1 * x2 - x1 * z2,
+              w1 * z2 + z1 * w2 + x1 * y2 - y1 * x2);
     },
     /**
      * Scales a quaternion by a scalar, faster than using multiplication
@@ -403,10 +403,10 @@
     'scale': function(s) {
 
       return new Quaternion(
-        this['w'] * s,
-        this['x'] * s,
-        this['y'] * s,
-        this['z'] * s);
+              this['w'] * s,
+              this['x'] * s,
+              this['y'] * s,
+              this['z'] * s);
     },
     /**
      * Calculates the dot product of two quaternions
@@ -491,10 +491,10 @@
       normSq = 1 / normSq;
 
       return new Quaternion(
-        (w1 * w2 + x1 * x2 + y1 * y2 + z1 * z2) * normSq,
-        (x1 * w2 - w1 * x2 - y1 * z2 + z1 * y2) * normSq,
-        (y1 * w2 - w1 * y2 - z1 * x2 + x1 * z2) * normSq,
-        (z1 * w2 - w1 * z2 - x1 * y2 + y1 * x2) * normSq);
+              (w1 * w2 + x1 * x2 + y1 * y2 + z1 * z2) * normSq,
+              (x1 * w2 - w1 * x2 - y1 * z2 + z1 * y2) * normSq,
+              (y1 * w2 - w1 * y2 - z1 * x2 + x1 * z2) * normSq,
+              (z1 * w2 - w1 * z2 - x1 * y2 + y1 * x2) * normSq);
     },
     /**
      * Calculates the conjugate of a quaternion
@@ -539,10 +539,10 @@
       }
 
       return new Quaternion(
-        wExp * Math.cos(vNorm),
-        x * scale,
-        y * scale,
-        z * scale);
+              wExp * Math.cos(vNorm),
+              x * scale,
+              y * scale,
+              z * scale);
     },
     /**
      * Calculates the natural logarithm of the quaternion
@@ -558,8 +558,8 @@
 
       if (y === 0 && z === 0) {
         return new Quaternion(
-          logHypot(w, x),
-          Math.atan2(x, w), 0, 0);
+                logHypot(w, x),
+                Math.atan2(x, w), 0, 0);
       }
 
       var qNorm2 = x * x + y * y + z * z + w * w;
@@ -568,10 +568,10 @@
       var scale = Math.atan2(vNorm, w) / vNorm;
 
       return new Quaternion(
-        Math.log(qNorm2) * 0.5,
-        x * scale,
-        y * scale,
-        z * scale);
+              Math.log(qNorm2) * 0.5,
+              x * scale,
+              y * scale,
+              z * scale);
     },
     /**
      * Calculates the power of a quaternion raised to a real number or another quaternion
@@ -634,8 +634,8 @@
           a = Math.exp(P['w'] * loh - P['x'] * arg);
           b = P['x'] * loh + P['w'] * arg;
           return new Quaternion(
-            a * Math.cos(b),
-            a * Math.sin(b), 0, 0);
+                  a * Math.cos(b),
+                  a * Math.sin(b), 0, 0);
         }
       }
 
@@ -660,9 +660,9 @@
 
       // maybe check for NaN's here?
       return Math.abs(P['w'] - this['w']) < eps
-        && Math.abs(P['x'] - this['x']) < eps
-        && Math.abs(P['y'] - this['y']) < eps
-        && Math.abs(P['z'] - this['z']) < eps;
+              && Math.abs(P['x'] - this['x']) < eps
+              && Math.abs(P['y'] - this['y']) < eps
+              && Math.abs(P['z'] - this['z']) < eps;
     },
     /**
      * Checks if all parts of a quaternion are finite
@@ -847,6 +847,62 @@
       var z4 = z3 * w1 - w3 * z1 - x3 * y1 + y3 * x1;
 
       return [x4, y4, z4];
+    },
+
+    'slerp': function(w, x, y, z) {
+
+      parse(P, w, x, y, z);
+
+      // slerp(Q1, Q2, t) := Q1(Q1^-1 Q2)^t
+
+      var w1 = this['w'];
+      var x1 = this['x'];
+      var y1 = this['y'];
+      var z1 = this['z'];
+
+      var w2 = P['w'];
+      var x2 = P['x'];
+      var y2 = P['y'];
+      var z2 = P['z'];
+
+      var cosTheta0 = w1 * w2 + x1 * x2 + y1 * y2 + z1 * z2;
+
+      if (cosTheta0 < 0) {
+        w1 = -w1;
+        x1 = -x1;
+        y1 = -y1;
+        z1 = -z1;
+        cosTheta0 = -cosTheta0;
+      }
+
+      if (cosTheta0 > 0.9995) { // DOT_THRESHOLD
+        return function(pct) {
+          return new Quaternion(
+                  w1 + pct * (w2 - w1),
+                  x1 + pct * (x2 - x1),
+                  y1 + pct * (y2 - y1),
+                  z1 + pct * (z2 - z1))['normalize']();
+        };
+      }
+
+      var Theta0 = Math.acos(cosTheta0);
+      var sinTheta0 = Math.sin(Theta0);
+
+      return function(pct) {
+
+        var Theta = Theta0 * pct;
+        var sinTheta = Math.sin(Theta);
+        var cosTheta = Math.cos(Theta);
+
+        var s0 = cosTheta - cosTheta0 * sinTheta / sinTheta0;
+        var s1 = sinTheta / sinTheta0;
+
+        return new Quaternion(
+                s0 * w1 + s1 * w2,
+                s0 * x1 + s1 * x2,
+                s0 * y1 + s1 * y2,
+                s0 * z1 + s1 * z2);
+      }
     }
   };
 
@@ -904,11 +960,11 @@
     var w3 = a * y - b * x;
 
     return new Quaternion(
-      dot + Math.sqrt(dot * dot + w1 * w1 + w2 * w2 + w3 * w3),
-      w1,
-      w2,
-      w3
-    ).normalize();
+            dot + Math.sqrt(dot * dot + w1 * w1 + w2 * w2 + w3 * w3),
+            w1,
+            w2,
+            w3
+            ).normalize();
   };
 
   /**
@@ -936,50 +992,50 @@
 
     if (order === undefined || order === 'ZXY') {
       return new Quaternion(
-        cX * cY * cZ - sX * sY * sZ,
-        sX * cY * cZ - cX * sY * sZ,
-        cX * sY * cZ + sX * cY * sZ,
-        cX * cY * sZ + sX * sY * cZ);
+              cX * cY * cZ - sX * sY * sZ,
+              sX * cY * cZ - cX * sY * sZ,
+              cX * sY * cZ + sX * cY * sZ,
+              cX * cY * sZ + sX * sY * cZ);
     }
 
     if (order === 'XYZ') {
       return new Quaternion(
-        cX * cY * cZ - sX * sY * sZ,
-        sX * cY * cZ + cX * sY * sZ,
-        cX * sY * cZ - sX * cY * sZ,
-        cX * cY * sZ + sX * sY * cZ);
+              cX * cY * cZ - sX * sY * sZ,
+              sX * cY * cZ + cX * sY * sZ,
+              cX * sY * cZ - sX * cY * sZ,
+              cX * cY * sZ + sX * sY * cZ);
     }
 
     if (order === 'YXZ') {
       return new Quaternion(
-        cX * cY * cZ + sX * sY * sZ,
-        sX * cY * cZ + cX * sY * sZ,
-        cX * sY * cZ - sX * cY * sZ,
-        cX * cY * sZ - sX * sY * cZ);
+              cX * cY * cZ + sX * sY * sZ,
+              sX * cY * cZ + cX * sY * sZ,
+              cX * sY * cZ - sX * cY * sZ,
+              cX * cY * sZ - sX * sY * cZ);
     }
 
     if (order === 'ZYX') {
       return new Quaternion(
-        cX * cY * cZ + sX * sY * sZ,
-        sX * cY * cZ - cX * sY * sZ,
-        cX * sY * cZ + sX * cY * sZ,
-        cX * cY * sZ - sX * sY * cZ);
+              cX * cY * cZ + sX * sY * sZ,
+              sX * cY * cZ - cX * sY * sZ,
+              cX * sY * cZ + sX * cY * sZ,
+              cX * cY * sZ - sX * sY * cZ);
     }
 
     if (order === 'YZX') {
       return new Quaternion(
-        cX * cY * cZ - sX * sY * sZ,
-        sX * cY * cZ + cX * sY * sZ,
-        cX * sY * cZ + sX * cY * sZ,
-        cX * cY * sZ - sX * sY * cZ);
+              cX * cY * cZ - sX * sY * sZ,
+              sX * cY * cZ + cX * sY * sZ,
+              cX * sY * cZ + sX * cY * sZ,
+              cX * cY * sZ - sX * sY * cZ);
     }
 
     if (order === 'XZY') {
       return new Quaternion(
-        cX * cY * cZ + sX * sY * sZ,
-        sX * cY * cZ - cX * sY * sZ,
-        cX * sY * cZ - sX * cY * sZ,
-        cX * cY * sZ + sX * sY * cZ);
+              cX * cY * cZ + sX * sY * sZ,
+              sX * cY * cZ - cX * sY * sZ,
+              cX * sY * cZ - sX * cY * sZ,
+              cX * cY * sZ + sX * sY * cZ);
     }
     return null;
   };
