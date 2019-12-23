@@ -914,7 +914,7 @@
   Quaternion['EPSILON'] = 1e-16;
 
   /**
-   * Creates quaternion by a rotation given as axis and angle
+   * Creates quaternion by a rotation given as axis-angle orientation
    *
    * @param {Array} axis The axis around which to rotate
    * @param {number} angle The angle in radians
@@ -930,12 +930,12 @@
     var b = axis[1];
     var c = axis[2];
 
-    var sin = Math.sin(halfAngle);
-    var cos = Math.cos(halfAngle);
+    var sin_2 = Math.sin(halfAngle);
+    var cos_2 = Math.cos(halfAngle);
 
-    var sin_norm = sin / Math.sqrt(a * a + b * b + c * c);
+    var sin_norm = sin_2 / Math.sqrt(a * a + b * b + c * c);
 
-    return new Quaternion(cos, a * sin_norm, b * sin_norm, c * sin_norm);
+    return new Quaternion(cos_2, a * sin_norm, b * sin_norm, c * sin_norm);
   };
 
   /**
