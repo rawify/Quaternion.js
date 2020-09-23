@@ -1045,7 +1045,7 @@
       return Quaternion;
     });
   } else if (typeof exports === 'object') {
-    Object.defineProperty(exports, "__esModule", {'value': true});
+    Object.defineProperty(Quaternion, "__esModule", {'value': true});
     Quaternion['default'] = Quaternion;
     Quaternion['Quaternion'] = Quaternion;
     module['exports'] = Quaternion;
