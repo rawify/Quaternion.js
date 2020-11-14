@@ -255,7 +255,7 @@ An imaginary number k instance
 
 Quaternion.EPSILON
 ---
-A small epsilon value used for `equals()` comparison in order to circumvent double inprecision.
+A small epsilon value used for `equals()` comparison in order to circumvent double imprecision.
 
 
 
