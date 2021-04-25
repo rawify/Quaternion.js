@@ -64,10 +64,9 @@
     <body>
 
         <div id="main">
-            <button onclick="initialize()">Initialize Sensors</button>
 
-            <div id="frame">
-                <h1>Quaternion.js</h1>
+            <div id="frame" onclick="initialize()">
+                <h1>Click Here</h1>
             </div>
 
             <div id="note">Rotate your device or press X, Y or Z and drag the box</div>
@@ -77,24 +76,33 @@
         <script>
             function initialize() {
 
-              var frameStyle = document.getElementById('frame').style;
+              var $frame = document.getElementById('frame');
+              var frameStyle = $frame.style;
+                
+              $frame.innerHTML = '<h1>Quaternion.js</h1>';
+                
+              function handleOrientation(ev) {
 
-              if (window.DeviceOrientationEvent && typeof window.DeviceOrientationEvent.requestPermission === "function") {
-                DeviceOrientationEvent.requestPermission().then(response => {
-                  if (response === "granted") {
-                    window.addEventListener("deviceorientation", function(ev) {
-
-                      if (ev.alpha !== null) {
-                        vars.x = ev.beta / 180 * Math.PI;
-                        vars.y = ev.gamma / 180 * Math.PI;
-                        vars.z = ev.alpha / 180 * Math.PI;
-                      } else {
-                        vars.x = vars.y = vars.z = -1;
-                      }
-
-                    }, true);
+                  if (ev.alpha !== null) {
+                    vars.x = ev.beta / 180 * Math.PI;
+                    vars.y = ev.gamma / 180 * Math.PI;
+                    vars.z = ev.alpha / 180 * Math.PI;
+                  } else {
+                    vars.x = vars.y = vars.z = -1;
                   }
-                });
+              }
+
+              // Make sure to allow "Motion & Orientation Access" via Safari privacy settings.
+              if (window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === "function") {
+                  DeviceOrientationEvent.requestPermission().then(response => {
+                      if (response === "granted") {
+                          window.addEventListener("deviceorientation", handleOrientation, true);
+                      } else {
+                          alert("Permssion revoked!");   
+                      }
+                  });
+              } else {
+                  window.addEventListener('devicemotion', handleOrientation, true);   
               }
 
               var START = 0;
