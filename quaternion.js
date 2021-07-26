@@ -998,7 +998,7 @@
               cX * cY * sZ + sX * sY * cZ);
     }
 
-    if (order === 'XYZ') {
+    if (order === 'XYZ' || order === 'RPY') {
       return new Quaternion(
               cX * cY * cZ - sX * sY * sZ,
               sX * cY * cZ + cX * sY * sZ,
@@ -1014,7 +1014,7 @@
               cX * cY * sZ - sX * sY * cZ);
     }
 
-    if (order === 'ZYX') {
+    if (order === 'ZYX' || order === 'YPR') {
       return new Quaternion(
               cX * cY * cZ + sX * sY * sZ,
               sX * cY * cZ - cX * sY * sZ,
