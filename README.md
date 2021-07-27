@@ -216,19 +216,32 @@ Rotates a 3 component vector, represented as an array by the current quaternion
 
 Quaternion slerp(q)(pct)
 ---
-Returns a function to interpolate spherical between two quaternions. Called with a percentage, the function returns the interpolated Quaternion.
+Returns a function to spherically interpolate between two quaternions. Called with a percentage `[0-1]`, the function returns the interpolated Quaternion.
 
 Quaternion.fromAxisAngle(axis, angle)
 ---
-Sets the quaternion by a rotation given as axis and angle
+Gets a quaternion by a rotation given as an axis and angle
 
 Quaternion.fromEuler(Φ, θ, ψ[, order="ZXY"])
 ---
-Creates a quaternion by a rotation given by Euler angles. Optional the order of the axis can be provided.
+Gets a quaternion given three Euler angles. The angles are applied from right to left. 
+
+So, order `ZXY` for example means first rotate around Y by ψ then around X by θ and then around Z by Φ (`RotZ(Φ)RotX(θ)RotY(ψ)`). The order can take the string value `ZXY, XYZ or RPY, YXZ, ZYX or YPR, YZX, XZY`.
+
+### Relations
+
+- `axisAngle([0, 1, 0], x)axisAngle([0, 0, 1], y)axisAngle([1, 0, 0], z) = fromEuler(x, y, z, 'YZX')`
+- Mathematica `RollPitchYawMatrix[{α,β,γ}] = fromEuler(γ, β, α, 'RPY')`
+
+
 
 Quaternion.fromBetweenVectors(u, v)
 ---
 Calculates the quaternion to rotate one vector onto the other
+
+Quaternion.random()
+---
+Gets a spherical random number
 
 Constants
 ===

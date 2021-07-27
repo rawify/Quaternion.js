@@ -1,10 +1,10 @@
 /**
- * @license Quaternion.js v1.1.0 22/02/2016
+ * @license Quaternion.js v1.2.0 27/07/2021
  *
- * Copyright (c) 2016, Robert Eisele (robert@xarg.org)
- * Dual licensed under the MIT or GPL Version 2 licenses.
+ * Copyright (c) 2021, Robert Eisele (robert@xarg.org)
+ * Licensed under the MIT license.
  **/
-(function(root) {
+(function (root) {
 
   'use strict';
 
@@ -105,7 +105,7 @@
       var plus = 1;
       var minus = 0;
 
-      var iMap = {'i': 'x', 'j': 'y', 'k': 'z'};
+      var iMap = { 'i': 'x', 'j': 'y', 'k': 'z' };
 
       if (tokens === null) {
         throw new Error('Parse error');
@@ -113,9 +113,9 @@
 
       // Reset the current state
       dest['w'] =
-              dest['x'] =
-              dest['y'] =
-              dest['z'] = 0;
+      dest['x'] =
+      dest['y'] =
+      dest['z'] = 0;
 
       for (var i = 0; i < tokens.length; i++) {
 
@@ -175,8 +175,8 @@
     if (w === undefined && dest !== P) {
       dest['w'] = 1;
       dest['x'] =
-              dest['y'] =
-              dest['z'] = 0;
+      dest['y'] =
+      dest['z'] = 0;
     } else {
 
       dest['w'] = w || 0;
@@ -249,17 +249,17 @@
      * @param {number=} z imag
      * @returns {Quaternion}
      */
-    'add': function(w, x, y, z) {
+    'add': function (w, x, y, z) {
 
       parse(P, w, x, y, z);
 
       // Q1 + Q2 := [w1, v1] + [w2, v2] = [w1 + w2, v1 + v2]
 
       return new Quaternion(
-              this['w'] + P['w'],
-              this['x'] + P['x'],
-              this['y'] + P['y'],
-              this['z'] + P['z']);
+        this['w'] + P['w'],
+        this['x'] + P['x'],
+        this['y'] + P['y'],
+        this['z'] + P['z']);
     },
     /**
      * Subtracts a quaternions Q2 from Q1
@@ -270,7 +270,7 @@
      * @param {number=} z imag
      * @returns {Quaternion}
      */
-    'sub': function(w, x, y, z) {
+    'sub': function (w, x, y, z) {
 
       parse(P, w, x, y, z);
 
@@ -278,17 +278,17 @@
       //          = [w1, v1] - [w2, v2] = [w1 - w2, v1 - v2]
 
       return new Quaternion(
-              this['w'] - P['w'],
-              this['x'] - P['x'],
-              this['y'] - P['y'],
-              this['z'] - P['z']);
+        this['w'] - P['w'],
+        this['x'] - P['x'],
+        this['y'] - P['y'],
+        this['z'] - P['z']);
     },
     /**
      * Calculates the additive inverse, or simply it negates the quaternion
      *
      * @returns {Quaternion}
      */
-    'neg': function() {
+    'neg': function () {
 
       // -Q := [-w, -v]
 
@@ -299,7 +299,7 @@
      *
      * @returns {number}
      */
-    'norm': function() {
+    'norm': function () {
 
       // |Q| := sqrt(|Q|^2)
 
@@ -317,7 +317,7 @@
      *
      * @returns {number}
      */
-    'normSq': function() {
+    'normSq': function () {
 
       // |Q|^2 := [w, v] * [w, -v]
       //        = [w^2 + dot(v, v), -w * v + w * v + cross(v, -v)]
@@ -339,7 +339,7 @@
      *
      * @returns {Quaternion}
      */
-    'normalize': function() {
+    'normalize': function () {
 
       // Q* := Q / |Q|
 
@@ -370,7 +370,7 @@
      * @param {number=} z imag
      * @returns {Quaternion}
      */
-    'mul': function(w, x, y, z) {
+    'mul': function (w, x, y, z) {
 
       parse(P, w, x, y, z);
 
@@ -389,10 +389,10 @@
       var z2 = P['z'];
 
       return new Quaternion(
-              w1 * w2 - x1 * x2 - y1 * y2 - z1 * z2,
-              w1 * x2 + x1 * w2 + y1 * z2 - z1 * y2,
-              w1 * y2 + y1 * w2 + z1 * x2 - x1 * z2,
-              w1 * z2 + z1 * w2 + x1 * y2 - y1 * x2);
+        w1 * w2 - x1 * x2 - y1 * y2 - z1 * z2,
+        w1 * x2 + x1 * w2 + y1 * z2 - z1 * y2,
+        w1 * y2 + y1 * w2 + z1 * x2 - x1 * z2,
+        w1 * z2 + z1 * w2 + x1 * y2 - y1 * x2);
     },
     /**
      * Scales a quaternion by a scalar, faster than using multiplication
@@ -400,13 +400,13 @@
      * @param {number} s scaling factor
      * @returns {Quaternion}
      */
-    'scale': function(s) {
+    'scale': function (s) {
 
       return new Quaternion(
-              this['w'] * s,
-              this['x'] * s,
-              this['y'] * s,
-              this['z'] * s);
+        this['w'] * s,
+        this['x'] * s,
+        this['y'] * s,
+        this['z'] * s);
     },
     /**
      * Calculates the dot product of two quaternions
@@ -417,7 +417,7 @@
      * @param {number=} z imag
      * @returns {number}
      */
-    'dot': function(w, x, y, z) {
+    'dot': function (w, x, y, z) {
 
       parse(P, w, x, y, z);
 
@@ -431,7 +431,7 @@
      *
      * @returns {Quaternion}
      */
-    'inverse': function() {
+    'inverse': function () {
 
       // Q^-1 := Q' / |Q|^2
       //       = [w / (w^2 + |v|^2), -v / (w^2 + |v|^2)]
@@ -466,7 +466,7 @@
      * @param {number=} z imag
      * @returns {Quaternion}
      */
-    'div': function(w, x, y, z) {
+    'div': function (w, x, y, z) {
 
       parse(P, w, x, y, z);
 
@@ -491,17 +491,17 @@
       normSq = 1 / normSq;
 
       return new Quaternion(
-              (w1 * w2 + x1 * x2 + y1 * y2 + z1 * z2) * normSq,
-              (x1 * w2 - w1 * x2 - y1 * z2 + z1 * y2) * normSq,
-              (y1 * w2 - w1 * y2 - z1 * x2 + x1 * z2) * normSq,
-              (z1 * w2 - w1 * z2 - x1 * y2 + y1 * x2) * normSq);
+        (w1 * w2 + x1 * x2 + y1 * y2 + z1 * z2) * normSq,
+        (x1 * w2 - w1 * x2 - y1 * z2 + z1 * y2) * normSq,
+        (y1 * w2 - w1 * y2 - z1 * x2 + x1 * z2) * normSq,
+        (z1 * w2 - w1 * z2 - x1 * y2 + y1 * x2) * normSq);
     },
     /**
      * Calculates the conjugate of a quaternion
      *
      * @returns {Quaternion}
      */
-    'conjugate': function() {
+    'conjugate': function () {
 
       // Q' = [s, -v]
 
@@ -522,7 +522,7 @@
      *
      * @returns {Quaternion}
      */
-    'exp': function() {
+    'exp': function () {
 
       var w = this['w'];
       var x = this['x'];
@@ -539,17 +539,17 @@
       }
 
       return new Quaternion(
-              wExp * Math.cos(vNorm),
-              x * scale,
-              y * scale,
-              z * scale);
+        wExp * Math.cos(vNorm),
+        x * scale,
+        y * scale,
+        z * scale);
     },
     /**
      * Calculates the natural logarithm of the quaternion
      *
      * @returns {Quaternion}
      */
-    'log': function() {
+    'log': function () {
 
       var w = this['w'];
       var x = this['x'];
@@ -558,8 +558,8 @@
 
       if (y === 0 && z === 0) {
         return new Quaternion(
-                logHypot(w, x),
-                Math.atan2(x, w), 0, 0);
+          logHypot(w, x),
+          Math.atan2(x, w), 0, 0);
       }
 
       var qNorm2 = x * x + y * y + z * z + w * w;
@@ -568,10 +568,10 @@
       var scale = Math.atan2(vNorm, w) / vNorm;
 
       return new Quaternion(
-              Math.log(qNorm2) * 0.5,
-              x * scale,
-              y * scale,
-              z * scale);
+        Math.log(qNorm2) * 0.5,
+        x * scale,
+        y * scale,
+        z * scale);
     },
     /**
      * Calculates the power of a quaternion raised to a real number or another quaternion
@@ -582,7 +582,7 @@
      * @param {number=} z imag
      * @returns {Quaternion}
      */
-    'pow': function(w, x, y, z) {
+    'pow': function (w, x, y, z) {
 
       parse(P, w, x, y, z);
 
@@ -634,8 +634,8 @@
           a = Math.exp(P['w'] * loh - P['x'] * arg);
           b = P['x'] * loh + P['w'] * arg;
           return new Quaternion(
-                  a * Math.cos(b),
-                  a * Math.sin(b), 0, 0);
+            a * Math.cos(b),
+            a * Math.sin(b), 0, 0);
         }
       }
 
@@ -652,7 +652,7 @@
      * @param {number=} z imag
      * @returns {boolean}
      */
-    'equals': function(w, x, y, z) {
+    'equals': function (w, x, y, z) {
 
       parse(P, w, x, y, z);
 
@@ -660,16 +660,16 @@
 
       // maybe check for NaN's here?
       return Math.abs(P['w'] - this['w']) < eps
-              && Math.abs(P['x'] - this['x']) < eps
-              && Math.abs(P['y'] - this['y']) < eps
-              && Math.abs(P['z'] - this['z']) < eps;
+        && Math.abs(P['x'] - this['x']) < eps
+        && Math.abs(P['y'] - this['y']) < eps
+        && Math.abs(P['z'] - this['z']) < eps;
     },
     /**
      * Checks if all parts of a quaternion are finite
      *
      * @returns {boolean}
      */
-    'isFinite': function() {
+    'isFinite': function () {
 
       return isFinite(this['w']) && isFinite(this['x']) && isFinite(this['y']) && isFinite(this['z']);
     },
@@ -678,7 +678,7 @@
      *
      * @returns {boolean}
      */
-    'isNaN': function() {
+    'isNaN': function () {
 
       return isNaN(this['w']) || isNaN(this['x']) || isNaN(this['y']) || isNaN(this['z']);
     },
@@ -687,7 +687,7 @@
      *
      * @returns {string}
      */
-    'toString': function() {
+    'toString': function () {
 
       var w = this['w'];
       var x = this['x'];
@@ -717,7 +717,7 @@
      *
      * @returns {number}
      */
-    'real': function() {
+    'real': function () {
 
       return this['w'];
     },
@@ -726,7 +726,7 @@
      *
      * @returns {Array}
      */
-    'imag': function() {
+    'imag': function () {
 
       return [this['x'], this['y'], this['z']];
     },
@@ -735,7 +735,7 @@
      *
      * @returns {Array}
      */
-    'toVector': function() {
+    'toVector': function () {
 
       return [this['w'], this['x'], this['y'], this['z']];
     },
@@ -746,7 +746,7 @@
      * @see https://en.wikipedia.org/wiki/Rotation_matrix#Quaternion
      * @returns {Array}
      */
-    'toMatrix': function(d2) {
+    'toMatrix': function (d2) {
 
       var w = this['w'];
       var x = this['x'];
@@ -777,7 +777,7 @@
      * @param {boolean=} d2
      * @returns {Array}
      */
-    'toMatrix4': function(d2) {
+    'toMatrix4': function (d2) {
 
       var w = this['w'];
       var x = this['x'];
@@ -809,7 +809,7 @@
      *
      * @returns {Quaternion}
      */
-    'clone': function() {
+    'clone': function () {
 
       return new Quaternion(this);
     },
@@ -819,7 +819,7 @@
      * @param {Array} v The vector to be rotated
      * @returns {Array}
      */
-    'rotateVector': function(v) {
+    'rotateVector': function (v) {
 
       // [0, v'] = Q * [0, v] * Q'
 
@@ -849,7 +849,7 @@
       return [x4, y4, z4];
     },
 
-    'slerp': function(w, x, y, z) {
+    'slerp': function (w, x, y, z) {
 
       parse(P, w, x, y, z);
 
@@ -876,19 +876,19 @@
       }
 
       if (cosTheta0 > 0.9995) { // DOT_THRESHOLD
-        return function(pct) {
+        return function (pct) {
           return new Quaternion(
-                  w1 + pct * (w2 - w1),
-                  x1 + pct * (x2 - x1),
-                  y1 + pct * (y2 - y1),
-                  z1 + pct * (z2 - z1))['normalize']();
+            w1 + pct * (w2 - w1),
+            x1 + pct * (x2 - x1),
+            y1 + pct * (y2 - y1),
+            z1 + pct * (z2 - z1))['normalize']();
         };
       }
 
       var Theta0 = Math.acos(cosTheta0);
       var sinTheta0 = Math.sin(Theta0);
 
-      return function(pct) {
+      return function (pct) {
 
         var Theta = Theta0 * pct;
         var sinTheta = Math.sin(Theta);
@@ -898,10 +898,10 @@
         var s1 = sinTheta / sinTheta0;
 
         return new Quaternion(
-                s0 * w1 + s1 * w2,
-                s0 * x1 + s1 * x2,
-                s0 * y1 + s1 * y2,
-                s0 * z1 + s1 * z2);
+          s0 * w1 + s1 * w2,
+          s0 * x1 + s1 * x2,
+          s0 * y1 + s1 * y2,
+          s0 * z1 + s1 * z2);
       }
     }
   };
@@ -920,7 +920,7 @@
    * @param {number} angle The angle in radians
    * @returns {Quaternion}
    */
-  Quaternion['fromAxisAngle'] = function(axis, angle) {
+  Quaternion['fromAxisAngle'] = function (axis, angle) {
 
     // Q = [cos(angle / 2), v * sin(angle / 2)]
 
@@ -944,7 +944,7 @@
    * @param {Array} u
    * @param {Array} v
    */
-  Quaternion['fromBetweenVectors'] = function(u, v) {
+  Quaternion['fromBetweenVectors'] = function (u, v) {
 
     var a = u[0];
     var b = u[1];
@@ -960,11 +960,32 @@
     var w3 = a * y - b * x;
 
     return new Quaternion(
-            dot + Math.sqrt(dot * dot + w1 * w1 + w2 * w2 + w3 * w3),
-            w1,
-            w2,
-            w3
-            ).normalize();
+      dot + Math.sqrt(dot * dot + w1 * w1 + w2 * w2 + w3 * w3),
+      w1,
+      w2,
+      w3
+    ).normalize();
+  };
+
+  /**
+   * Gets a spherical random number
+   * @link http://planning.cs.uiuc.edu/node198.html
+   */
+  Quaternion['random'] = function () {
+
+    var u1 = Math.random();
+    var u2 = Math.random();
+    var u3 = Math.random();
+
+    var s = Math.sqrt(1 - u1);
+    var t = Math.sqrt(u1);
+
+    return new Quaternion(
+      t * Math.cos(2 * Math.PI * u3),
+      s * Math.sin(2 * Math.PI * u2),
+      s * Math.cos(2 * Math.PI * u2),
+      t * Math.sin(2 * Math.PI * u3)
+    );
   };
 
   /**
@@ -976,11 +997,11 @@
    * @param {string=} order
    * @returns {Quaternion}
    */
-  Quaternion['fromEuler'] = function(phi, theta, psi, order) {
+  Quaternion['fromEuler'] = function (phi, theta, psi, order) {
 
-    var _x = theta * 0.5;
-    var _y = psi * 0.5;
-    var _z = phi * 0.5;
+    var _x = phi * 0.5;
+    var _y = theta * 0.5;
+    var _z = psi * 0.5;
 
     var cX = Math.cos(_x);
     var cY = Math.cos(_y);
@@ -991,61 +1012,67 @@
     var sZ = Math.sin(_z);
 
     if (order === undefined || order === 'ZXY') {
+      // axisAngle([0, 0, 1], x) * axisAngle([1, 0, 0], y) * axisAngle([0, 1, 0], z)
       return new Quaternion(
-              cX * cY * cZ - sX * sY * sZ,
-              sX * cY * cZ - cX * sY * sZ,
-              cX * sY * cZ + sX * cY * sZ,
-              cX * cY * sZ + sX * sY * cZ);
+        cX * cY * cZ - sX * sY * sZ,
+        cX * cZ * sY - cY * sX * sZ,
+        cX * cY * sZ + cZ * sX * sY,
+        cY * cZ * sX + cX * sY * sZ);
     }
 
     if (order === 'XYZ' || order === 'RPY') {
+      // axisAngle([1, 0, 0], x) * axisAngle([0, 1, 0], y) * axisAngle([0, 0, 1], z)
       return new Quaternion(
-              cX * cY * cZ - sX * sY * sZ,
-              sX * cY * cZ + cX * sY * sZ,
-              cX * sY * cZ - sX * cY * sZ,
-              cX * cY * sZ + sX * sY * cZ);
+        cX * cY * cZ - sX * sY * sZ,
+        cY * cZ * sX + cX * sY * sZ,
+        cX * cZ * sY - cY * sX * sZ,
+        cX * cY * sZ + cZ * sX * sY);
     }
 
     if (order === 'YXZ') {
+      // axisAngle([0, 1, 0], x) * axisAngle([1, 0, 0], y) * axisAngle([0, 0, 1], z)
       return new Quaternion(
-              cX * cY * cZ + sX * sY * sZ,
-              sX * cY * cZ + cX * sY * sZ,
-              cX * sY * cZ - sX * cY * sZ,
-              cX * cY * sZ - sX * sY * cZ);
+        cX * cY * cZ + sX * sY * sZ,
+        cX * cZ * sY + cY * sX * sZ,
+        cY * cZ * sX - cX * sY * sZ,
+        cX * cY * sZ - cZ * sX * sY);
     }
 
-    if (order === 'ZYX' || order === 'YPR') {
+    if (order === 'ZYX' || order === 'YPR') {
+      // axisAngle([0, 0, 1], x) * axisAngle([0, 1, 0], y) * axisAngle([1, 0, 0], z)
       return new Quaternion(
-              cX * cY * cZ + sX * sY * sZ,
-              sX * cY * cZ - cX * sY * sZ,
-              cX * sY * cZ + sX * cY * sZ,
-              cX * cY * sZ - sX * sY * cZ);
+        cX * cY * cZ + sX * sY * sZ,
+        cX * cY * sZ - cZ * sX * sY,
+        cX * cZ * sY + cY * sX * sZ,
+        cY * cZ * sX - cX * sY * sZ);
     }
 
     if (order === 'YZX') {
+      // axisAngle([0, 1, 0], x) * axisAngle([0, 0, 1], y) * axisAngle([1, 0, 0], z)
       return new Quaternion(
-              cX * cY * cZ - sX * sY * sZ,
-              sX * cY * cZ + cX * sY * sZ,
-              cX * sY * cZ + sX * cY * sZ,
-              cX * cY * sZ - sX * sY * cZ);
+        cX * cY * cZ - sX * sY * sZ,
+        cX * cY * sZ + cZ * sX * sY,
+        cY * cZ * sX + cX * sY * sZ,
+        cX * cZ * sY - cY * sX * sZ);
     }
 
     if (order === 'XZY') {
+      // axisAngle([1, 0, 0], x) * axisAngle([0, 0, 1], z) * axisAngle([0, 1, 0], y)
       return new Quaternion(
-              cX * cY * cZ + sX * sY * sZ,
-              sX * cY * cZ - cX * sY * sZ,
-              cX * sY * cZ - sX * cY * sZ,
-              cX * cY * sZ + sX * sY * cZ);
+        cX * cY * cZ + sX * sY * sZ,
+        cY * cZ * sX - cX * sY * sZ,
+        cX * cY * sZ - cZ * sX * sY,
+        cX * cZ * sY + cY * sX * sZ);
     }
     return null;
   };
 
   if (typeof define === 'function' && define['amd']) {
-    define([], function() {
+    define([], function () {
       return Quaternion;
     });
   } else if (typeof exports === 'object') {
-    Object.defineProperty(Quaternion, "__esModule", {'value': true});
+    Object.defineProperty(Quaternion, "__esModule", { 'value': true });
     Quaternion['default'] = Quaternion;
     Quaternion['Quaternion'] = Quaternion;
     module['exports'] = Quaternion;

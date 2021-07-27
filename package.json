@@ -1,7 +1,7 @@
 {
     "name": "quaternion",
     "title": "Quaternion.js",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "homepage": "https://github.com/infusion/Quaternion.js",
     "bugs": "https://github.com/infusion/Quaternion.js/issues",
     "description": "A rotation library using quaternions",
@@ -22,7 +22,7 @@
     "directories": {
         "example": "examples"
     },
-    "license": "MIT OR GPL-2.0",
+    "license": "MIT",
     "repository": {
         "type": "git",
         "url": "git://github.com/infusion/Quaternion.js.git"
