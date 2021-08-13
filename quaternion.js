@@ -1,5 +1,5 @@
 /**
- * @license Quaternion.js v1.2.0 27/07/2021
+ * @license Quaternion.js v1.2.1 27/07/2021
  *
  * Copyright (c) 2021, Robert Eisele (robert@xarg.org)
  * Licensed under the MIT license.
@@ -113,9 +113,9 @@
 
       // Reset the current state
       dest['w'] =
-      dest['x'] =
-      dest['y'] =
-      dest['z'] = 0;
+        dest['x'] =
+        dest['y'] =
+        dest['z'] = 0;
 
       for (var i = 0; i < tokens.length; i++) {
 
@@ -175,8 +175,8 @@
     if (w === undefined && dest !== P) {
       dest['w'] = 1;
       dest['x'] =
-      dest['y'] =
-      dest['z'] = 0;
+        dest['y'] =
+        dest['z'] = 0;
     } else {
 
       dest['w'] = w || 0;
@@ -641,7 +641,7 @@
 
       // Normal quaternion behavior
       // q^p = e^ln(q^p) = e^(ln(q)*p)
-      return this.log().mul(P).exp();
+      return this['log']()['mul'](P)['exp']();
     },
     /**
      * Checks if two quats are the same
@@ -814,39 +814,32 @@
       return new Quaternion(this);
     },
     /**
-     * Rotates a vector according to the current quaternion
+     * Rotates a vector according to the current quaternion, assumes |q|=1
      *
      * @param {Array} v The vector to be rotated
      * @returns {Array}
      */
     'rotateVector': function (v) {
 
-      // [0, v'] = Q * [0, v] * Q'
+      var qw = this['w'];
+      var qx = this['x'];
+      var qy = this['y'];
+      var qz = this['z'];
 
-      // Q
-      var w1 = this['w'];
-      var x1 = this['x'];
-      var y1 = this['y'];
-      var z1 = this['z'];
+      var vx = v[0];
+      var vy = v[1];
+      var vz = v[2];
 
-      // [0, v]
-      var w2 = 0;
-      var x2 = v[0];
-      var y2 = v[1];
-      var z2 = v[2];
+      // t = 2q x v
+      var tx = 2 * (qy * vz - qz * vy);
+      var ty = 2 * (qz * vx - qx * vz);
+      var tz = 2 * (qx * vy - qy * vx);
 
-      // Q * [0, v]
-      var w3 = /*w1 * w2*/ -x1 * x2 - y1 * y2 - z1 * z2;
-      var x3 = w1 * x2 + /*x1 * w2 +*/ y1 * z2 - z1 * y2;
-      var y3 = w1 * y2 + /*y1 * w2 +*/ z1 * x2 - x1 * z2;
-      var z3 = w1 * z2 + /*z1 * w2 +*/ x1 * y2 - y1 * x2;
-
-      var w4 = w3 * w1 + x3 * x1 + y3 * y1 + z3 * z1;
-      var x4 = x3 * w1 - w3 * x1 - y3 * z1 + z3 * y1;
-      var y4 = y3 * w1 - w3 * y1 - z3 * x1 + x3 * z1;
-      var z4 = z3 * w1 - w3 * z1 - x3 * y1 + y3 * x1;
-
-      return [x4, y4, z4];
+      // v + w t + q x t
+      return [
+        vx + qw * tx + qy * tz - qz * ty,
+        vy + qw * ty + qz * tx - qx * tz,
+        vz + qw * tz + qx * ty - qy * tx];
     },
 
     'slerp': function (w, x, y, z) {
