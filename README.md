@@ -106,7 +106,7 @@ Functions
 
 Every stated parameter *n* in the following list of functions behaves in the same way as the constructor examples above
 
-**Note:** Calling a method like *add()* without parameters results in a quaternion with all elements zero, not one!
+**Note:** Calling a method like *add()* without parameters passes a quaternion with all elements zero, not one!
 
 Quaternion add(n)
 ---
