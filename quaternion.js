@@ -815,6 +815,7 @@
     },
     /**
      * Rotates a vector according to the current quaternion, assumes |q|=1
+     * @link https://www.xarg.org/proof/vector-rotation-using-quaternions/
      *
      * @param {Array} v The vector to be rotated
      * @returns {Array}
