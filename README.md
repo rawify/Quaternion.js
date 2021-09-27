@@ -172,11 +172,11 @@ Calculates the natural logarithm of the quaternion
 
 double real()
 ---
-Returns the real part of the quaternion
+Returns the real `w` part of the quaternion
 
 Quaternion imag()
 ---
-Returns the imaginary part of the quaternion as a 3D vector / array
+Returns the imaginary part `[x, y, z]` of the quaternion as a 3D vector / array
 
 boolean equals(n)
 ---
