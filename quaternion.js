@@ -933,31 +933,33 @@
   };
 
   /**
-   * Calculates the quaternion to rotate one vector onto the other
+   * Calculates the quaternion to rotate one vector onto another
+   * @link https://www.xarg.org/proof/quaternion-from-two-vectors/
    *
    * @param {Array} u
    * @param {Array} v
    */
   Quaternion['fromBetweenVectors'] = function (u, v) {
 
-    var a = u[0];
-    var b = u[1];
-    var c = u[2];
+    var ux = u[0];
+    var uy = u[1];
+    var uz = u[2];
 
-    var x = v[0];
-    var y = v[1];
-    var z = v[2];
+    var vx = v[0];
+    var vy = v[1];
+    var vz = v[2];
 
-    var dot = a * x + b * y + c * z;
-    var w1 = b * z - c * y;
-    var w2 = c * x - a * z;
-    var w3 = a * y - b * x;
+    var dot = ux * vx + uy * vy + uz * vz;
+
+    var wx = uy * vz - uz * vy;
+    var wy = uz * vx - ux * vz;
+    var wz = ux * vy - uy * vx;
 
     return new Quaternion(
-      dot + Math.sqrt(dot * dot + w1 * w1 + w2 * w2 + w3 * w3),
-      w1,
-      w2,
-      w3
+      dot + Math.sqrt(dot * dot + wx * wx + wy * wy + wz * wz),
+      wx,
+      wy,
+      wz
     ).normalize();
   };
 
