@@ -950,6 +950,17 @@
     var vz = v[2];
 
     var dot = ux * vx + uy * vy + uz * vz;
+    
+    // Parallel check
+    if (dot >= 1 - Quaternion['EPSILON']) {
+      return Quaternion['ONE'];
+    }
+    
+    // Close to PI @TODO
+    //if (1 + dot <= Quaternion['EPSILON']) {
+      // return Quaternion.fromAxisAngle(Math.abs(ux) > Math.abs(uz) ? [-uy,  ux, 0] : [0, -uz,  uy], 0) -> OR
+      // return Quaternion.fromAxisAngle(Math.abs(ux) > Math.abs(uz) ? [ uy, -ux, 0] : [0,  uz, -uy], 0)
+    //}
 
     var wx = uy * vz - uz * vy;
     var wy = uz * vx - ux * vz;
