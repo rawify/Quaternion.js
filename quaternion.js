@@ -742,66 +742,61 @@
     /**
      * Calculates the 3x3 rotation matrix for the current quat
      *
-     * @param {boolean=} d2
-     * @see https://en.wikipedia.org/wiki/Rotation_matrix#Quaternion
+     * @param {boolean=} twoD
      * @returns {Array}
      */
-    'toMatrix': function (d2) {
+    'toMatrix': function (twoD) {
 
       var w = this['w'];
       var x = this['x'];
       var y = this['y'];
       var z = this['z'];
 
-      var n = w * w + x * x + y * y + z * z;
-      var s = n === 0 ? 0 : 2 / n;
-      var wx = s * w * x, wy = s * w * y, wz = s * w * z;
-      var xx = s * x * x, xy = s * x * y, xz = s * x * z;
-      var yy = s * y * y, yz = s * y * z, zz = s * z * z;
+      var wx = w * x, wy = w * y, wz = w * z;
+      var xx = x * x, xy = x * y, xz = x * z;
+      var yy = y * y, yz = y * z, zz = z * z;
 
-      if (d2) {
+      if (twoD) {
         return [
-          [1 - (yy + zz), xy - wz, xz + wy],
-          [xy + wz, 1 - (xx + zz), yz - wx],
-          [xz - wy, yz + wx, 1 - (xx + yy)]];
+          [1 - 2 * (yy + zz), 2 * (xy - wz), 2 * (xz + wy)],
+          [2 * (xy + wz), 1 - 2 * (xx + zz), 2 * (yz - wx)],
+          [2 * (xz - wy), 2 * (yz + wx), 1 - 2 * (xx + yy)]];
       }
 
       return [
-        1 - (yy + zz), xy - wz, xz + wy,
-        xy + wz, 1 - (xx + zz), yz - wx,
-        xz - wy, yz + wx, 1 - (xx + yy)];
+        1 - 2 * (yy + zz), 2 * (xy - wz), 2 * (xz + wy),
+        2 * (xy + wz), 1 - 2 * (xx + zz), 2 * (yz - wx),
+        2 * (xz - wy), 2 * (yz + wx), 1 - 2 * (xx + yy)];
     },
     /**
      * Calculates the homogeneous 4x4 rotation matrix for the current quat
      *
-     * @param {boolean=} d2
+     * @param {boolean=} twoD
      * @returns {Array}
      */
-    'toMatrix4': function (d2) {
+    'toMatrix4': function (twoD) {
 
       var w = this['w'];
       var x = this['x'];
       var y = this['y'];
       var z = this['z'];
 
-      var n = w * w + x * x + y * y + z * z;
-      var s = n === 0 ? 0 : 2 / n;
-      var wx = s * w * x, wy = s * w * y, wz = s * w * z;
-      var xx = s * x * x, xy = s * x * y, xz = s * x * z;
-      var yy = s * y * y, yz = s * y * z, zz = s * z * z;
+      var wx = w * x, wy = w * y, wz = w * z;
+      var xx = x * x, xy = x * y, xz = x * z;
+      var yy = y * y, yz = y * z, zz = z * z;
 
-      if (d2) {
+      if (twoD) {
         return [
-          [1 - (yy + zz), xy - wz, xz + wy, 0],
-          [xy + wz, 1 - (xx + zz), yz - wx, 0],
-          [xz - wy, yz + wx, 1 - (xx + yy), 0],
+          [1 - 2 * (yy + zz), 2 * (xy - wz), 2 * (xz + wy), 0],
+          [2 * (xy + wz), 1 - 2 * (xx + zz), 2 * (yz - wx), 0],
+          [2 * (xz - wy), 2 * (yz + wx), 1 - 2 * (xx + yy), 0],
           [0, 0, 0, 1]];
       }
 
       return [
-        1 - (yy + zz), xy - wz, xz + wy, 0,
-        xy + wz, 1 - (xx + zz), yz - wx, 0,
-        xz - wy, yz + wx, 1 - (xx + yy), 0,
+        1 - 2 * (yy + zz), 2 * (xy - wz), 2 * (xz + wy), 0,
+        2 * (xy + wz), 1 - 2 * (xx + zz), 2 * (yz - wx), 0,
+        2 * (xz - wy), 2 * (yz + wx), 1 - 2 * (xx + yy), 0,
         0, 0, 0, 1];
     },
     /**
