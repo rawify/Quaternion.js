@@ -29,10 +29,13 @@
     }
 
     if (_a < 3000 && _b < 3000) {
-      return Math.log(a * a + b * b) * 0.5;
+      return 0.5 * Math.log(a * a + b * b);
     }
 
-    return Math.log(a / Math.cos(Math.atan2(b, a)));
+    a = a / 2;
+    b = b / 2;
+
+   return 0.5 * Math.log(a * a + b * b) + Math.LN2;
   }
 
   /*
