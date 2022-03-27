@@ -948,10 +948,10 @@
     var vz = v[2];
 
     var dot = ux * vx + uy * vy + uz * vz;
-    
-    // Parallel check
+  
+    // Parallel check (TODO must be normalized)
     if (dot >= 1 - Quaternion['EPSILON']) {
-      return Quaternion['ONE'];
+      //return Quaternion['ONE'];
     }
     
     // Close to PI @TODO

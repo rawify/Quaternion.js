@@ -672,6 +672,14 @@ describe("Quaternions", function() {
     assert(CQ(Quaternion(1, 2, 3, 4).pow(-2.5), Quaternion(-0.0134909686430938, 0.0016959981926818065, 0.0025439972890227095, 0.003391996385363613)));
   });
 
+  it('should rotate the optimized function', function() {
+
+    var v = [Math.random() * 100, Math.random() * 50, Math.random() * 20];
+    var q = Quaternion.random();
+  
+    assert.v(q.rotateVector(v), q.mul(0, v).mul(q.conjugate()).toVector().slice(1));
+  });
+
   it('should rotate one vector onto the other', function() {
 
     var u = [Math.random() * 100, Math.random() * 100, Math.random() * 100];
@@ -680,12 +688,11 @@ describe("Quaternions", function() {
     var q = Quaternion.fromBetweenVectors(u, v);
     var vPrime = q.rotateVector(u);
 
-    // Do they look in the same direction?
-    assert.q(Quaternion(v).normalize(), Quaternion(vPrime).normalize());
-
     // Is the length of rotated equal to the original?
     assert.approx(Quaternion(u).norm(), Quaternion(vPrime).norm());
 
+    // Do they look in the same direction?
+    assert.q(Quaternion(v).normalize(), Quaternion(vPrime).normalize());
   });
 
   it('should rotate additive inverse to the same point', function() {
