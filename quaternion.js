@@ -1,7 +1,7 @@
 /**
- * @license Quaternion.js v1.2.1 27/07/2021
+ * @license Quaternion.js v1.3.0 27/03/2022
  *
- * Copyright (c) 2021, Robert Eisele (robert@xarg.org)
+ * Copyright (c) 2022, Robert Eisele (robert@xarg.org)
  * Licensed under the MIT license.
  **/
 (function (root) {
@@ -178,8 +178,8 @@
     if (w === undefined && dest !== P) {
       dest['w'] = 1;
       dest['x'] =
-        dest['y'] =
-        dest['z'] = 0;
+      dest['y'] =
+      dest['z'] = 0;
     } else {
 
       dest['w'] = w || 0;
