@@ -206,6 +206,10 @@ Array toMatrix4(2d=false)
 ---
 Calculates the homogeneous 4x4 rotation matrix for the current quat as a 16 element array or alternatively as a 2d array
 
+Object toEuler()
+---
+Calculates the Euler angles represented by the current quat
+
 Quaternion clone()
 ---
 Clones the actual object
