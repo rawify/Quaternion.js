@@ -1100,6 +1100,62 @@
     return null;
   };
 
+  /**
+   * Creates a quaternion by a rotation matrix
+   *
+   * @param {Array} matrix
+   * @returns {Quaternion}
+   */
+  Quaternion['fromMatrix'] = function(matrix) {
+
+    if (matrix.length === 9) {
+
+      var m00 = matrix[0];
+      var m01 = matrix[1];
+      var m02 = matrix[2];
+
+      var m10 = matrix[3];
+      var m11 = matrix[4];
+      var m12 = matrix[5];
+
+      var m20 = matrix[6];
+      var m21 = matrix[7];
+      var m22 = matrix[8];
+
+    } else {
+      var m00 = matrix[0][0];
+      var m01 = matrix[0][1];
+      var m02 = matrix[0][2];
+
+      var m10 = matrix[1][0];
+      var m11 = matrix[1][1];
+      var m12 = matrix[1][2];
+
+      var m20 = matrix[2][0];
+      var m21 = matrix[2][1];
+      var m22 = matrix[2][2];
+    }
+
+    if (m22 < 0) {
+      if (m00 > m11) {
+        var t = 1 + m00 - m11 - m22;
+        return new Quaternion(m12 - m21, t, m01 + m10, m20 + m02)['scale'](0.5 / Math.sqrt(t));
+      } else {
+        var t = 1 - m00 + m11 - m22;
+        return new Quaternion(m20 - m02, m01 + m10, t, m12 + m21)['scale'](0.5 / Math.sqrt(t));
+      }
+    }
+    else {
+      if (m00 < -m11) {
+        var t = 1 - m00 - m11 + m22;
+        return new Quaternion(m01 - m10, m20 + m02, m12 + m21, t)['scale'](0.5 / Math.sqrt(t));
+      } else {
+        var t = 1 + m00 + m11 + m22;
+        return new Quaternion(t, m12 - m21, m20 - m02, m01 - m10)['scale'](0.5 / Math.sqrt(t));
+      }
+    }
+  };
+
   if (typeof define === 'function' && define['amd']) {
     define([], function() {
       return Quaternion;

@@ -226,6 +226,12 @@ Quaternion.fromAxisAngle(axis, angle)
 ---
 Gets a quaternion by a rotation given as an axis and angle
 
+
+Quaternion.fromMatrix(matrix)
+---
+Gets a quaternion given a rotation matrix, either as a 1x9 array or a 3x3 array.
+
+
 Quaternion.fromEuler(Φ, θ, ψ[, order="ZXY"])
 ---
 Gets a quaternion given three Euler angles. The angles are applied from right to left. 
