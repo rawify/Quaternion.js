@@ -1136,23 +1136,40 @@
       var m22 = matrix[2][2];
     }
 
-    if (m22 < 0) {
-      if (m00 > m11) {
-        var t = 1 + m00 - m11 - m22;
-        return new Quaternion(m12 - m21, t, m01 + m10, m20 + m02)['scale'](0.5 / Math.sqrt(t));
-      } else {
-        var t = 1 - m00 + m11 - m22;
-        return new Quaternion(m20 - m02, m01 + m10, t, m12 + m21)['scale'](0.5 / Math.sqrt(t));
-      }
-    }
-    else {
-      if (m00 < -m11) {
-        var t = 1 - m00 - m11 + m22;
-        return new Quaternion(m01 - m10, m20 + m02, m12 + m21, t)['scale'](0.5 / Math.sqrt(t));
-      } else {
-        var t = 1 + m00 + m11 + m22;
-        return new Quaternion(t, m12 - m21, m20 - m02, m01 - m10)['scale'](0.5 / Math.sqrt(t));
-      }
+    var tr = m00 + m11 + m22;
+
+    if (tr > 0) { 
+      var S = Math.sqrt(tr+1.0) * 2; // S=4*qw
+
+      return new Quaternion(
+        0.25 * S,
+        (m21 - m12) / S,
+        (m02 - m20) / S,
+        (m10 - m01) / S);
+    } else if ((m00 > m11)&(m00 > m22)) { 
+      var S = Math.sqrt(1.0 + m00 - m11 - m22) * 2; // S=4*qx
+
+      return new Quaternion(
+        (m21 - m12) / S,
+        0.25 * S,
+        (m01 + m10) / S,
+        (m02 + m20) / S);
+    } else if (m11 > m22) { 
+      var S = Math.sqrt(1.0 + m11 - m00 - m22) * 2; // S=4*qy
+
+      return new Quaternion(
+        (m02 - m20) / S,
+        (m01 + m10) / S,
+        0.25 * S,
+        (m12 + m21) / S);
+    } else { 
+      var S = Math.sqrt(1.0 + m22 - m00 - m11) * 2; // S=4*qz
+
+      return new Quaternion(
+        (m10 - m01) / S,
+        (m02 + m20) / S,
+        (m12 + m21) / S,
+        0.25 * S);
     }
   };
 
