@@ -3,6 +3,24 @@ var assert = require("assert");
 var Quaternion = require("../quaternion");
 var EPS = 1e-11;
 
+assert.matriceEqual = function(mat1, mat2) {
+
+  assert.equal(mat1.length, mat2.length)
+
+  // 2 dimension matrices
+  if(mat1.length <= 4) {
+    mat1.forEach((array, idx1) => {
+      array.forEach((value, idx2) => {
+        if(Math.abs(value - mat2[idx1][idx2]) > EPS) assert(mat1.toString(), mat2.toString());
+      })
+    });
+  } else {
+    mat1.forEach((value, idx1) => {
+        if(Math.abs(value - mat2[idx1]) > EPS) assert(mat1.toString(), mat2.toString());
+    });
+  }
+};
+
 assert.q = function(a, b) {
 
   if ('w' in a && 'w' in b) {
@@ -714,6 +732,109 @@ describe("Quaternions", function() {
     assert.q(q1.slerp(q2)(0), q1);
     assert.q(q1.slerp(q2)(1), q2);
 
+  });
+
+  describe('fromMatrix', function() {
+    it('Should create a quaternion from a matrix with m22 positive and m00 < -m11', function() {
+      const q = Quaternion.fromMatrix([
+        -0.14040120936120104, -0.03817338250185204,   0.9893585261563572,
+        -0.2992237727316569,  -0.9508943214366381,    -0.0791525318090902, 
+        0.9437969242597403,   -0.3071527019707341,    0.12208432917426992 ])
+      assert.q(q, new Quaternion(-0.08773368562933877, 0.6496939246485931, -0.12982927130494584, 0.7438716051799714))
+    })
+    
+    it('Should create a quaternion from a matrix with m22 positive and m00 >= -m11', function() {
+      const q = Quaternion.fromMatrix([
+        0.7441469599075261, -0.6679403460655629,  0.010049684482756005,
+        0.4879070091702578, 0.5331745589946937,   -0.6911379312722953,
+        0.4562806729009248, 0.5192115019321414,   0.7226530037289329 ])
+      assert.q(q, new Quaternion(0.8660217264351906, 0.34939926916920544, -0.12881633762671046, 0.3336658076679094))
+    })
+
+    it('Should create a quaternion from a matrix with m22 negative and m00 > m11', function() {
+      const q = Quaternion.fromMatrix([
+        0.060549599475538174, 0.13230044593141155,  0.9893585487626324, 
+        0.14484523930352894,  -0.981850454507192,   0.12243178359856144, 
+        0.9875999203394337,   0.13589068029254686,  -0.07861374151618494 ])
+      assert.q(q, new Quaternion( 0.004620699410323448, 0.7281850375246176, 0.09514947127211848, 0.6787280592246553))
+    })
+
+    it('Should create a quaternion from a matrix with m22 negative and m00 <= m11', function() {
+      const q = Quaternion.fromMatrix([
+        -0.9899924978109478,  -0.13532339494964624, -0.04003040166351807,
+        -0.00000000597024110, 0.28366218433821,     -0.9589242749959328,
+        0.14111999956788723,  -0.9493278379757846,  -0.2808234352154073 ])
+      assert.q(q, new Quaternion(-0.05667065226343984, -0.04233424460838274, 0.7991367400771543, -0.5969729638470511))
+    })
+  })
+
+  describe('toMatrix', function() {
+    it('Should create a matrix from a quaternion with m22 positive and m00 < -m11', function() {
+      assert.matriceEqual(
+        new Quaternion(-0.08773368562933877, 0.6496939246485931, -0.12982927130494584, 0.7438716051799714).toMatrix(true), 
+        [[-0.14040120936120104, -0.03817338250185204,   0.9893585261563572],
+         [-0.2992237727316569,  -0.9508943214366381,    -0.0791525318090902], 
+         [0.9437969242597403,   -0.3071527019707341,    0.12208432917426992]])
+      assert.matriceEqual(
+        new Quaternion(-0.08773368562933877, 0.6496939246485931, -0.12982927130494584, 0.7438716051799714).toMatrix(false), 
+        [ -0.14040120936120104, -0.03817338250185204,   0.9893585261563572,
+          -0.2992237727316569,  -0.9508943214366381,    -0.0791525318090902, 
+          0.9437969242597403,   -0.3071527019707341,    0.12208432917426992 ])
+    })
+    
+    it('Should create a matrix from a quaternion with m22 positive and m00 >= -m11', function() {
+      assert.matriceEqual(
+        new Quaternion(-0.08773368562933877, 0.6496939246485931, -0.12982927130494584, 0.7438716051799714).toMatrix(true), 
+        [[0.7441469599075261, -0.6679403460655629,  0.010049684482756005],
+         [0.4879070091702578, 0.5331745589946937,   -0.6911379312722953],
+         [0.4562806729009248, 0.5192115019321414,   0.7226530037289329]])
+      assert.matriceEqual(
+        new Quaternion(-0.08773368562933877, 0.6496939246485931, -0.12982927130494584, 0.7438716051799714).toMatrix(false), 
+        [ 0.7441469599075261, -0.6679403460655629,  0.010049684482756005,
+          0.4879070091702578, 0.5331745589946937,   -0.6911379312722953,
+          0.4562806729009248, 0.5192115019321414,   0.7226530037289329 ])
+    })
+
+    it('Should create a matrix from a quaternion with m22 negative and m00 > m11', function() {
+      assert.matriceEqual(
+        new Quaternion(-0.08773368562933877, 0.6496939246485931, -0.12982927130494584, 0.7438716051799714).toMatrix(true), 
+        [[0.060549599475538174, 0.13230044593141155,  0.9893585487626324], 
+         [0.14484523930352894,  -0.981850454507192,   0.12243178359856144], 
+         [0.9875999203394337,   0.13589068029254686,  -0.07861374151618494]])
+      assert.matriceEqual(
+        new Quaternion(-0.08773368562933877, 0.6496939246485931, -0.12982927130494584, 0.7438716051799714).toMatrix(false), 
+        [ 0.060549599475538174, 0.13230044593141155,  0.9893585487626324, 
+          0.14484523930352894,  -0.981850454507192,   0.12243178359856144, 
+          0.9875999203394337,   0.13589068029254686,  -0.07861374151618494 ])
+    })
+
+    it('Should create a matrix from a quaternion with m22 negative and m00 <= m11', function() {
+      assert.matriceEqual(
+        new Quaternion(-0.08773368562933877, 0.6496939246485931, -0.12982927130494584, 0.7438716051799714).toMatrix(true), 
+        [[-0.9899924978109478,  -0.13532339494964624, -0.04003040166351807],
+         [-0.00000000597024110, 0.28366218433821,     -0.9589242749959328],
+         [0.14111999956788723,  -0.9493278379757846,  -0.2808234352154073 ]])
+      assert.matriceEqual(
+        new Quaternion(-0.08773368562933877, 0.6496939246485931, -0.12982927130494584, 0.7438716051799714).toMatrix(false), 
+        [ -0.9899924978109478,  -0.13532339494964624, -0.04003040166351807,
+          -0.00000000597024110, 0.28366218433821,     -0.9589242749959328,
+          0.14111999956788723,  -0.9493278379757846,  -0.2808234352154073 ])
+    })
+  })
+
+
+  it('should convert from and to matrix', function() {
+
+    var initialQuat = Quaternion.random().normalize();
+
+    let m1 = initialQuat.toMatrix(true);
+    let m2 = initialQuat.toMatrix(false);
+
+    let q1 = Quaternion.fromMatrix(m1)
+    let q2 = Quaternion.fromMatrix(m2)
+
+    assert.matriceEqual(q1.toMatrix(true), m1);
+    assert.matriceEqual(q2.toMatrix(false), m2);
   });
 
   it('Should fuzz 0# ZXY', function() {assert.v(Quaternion.fromEuler(0.7560671181764893, -0.13546265539440805, 3.0647447738212223, 'ZXY').rotateVector([2, 3, 5]), [-2.73473153490426, 0.552994141668246, -5.49685736683069]) });
