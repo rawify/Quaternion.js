@@ -17,6 +17,7 @@
     ],
     "author": "Robert Eisele <robert@xarg.org> (http://www.xarg.org/)",
     "main": "quaternion",
+    "types": "./quaternion.d.ts",
     "private": false,
     "readmeFilename": "README.md",
     "directories": {
