@@ -247,7 +247,7 @@ So, order `ZXY` for example means first rotate around Y by Ïˆ then around X by Î
 
 Quaternion.fromBetweenVectors(u, v)
 ---
-Calculates the quaternion to rotate one vector onto the other
+Calculates the quaternion to rotate vector `u` onto vector `v`, represented as 3 element arrays.
 
 Quaternion.random()
 ---
