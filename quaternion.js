@@ -975,29 +975,30 @@
     var vy = v[1];
     var vz = v[2];
 
+    var uLen = Math.sqrt(ux * ux + uy * uy + uz * uz);
+    var vLen = Math.sqrt(vx * vx + vy * vy + vz * vz);
+
+    if (uLen > 0) ux/= uLen, uy/= uLen, uz/= uLen;
+    if (vLen > 0) vx/= vLen, vy/= vLen, vz/= vLen;
+
     var dot = ux * vx + uy * vy + uz * vz;
 
-    // Parallel check (TODO must be normalized)
+    // Parallel check
     if (dot >= 1 - Quaternion['EPSILON']) {
-      //return Quaternion['ONE'];
+      return Quaternion['ONE'];
     }
 
-    // Close to PI @TODO
-    //if (1 + dot <= Quaternion['EPSILON']) {
-    // return Quaternion.fromAxisAngle(Math.abs(ux) > Math.abs(uz) ? [-uy,  ux, 0] : [0, -uz,  uy], 0) -> OR
-    // return Quaternion.fromAxisAngle(Math.abs(ux) > Math.abs(uz) ? [ uy, -ux, 0] : [0,  uz, -uy], 0)
-    //}
+    // Close to PI when dot < -0.999999
+    if (1 + dot <= Quaternion['EPSILON']) {
+      return Quaternion.fromAxisAngle(Math.abs(ux) > Math.abs(uz) ? [-uy, ux, 0 ] : [0, -uz,  uy ], Math.PI);
+      // alternative: return Quaternion.fromAxisAngle(Math.abs(ux) > Math.abs(uz) ? [ uy, -ux, 0] : [0,  uz, -uy ], Math.PI);
+    }
 
     var wx = uy * vz - uz * vy;
     var wy = uz * vx - ux * vz;
     var wz = ux * vy - uy * vx;
 
-    return new Quaternion(
-      dot + Math.sqrt(dot * dot + wx * wx + wy * wy + wz * wz),
-      wx,
-      wy,
-      wz
-    ).normalize();
+    return new Quaternion(1 + dot, wx, wy, wz).normalize();
   };
 
   /**
@@ -1138,15 +1139,15 @@
 
     var tr = m00 + m11 + m22;
 
-    if (tr > 0) { 
-      var S = Math.sqrt(tr+1.0) * 2; // S=4*qw
+    if (tr > 0) {
+      var S = Math.sqrt(tr + 1.0) * 2; // S=4*qw
 
       return new Quaternion(
         0.25 * S,
         (m21 - m12) / S,
         (m02 - m20) / S,
         (m10 - m01) / S);
-    } else if ((m00 > m11)&(m00 > m22)) { 
+    } else if ((m00 > m11) & (m00 > m22)) {
       var S = Math.sqrt(1.0 + m00 - m11 - m22) * 2; // S=4*qx
 
       return new Quaternion(
@@ -1154,7 +1155,7 @@
         0.25 * S,
         (m01 + m10) / S,
         (m02 + m20) / S);
-    } else if (m11 > m22) { 
+    } else if (m11 > m22) {
       var S = Math.sqrt(1.0 + m11 - m00 - m22) * 2; // S=4*qy
 
       return new Quaternion(
@@ -1162,7 +1163,7 @@
         (m01 + m10) / S,
         0.25 * S,
         (m12 + m21) / S);
-    } else { 
+    } else {
       var S = Math.sqrt(1.0 + m22 - m00 - m11) * 2; // S=4*qz
 
       return new Quaternion(

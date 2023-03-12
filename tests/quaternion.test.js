@@ -713,6 +713,45 @@ describe("Quaternions", function() {
     assert.q(Quaternion(v).normalize(), Quaternion(vPrime).normalize());
   });
 
+  it('should rotate one vector onto the other around PI', function() {
+
+    var u = [10,0,0];
+    var v = [-12,0,0];
+
+    var q = Quaternion.fromBetweenVectors(u, v);
+    var vPrime = q.rotateVector(u);
+
+    // Is the length of rotated equal to the original?
+    assert.approx(Quaternion(u).norm(), Quaternion(vPrime).norm());
+
+    // Do they look in the same direction?
+    assert.q(Quaternion(v).normalize(), Quaternion(vPrime).normalize());
+
+    var u = [0,10,0];
+    var v = [0,-12,0];
+
+    var q = Quaternion.fromBetweenVectors(u, v);
+    var vPrime = q.rotateVector(u);
+
+    // Is the length of rotated equal to the original?
+    assert.approx(Quaternion(u).norm(), Quaternion(vPrime).norm());
+
+    // Do they look in the same direction?
+    assert.q(Quaternion(v).normalize(), Quaternion(vPrime).normalize());
+
+    var u = [0,0,10];
+    var v = [0,0,150];
+
+    var q = Quaternion.fromBetweenVectors(u, v);
+    var vPrime = q.rotateVector(u);
+
+    // Is the length of rotated equal to the original?
+    assert.approx(Quaternion(u).norm(), Quaternion(vPrime).norm());
+
+    // Do they look in the same direction?
+    assert.q(Quaternion(v).normalize(), Quaternion(vPrime).normalize());
+  });
+
   it('should rotate additive inverse to the same point', function() {
 
     var q1 = Quaternion(Math.random(),Math.random(),Math.random(),Math.random()).normalize();
