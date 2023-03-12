@@ -983,13 +983,14 @@
 
     var dot = ux * vx + uy * vy + uz * vz;
 
-    // Parallel check
+    // Parallel check when dot > 0.999999
     if (dot >= 1 - Quaternion['EPSILON']) {
       return Quaternion['ONE'];
     }
 
     // Close to PI when dot < -0.999999
     if (1 + dot <= Quaternion['EPSILON']) {
+      // Rotate 180° around any orthogonal vector
       return Quaternion['fromAxisAngle'](Math.abs(ux) > Math.abs(uz) ? [-uy, ux, 0 ] : [0, -uz,  uy ], Math.PI);
       // alternative: return Quaternion.fromAxisAngle(Math.abs(ux) > Math.abs(uz) ? [ uy, -ux, 0] : [0,  uz, -uy ], Math.PI);
     }
