@@ -1,7 +1,7 @@
 /**
- * @license Quaternion.js v1.4.0 27/03/2022
+ * @license Quaternion.js v1.4.1 12/03/2023
  *
- * Copyright (c) 2022, Robert Eisele (robert@xarg.org)
+ * Copyright (c) 2023, Robert Eisele (raw.org)
  * Licensed under the MIT license.
  **/
 (function(root) {
@@ -836,7 +836,7 @@
     },
     /**
      * Rotates a vector according to the current quaternion, assumes |q|=1
-     * @link https://www.xarg.org/proof/vector-rotation-using-quaternions/
+     * @link https://raw.org/proof/vector-rotation-using-quaternions/
      *
      * @param {Array} v The vector to be rotated
      * @returns {Array}
@@ -960,7 +960,7 @@
 
   /**
    * Calculates the quaternion to rotate one vector onto another
-   * @link https://www.xarg.org/proof/quaternion-from-two-vectors/
+   * @link https://raw.org/proof/quaternion-from-two-vectors/
    *
    * @param {Array} u
    * @param {Array} v
@@ -990,7 +990,7 @@
 
     // Close to PI when dot < -0.999999
     if (1 + dot <= Quaternion['EPSILON']) {
-      return Quaternion.fromAxisAngle(Math.abs(ux) > Math.abs(uz) ? [-uy, ux, 0 ] : [0, -uz,  uy ], Math.PI);
+      return Quaternion['fromAxisAngle'](Math.abs(ux) > Math.abs(uz) ? [-uy, ux, 0 ] : [0, -uz,  uy ], Math.PI);
       // alternative: return Quaternion.fromAxisAngle(Math.abs(ux) > Math.abs(uz) ? [ uy, -ux, 0] : [0,  uz, -uy ], Math.PI);
     }
 
