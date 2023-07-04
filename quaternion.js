@@ -1,5 +1,5 @@
 /**
- * @license Quaternion.js v1.4.1 12/03/2023
+ * @license Quaternion.js v1.4.2 12/03/2023
  *
  * Copyright (c) 2023, Robert Eisele (raw.org)
  * Licensed under the MIT license.
@@ -818,11 +818,11 @@
 
       return {
         // X-axis rotation
-        roll: Math.atan2(2 * (w * x + y * z), 1 - 2 * (x * x + y * y)),
+        "roll": Math.atan2(2 * (w * x + y * z), 1 - 2 * (x * x + y * y)),
         // Y-axis rotation
-        pitch: t >= 1 ? Math.PI / 2 : (t <= -1 ? -Math.PI / 2 : Math.asin(t)),
+        "pitch": t >= 1 ? Math.PI / 2 : (t <= -1 ? -Math.PI / 2 : Math.asin(t)),
         // Z-axis rotation
-        yaw: Math.atan2(2 * (w * z + x * y), 1 - 2 * (y * y + z * z))
+        "yaw": Math.atan2(2 * (w * z + x * y), 1 - 2 * (y * y + z * z))
       };
     },
     /**
