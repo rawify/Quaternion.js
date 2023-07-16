@@ -130,11 +130,11 @@ declare namespace Quaternion {
     const I: Quaternion;
     const J: Quaternion;
     const K: Quaternion;
-    const EPSILON: number;
 
     function fromAxisAngle(axis: [number, number, number], angle: number): Quaternion;
     function fromBetweenVectors(u: [number, number, number], v: [number, number, number]): Quaternion;
     function random(): Quaternion;
+    function toAxisAngle(): Quaternion;
     function fromEuler(phi: number, theta: number, psi: number, order?: string): Quaternion;
     function fromMatrix(matrix: Matrix3 | Matrix3_2D): Quaternion;
 }

@@ -1,5 +1,5 @@
 /**
- * @license Quaternion.js v1.4.2 12/03/2023
+ * @license Quaternion.js v1.4.3 16/07/2023
  *
  * Copyright (c) 2023, Robert Eisele (raw.org)
  * Licensed under the MIT license.
@@ -7,6 +7,26 @@
 (function(root) {
 
   'use strict';
+
+  /**
+   * Creates a new Quaternion object
+   * 
+   * @param {number} w 
+   * @param {number} x 
+   * @param {number} y 
+   * @param {number} z 
+   * @returns 
+   */
+  function newQuaternion(w, x, y, z) {
+    var f = Object.create(Quaternion.prototype);
+
+    f['w'] = w;
+    f['x'] = x;
+    f['y'] = y;
+    f['z'] = z;
+
+    return f;
+  }
 
   /**
    * Calculates log(sqrt(a^2+b^2)) in a way to avoid overflows
@@ -39,15 +59,10 @@
   }
 
   /*
-   * Default is the multiplicative one element
+   * Temporary parsing object to avoid re-allocations
    *
    */
-  var P = {
-    'w': 1,
-    'x': 0,
-    'y': 0,
-    'z': 0
-  };
+  var P = Object.create(Quaternion.prototype);
 
   function parse(dest, w, x, y, z) {
 
@@ -184,7 +199,7 @@
 
       dest['w'] = w || 0;
 
-      // Note: This isn't setFromAxis, it's just syntactic sugar!
+      // Note: This isn't fromAxis(), it's just syntactic sugar!
       if (x && x.length === 3) {
         dest['x'] = x[0];
         dest['y'] = x[1];
@@ -231,11 +246,13 @@
    */
   function Quaternion(w, x, y, z) {
 
-    if (!(this instanceof Quaternion)) {
-      return new Quaternion(w, x, y, z);
+    if (this instanceof Quaternion) {
+      parse(this, w, x, y, z);
+    } else {
+      var t = Object.create(Quaternion.prototype);
+      parse(t, w, x, y, z);
+      return t;
     }
-
-    parse(this, w, x, y, z);
   }
 
   Quaternion.prototype = {
@@ -258,7 +275,7 @@
 
       // Q1 + Q2 := [w1, v1] + [w2, v2] = [w1 + w2, v1 + v2]
 
-      return new Quaternion(
+      return newQuaternion(
         this['w'] + P['w'],
         this['x'] + P['x'],
         this['y'] + P['y'],
@@ -280,7 +297,7 @@
       // Q1 - Q2 := Q1 + (-Q2)
       //          = [w1, v1] - [w2, v2] = [w1 - w2, v1 - v2]
 
-      return new Quaternion(
+      return newQuaternion(
         this['w'] - P['w'],
         this['x'] - P['x'],
         this['y'] - P['y'],
@@ -295,7 +312,7 @@
 
       // -Q := [-w, -v]
 
-      return new Quaternion(-this['w'], -this['x'], -this['y'], -this['z']);
+      return newQuaternion(-this['w'], -this['x'], -this['y'], -this['z']);
     },
     /**
      * Calculates the length/modulus/magnitude or the norm of a quaternion
@@ -355,13 +372,13 @@
 
       var norm = Math.sqrt(w * w + x * x + y * y + z * z);
 
-      if (norm < Quaternion['EPSILON']) {
+      if (norm < EPSILON) {
         return Quaternion['ZERO'];
       }
 
       norm = 1 / norm;
 
-      return new Quaternion(w * norm, x * norm, y * norm, z * norm);
+      return newQuaternion(w * norm, x * norm, y * norm, z * norm);
     },
     /**
      * Calculates the Hamilton product of two quaternions
@@ -391,7 +408,7 @@
       var y2 = P['y'];
       var z2 = P['z'];
 
-      return new Quaternion(
+      return newQuaternion(
         w1 * w2 - x1 * x2 - y1 * y2 - z1 * z2,
         w1 * x2 + x1 * w2 + y1 * z2 - z1 * y2,
         w1 * y2 + y1 * w2 + z1 * x2 - x1 * z2,
@@ -405,7 +422,7 @@
      */
     'scale': function(s) {
 
-      return new Quaternion(
+      return newQuaternion(
         this['w'] * s,
         this['x'] * s,
         this['y'] * s,
@@ -458,7 +475,7 @@
 
       normSq = 1 / normSq;
 
-      return new Quaternion(w * normSq, -x * normSq, -y * normSq, -z * normSq);
+      return newQuaternion(w * normSq, -x * normSq, -y * normSq, -z * normSq);
     },
     /**
      * Multiplies a quaternion with the inverse of a second quaternion
@@ -493,7 +510,7 @@
 
       normSq = 1 / normSq;
 
-      return new Quaternion(
+      return newQuaternion(
         (w1 * w2 + x1 * x2 + y1 * y2 + z1 * z2) * normSq,
         (x1 * w2 - w1 * x2 - y1 * z2 + z1 * y2) * normSq,
         (y1 * w2 - w1 * y2 - z1 * x2 + x1 * z2) * normSq,
@@ -518,7 +535,7 @@
       // Moreover the following property holds:
       // (Q1 * Q2)' = Q2' * Q1'
 
-      return new Quaternion(this['w'], -this['x'], -this['y'], -this['z']);
+      return newQuaternion(this['w'], -this['x'], -this['y'], -this['z']);
     },
     /**
      * Calculates the natural exponentiation of the quaternion
@@ -537,11 +554,11 @@
       var scale = wExp / vNorm * Math.sin(vNorm);
 
       if (vNorm === 0) {
-        //return new Quaternion(wExp * Math.cos(vNorm), 0, 0, 0);
-        return new Quaternion(wExp, 0, 0, 0);
+        //return newQuaternion(wExp * Math.cos(vNorm), 0, 0, 0);
+        return newQuaternion(wExp, 0, 0, 0);
       }
 
-      return new Quaternion(
+      return newQuaternion(
         wExp * Math.cos(vNorm),
         x * scale,
         y * scale,
@@ -560,7 +577,7 @@
       var z = this['z'];
 
       if (y === 0 && z === 0) {
-        return new Quaternion(
+        return newQuaternion(
           logHypot(w, x),
           Math.atan2(x, w), 0, 0);
       }
@@ -570,7 +587,7 @@
 
       var scale = Math.atan2(vNorm, w) / vNorm;
 
-      return new Quaternion(
+      return newQuaternion(
         Math.log(qNorm2) * 0.5,
         x * scale,
         y * scale,
@@ -617,26 +634,26 @@
 
             if (b === 0 && a >= 0) {
 
-              return new Quaternion(Math.pow(a, P['w']), 0, 0, 0);
+              return newQuaternion(Math.pow(a, P['w']), 0, 0, 0);
 
             } else if (a === 0) {
 
               switch (P['w'] % 4) {
                 case 0:
-                  return new Quaternion(Math.pow(b, P['w']), 0, 0, 0);
+                  return newQuaternion(Math.pow(b, P['w']), 0, 0, 0);
                 case 1:
-                  return new Quaternion(0, Math.pow(b, P['w']), 0, 0);
+                  return newQuaternion(0, Math.pow(b, P['w']), 0, 0);
                 case 2:
-                  return new Quaternion(-Math.pow(b, P['w']), 0, 0, 0);
+                  return newQuaternion(-Math.pow(b, P['w']), 0, 0, 0);
                 case 3:
-                  return new Quaternion(0, -Math.pow(b, P['w']), 0, 0);
+                  return newQuaternion(0, -Math.pow(b, P['w']), 0, 0);
               }
             }
           }
 
           a = Math.exp(P['w'] * loh - P['x'] * arg);
           b = P['x'] * loh + P['w'] * arg;
-          return new Quaternion(
+          return newQuaternion(
             a * Math.cos(b),
             a * Math.sin(b), 0, 0);
         }
@@ -659,7 +676,7 @@
 
       parse(P, w, x, y, z);
 
-      var eps = Quaternion['EPSILON'];
+      var eps = EPSILON;
 
       // maybe check for NaN's here?
       return Math.abs(P['w'] - this['w']) < eps
@@ -803,11 +820,35 @@
         0, 0, 0, 1];
     },
     /**
+     * Calculates the axis and angle representation of the quaternion
+     *
+     * @returns {Array}
+     */
+    'toAxisAngle': function() {
+
+      var w = this['w'];
+
+      var angle = 2 * Math.acos(w);
+
+      var sin = 2 * w * Math.sqrt(1 - w * w); // sin(angle) = sin(2 * acos(w)) = 2w sqrt(1 - w^2)
+
+      if (Math.abs(sin) < EPSILON) {
+        // If the sine is close to 0, then we're close to the unit quaternion
+        sin = 1;
+      }
+
+      sin = 1 / sin;
+
+      return [
+        [this['x'] * sin, this['y'] * sin, this['z'] * sin], angle
+      ];
+    },
+    /**
      * Calculates the Euler angles represented by the current quat
      * 
      * @returns {Object}
      */
-    'toEuler': function() {
+    'toEuler': function(order) {
 
       var w = this['w'];
       var x = this['x'];
@@ -832,7 +873,7 @@
      */
     'clone': function() {
 
-      return new Quaternion(this);
+      return newQuaternion(this['w'], this['x'], this['y'], this['z']);
     },
     /**
      * Rotates a vector according to the current quaternion, assumes |q|=1
@@ -895,9 +936,9 @@
         cosTheta0 = -cosTheta0;
       }
 
-      if (cosTheta0 >= 1 - Quaternion['EPSILON']) {
+      if (cosTheta0 >= 1 - EPSILON) {
         return function(pct) {
-          return new Quaternion(
+          return newQuaternion(
             w1 + pct * (w2 - w1),
             x1 + pct * (x2 - x1),
             y1 + pct * (y2 - y1),
@@ -917,7 +958,7 @@
         var s0 = cosTheta - cosTheta0 * sinTheta / sinTheta0;
         var s1 = sinTheta / sinTheta0;
 
-        return new Quaternion(
+        return newQuaternion(
           s0 * w1 + s1 * w2,
           s0 * x1 + s1 * x2,
           s0 * y1 + s1 * y2,
@@ -926,12 +967,16 @@
     }
   };
 
-  Quaternion['ZERO'] = new Quaternion(0, 0, 0, 0); // This is the additive identity Quaternion
-  Quaternion['ONE'] = new Quaternion(1, 0, 0, 0); // This is the multiplicative identity Quaternion
-  Quaternion['I'] = new Quaternion(0, 1, 0, 0);
-  Quaternion['J'] = new Quaternion(0, 0, 1, 0);
-  Quaternion['K'] = new Quaternion(0, 0, 0, 1);
-  Quaternion['EPSILON'] = 1e-16;
+  Quaternion['ZERO'] = newQuaternion(0, 0, 0, 0); // This is the additive identity Quaternion
+  Quaternion['ONE'] = newQuaternion(1, 0, 0, 0); // This is the multiplicative identity Quaternion
+  Quaternion['I'] = newQuaternion(0, 1, 0, 0);
+  Quaternion['J'] = newQuaternion(0, 0, 1, 0);
+  Quaternion['K'] = newQuaternion(0, 0, 0, 1);
+  
+  /**
+   * @const
+   */
+  var EPSILON = 1e-16;
 
   /**
    * Creates quaternion by a rotation given as axis-angle orientation
@@ -944,22 +989,22 @@
 
     // Q = [cos(angle / 2), v * sin(angle / 2)]
 
-    var halfAngle = angle * 0.5;
-
     var a = axis[0];
     var b = axis[1];
     var c = axis[2];
+
+    var halfAngle = angle * 0.5;
 
     var sin_2 = Math.sin(halfAngle);
     var cos_2 = Math.cos(halfAngle);
 
     var sin_norm = sin_2 / Math.sqrt(a * a + b * b + c * c);
 
-    return new Quaternion(cos_2, a * sin_norm, b * sin_norm, c * sin_norm);
+    return newQuaternion(cos_2, a * sin_norm, b * sin_norm, c * sin_norm);
   };
 
   /**
-   * Calculates the quaternion to rotate one vector onto another
+   * Calculates the quaternion to rotate vector u onto vector v
    * @link https://raw.org/proof/quaternion-from-two-vectors/
    *
    * @param {Array} u
@@ -978,20 +1023,20 @@
     var uLen = Math.sqrt(ux * ux + uy * uy + uz * uz);
     var vLen = Math.sqrt(vx * vx + vy * vy + vz * vz);
 
-    if (uLen > 0) ux/= uLen, uy/= uLen, uz/= uLen;
-    if (vLen > 0) vx/= vLen, vy/= vLen, vz/= vLen;
+    if (uLen > 0) ux /= uLen, uy /= uLen, uz /= uLen;
+    if (vLen > 0) vx /= vLen, vy /= vLen, vz /= vLen;
 
     var dot = ux * vx + uy * vy + uz * vz;
 
     // Parallel check when dot > 0.999999
-    if (dot >= 1 - Quaternion['EPSILON']) {
+    if (dot >= 1 - EPSILON) {
       return Quaternion['ONE'];
     }
 
     // Close to PI when dot < -0.999999
-    if (1 + dot <= Quaternion['EPSILON']) {
+    if (1 + dot <= EPSILON) {
       // Rotate 180° around any orthogonal vector
-      return Quaternion['fromAxisAngle'](Math.abs(ux) > Math.abs(uz) ? [-uy, ux, 0 ] : [0, -uz,  uy ], Math.PI);
+      return Quaternion['fromAxisAngle'](Math.abs(ux) > Math.abs(uz) ? [-uy, ux, 0] : [0, -uz, uy], Math.PI);
       // alternative: return Quaternion.fromAxisAngle(Math.abs(ux) > Math.abs(uz) ? [ uy, -ux, 0] : [0,  uz, -uy ], Math.PI);
     }
 
@@ -999,7 +1044,7 @@
     var wy = uz * vx - ux * vz;
     var wz = ux * vy - uy * vx;
 
-    return new Quaternion(1 + dot, wx, wy, wz).normalize();
+    return newQuaternion(1 + dot, wx, wy, wz)['normalize']();
   };
 
   /**
@@ -1015,7 +1060,7 @@
     var s = Math.sqrt(1 - u1);
     var t = Math.sqrt(u1);
 
-    return new Quaternion(
+    return newQuaternion(
       t * Math.cos(2 * Math.PI * u3),
       s * Math.sin(2 * Math.PI * u2),
       s * Math.cos(2 * Math.PI * u2),
@@ -1048,7 +1093,7 @@
 
     if (order === undefined || order === 'ZXY') {
       // axisAngle([0, 0, 1], x) * axisAngle([1, 0, 0], y) * axisAngle([0, 1, 0], z)
-      return new Quaternion(
+      return newQuaternion(
         cX * cY * cZ - sX * sY * sZ,
         cX * cZ * sY - cY * sX * sZ,
         cX * cY * sZ + cZ * sX * sY,
@@ -1057,7 +1102,7 @@
 
     if (order === 'XYZ' || order === 'RPY') {
       // axisAngle([1, 0, 0], x) * axisAngle([0, 1, 0], y) * axisAngle([0, 0, 1], z)
-      return new Quaternion(
+      return newQuaternion(
         cX * cY * cZ - sX * sY * sZ,
         cY * cZ * sX + cX * sY * sZ,
         cX * cZ * sY - cY * sX * sZ,
@@ -1066,7 +1111,7 @@
 
     if (order === 'YXZ') {
       // axisAngle([0, 1, 0], x) * axisAngle([1, 0, 0], y) * axisAngle([0, 0, 1], z)
-      return new Quaternion(
+      return newQuaternion(
         cX * cY * cZ + sX * sY * sZ,
         cX * cZ * sY + cY * sX * sZ,
         cY * cZ * sX - cX * sY * sZ,
@@ -1075,7 +1120,7 @@
 
     if (order === 'ZYX' || order === 'YPR') {
       // axisAngle([0, 0, 1], x) * axisAngle([0, 1, 0], y) * axisAngle([1, 0, 0], z)
-      return new Quaternion(
+      return newQuaternion(
         cX * cY * cZ + sX * sY * sZ,
         cX * cY * sZ - cZ * sX * sY,
         cX * cZ * sY + cY * sX * sZ,
@@ -1084,7 +1129,7 @@
 
     if (order === 'YZX') {
       // axisAngle([0, 1, 0], x) * axisAngle([0, 0, 1], y) * axisAngle([1, 0, 0], z)
-      return new Quaternion(
+      return newQuaternion(
         cX * cY * cZ - sX * sY * sZ,
         cX * cY * sZ + cZ * sX * sY,
         cY * cZ * sX + cX * sY * sZ,
@@ -1093,7 +1138,7 @@
 
     if (order === 'XZY') {
       // axisAngle([1, 0, 0], x) * axisAngle([0, 0, 1], z) * axisAngle([0, 1, 0], y)
-      return new Quaternion(
+      return newQuaternion(
         cX * cY * cZ + sX * sY * sZ,
         cY * cZ * sX - cX * sY * sZ,
         cX * cY * sZ - cZ * sX * sY,
@@ -1143,7 +1188,7 @@
     if (tr > 0) {
       var S = Math.sqrt(tr + 1.0) * 2; // S=4*qw
 
-      return new Quaternion(
+      return newQuaternion(
         0.25 * S,
         (m21 - m12) / S,
         (m02 - m20) / S,
@@ -1151,7 +1196,7 @@
     } else if ((m00 > m11) & (m00 > m22)) {
       var S = Math.sqrt(1.0 + m00 - m11 - m22) * 2; // S=4*qx
 
-      return new Quaternion(
+      return newQuaternion(
         (m21 - m12) / S,
         0.25 * S,
         (m01 + m10) / S,
@@ -1159,7 +1204,7 @@
     } else if (m11 > m22) {
       var S = Math.sqrt(1.0 + m11 - m00 - m22) * 2; // S=4*qy
 
-      return new Quaternion(
+      return newQuaternion(
         (m02 - m20) / S,
         (m01 + m10) / S,
         0.25 * S,
@@ -1167,7 +1212,7 @@
     } else {
       var S = Math.sqrt(1.0 + m22 - m00 - m11) * 2; // S=4*qz
 
-      return new Quaternion(
+      return newQuaternion(
         (m10 - m01) / S,
         (m02 + m20) / S,
         (m12 + m21) / S,
