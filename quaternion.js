@@ -1,5 +1,5 @@
 /**
- * @license Quaternion.js v1.4.3 16/07/2023
+ * @license Quaternion.js v1.4.4 12/03/2023
  *
  * Copyright (c) 2023, Robert Eisele (raw.org)
  * Licensed under the MIT license.
@@ -193,8 +193,8 @@
     if (w === undefined && dest !== P) {
       dest['w'] = 1;
       dest['x'] =
-      dest['y'] =
-      dest['z'] = 0;
+        dest['y'] =
+        dest['z'] = 0;
     } else {
 
       dest['w'] = w || 0;
@@ -830,18 +830,16 @@
 
       var angle = 2 * Math.acos(w);
 
-      var sin = 2 * w * Math.sqrt(1 - w * w); // sin(angle) = sin(2 * acos(w)) = 2w sqrt(1 - w^2)
+      var sin = Math.sqrt(1 - w * w); // sin(angle / 2) = sin(acos(w)) = sqrt(1 - w^2), or alternatively 1 = dot(Q) <=> dot(v) = 1 - w^2
 
-      if (Math.abs(sin) < EPSILON) {
+      if (sin < EPSILON) {
         // If the sine is close to 0, then we're close to the unit quaternion
         sin = 1;
+      } else {
+        sin = 1 / sin;
       }
 
-      sin = 1 / sin;
-
-      return [
-        [this['x'] * sin, this['y'] * sin, this['z'] * sin], angle
-      ];
+      return [[this['x'] * sin, this['y'] * sin, this['z'] * sin], angle];
     },
     /**
      * Calculates the Euler angles represented by the current quat
@@ -855,16 +853,58 @@
       var y = this['y'];
       var z = this['z'];
 
-      var t = 2 * (w * y - z * x);
+      function asin(t) {
+        return t >= 1 ? Math.PI / 2 : (t <= -1 ? -Math.PI / 2 : Math.asin(t));
+      }
 
-      return {
-        // X-axis rotation
-        "roll": Math.atan2(2 * (w * x + y * z), 1 - 2 * (x * x + y * y)),
-        // Y-axis rotation
-        "pitch": t >= 1 ? Math.PI / 2 : (t <= -1 ? -Math.PI / 2 : Math.asin(t)),
-        // Z-axis rotation
-        "yaw": Math.atan2(2 * (w * z + x * y), 1 - 2 * (y * y + z * z))
-      };
+      if (order === undefined || order === 'ZXY') {
+        return {
+          "roll": Math.atan2(2 * (w * y - x * z), w * w - x * x - y * y + z * z),
+          "pitch": asin(2 * (y * z + w * x)),
+          "yaw": Math.atan2(2 * (w * z - x * y), w * w - x * x + y * y - z * z)
+        };
+      }
+
+      if (order === 'XYZ') {
+        return {
+          "roll": Math.atan2(2 * (w * z - x * y), w * w + x * x - y * y - z * z),
+          "pitch": asin(2 * (x * z + w * y)),
+          "yaw": Math.atan2(2 * (w * x - y * z), w * w - x * x - y * y + z * z)
+        };
+      }
+
+      if (order === 'YXZ') {
+        return {
+          "roll": Math.atan2(2 * (x * y + w * z), w * w - x * x + y * y - z * z),
+          "pitch": asin(2 * (w * x - y * z)),
+          "yaw": Math.atan2(2 * (x * z + w * y), w * w - x * x - y * y + z * z)
+        };
+      }
+
+      if (order === 'ZYX') {
+        return {
+          "roll": Math.atan2(2 * (w * x + y * z), 1 - 2 * (x * x + y * y)), // or atan2(2 * (w * x + y * z), w * w - x * x - y * y + z * z),
+          "pitch": asin(2 * (w * y - x * z)),
+          "yaw": Math.atan2(2 * (x * y + w * z), 1 - 2 * (y * y + z * z)) // or atan2(2 * (x * y + w * z), w * w + x * x - y * y - z * z)
+        };
+      }
+
+      if (order === 'YZX') {
+        return {
+          "roll": Math.atan2(2 * (w * x - y * z), w * w - x * x + y * y - z * z), // Heading - or atan2(2 * (y * w - x * z), 1 - 2 * (y * y - z * z))
+          "pitch": asin(2 * (x * y + w * z)), // Attitude
+          "yaw": Math.atan2(2 * (w * y - x * z), w * w + x * x - y * y - z * z) // bank - or atan2(2 * (x * w - y * z), 1 - 2 * (x * x - z * z))
+        };
+      }
+
+      if (order === 'XZY') {
+        return {
+          "roll": Math.atan2(2 * (x * z + w * y), w * w + x * x - y * y - z * z),
+          "pitch": asin(2 * (w * z - x * y)),
+          "yaw": Math.atan2(2 * (y * z + w * x), w * w - x * x + y * y - z * z)
+        };
+      }
+      return null;
     },
     /**
      * Clones the actual object
@@ -972,7 +1012,7 @@
   Quaternion['I'] = newQuaternion(0, 1, 0, 0);
   Quaternion['J'] = newQuaternion(0, 0, 1, 0);
   Quaternion['K'] = newQuaternion(0, 0, 0, 1);
-  
+
   /**
    * @const
    */

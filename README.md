@@ -210,7 +210,7 @@ Array toAxisAngle()
 ---
 Calculates the axis and angle representation of the current quaternion
 
-Object toEuler()
+Object toEuler(order="ZXY")
 ---
 Calculates the Euler angles represented by the current quat
 

@@ -108,7 +108,7 @@ declare class Quaternion {
     toVector: () => [number, number, number, number];
     toMatrix: <T extends boolean>(twoD: T) => T extends true ? Matrix3_2D : Matrix3;
     toMatrix4: <T extends boolean>(twoD: T) => T extends true ? Matrix4_2D : Matrix4;
-    toEuler: () => {
+    toEuler: (order?: string) => {
         roll: number;
         pitch: number;
         yaw: number;
