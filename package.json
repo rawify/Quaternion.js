@@ -1,7 +1,7 @@
 {
     "name": "quaternion",
     "title": "Quaternion.js",
-    "version": "1.4.5",
+    "version": "1.4.6",
     "homepage": "https://github.com/infusion/Quaternion.js",
     "bugs": "https://github.com/infusion/Quaternion.js/issues",
     "description": "A rotation library using quaternions",
@@ -15,7 +15,7 @@
         "slerp",
         "quat"
     ],
-    "author": "Robert Eisele <robert@xarg.org> (http://www.xarg.org/)",
+    "author": "Robert Eisele <robert@raw.org> (https://raw.org/)",
     "main": "quaternion",
     "types": "./quaternion.d.ts",
     "private": false,

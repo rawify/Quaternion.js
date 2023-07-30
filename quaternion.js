@@ -1,5 +1,5 @@
 /**
- * @license Quaternion.js v1.4.5 12/03/2023
+ * @license Quaternion.js v1.4.6 12/03/2023
  *
  * Copyright (c) 2023, Robert Eisele (raw.org)
  * Licensed under the MIT license.
@@ -24,6 +24,29 @@
     f['x'] = x;
     f['y'] = y;
     f['z'] = z;
+
+    return f;
+  }
+
+  /**
+   * Creates a new normalized Quaternion object
+   *
+   * @param {number} w
+   * @param {number} x
+   * @param {number} y
+   * @param {number} z
+   * @returns
+   */
+  function newNormalized(w, x, y, z) {
+    var f = Object.create(Quaternion.prototype);
+
+    // We assume |Q| > 0 for internal usage
+    var il = 1 / Math.sqrt(w * w + x * x + y * y + z * z);
+
+    f['w'] = w * il;
+    f['x'] = x * il;
+    f['y'] = y * il;
+    f['z'] = z * il;
 
     return f;
   }
@@ -828,17 +851,15 @@
 
       var w = this['w'];
 
-      var angle = 2 * Math.acos(w);
+      var angle = 2 * Math.acos(w); // Alternatively: 2 * atan2(|v|, w)
 
-      var sin = Math.sqrt(1 - w * w); // sin(angle / 2) = sin(acos(w)) = sqrt(1 - w^2), or alternatively 1 = dot(Q) <=> dot(v) = 1 - w^2
+      var sin = Math.sqrt(1 - w * w); // sin(angle / 2) = sin(acos(w)) = sqrt(1 - w^2) = |v|, since 1 = dot(Q) <=> dot(v) = 1 - w^2
 
-      if (sin < EPSILON) {
-        // If the sine is close to 0, then we're close to the unit quaternion
-        sin = 1;
-      } else {
-        sin = 1 / sin;
+      if (sin < EPSILON) { // Alternatively |v| == 0
+        // If the sine is close to 0, we're close to the unit quaternion and the direction does not matter
+        return [[this['x'], this['y'], this['z']], 0]; // or [[1, 0, 0], 0] ?  or [[0, 0, 0], 0] ?
       }
-
+      sin = 1 / sin;
       return [[this['x'] * sin, this['y'] * sin, this['z'] * sin], angle];
     },
     /**
@@ -978,11 +999,11 @@
 
       if (cosTheta0 >= 1 - EPSILON) {
         return function(pct) {
-          return newQuaternion(
+          return newNormalized(
             w1 + pct * (w2 - w1),
             x1 + pct * (x2 - x1),
             y1 + pct * (y2 - y1),
-            z1 + pct * (z2 - z1))['normalize']();
+            z1 + pct * (z2 - z1));
         };
       }
 
@@ -1063,28 +1084,41 @@
     var uLen = Math.sqrt(ux * ux + uy * uy + uz * uz);
     var vLen = Math.sqrt(vx * vx + vy * vy + vz * vz);
 
+    // Normalize u and v
     if (uLen > 0) ux /= uLen, uy /= uLen, uz /= uLen;
     if (vLen > 0) vx /= vLen, vy /= vLen, vz /= vLen;
 
+    // Calculate dot product of normalized u and v
     var dot = ux * vx + uy * vy + uz * vz;
 
-    // Parallel check when dot > 0.999999
+    // Parallel when dot > 0.999999
     if (dot >= 1 - EPSILON) {
       return Quaternion['ONE'];
     }
 
-    // Close to PI when dot < -0.999999
+    // Anti-Parallel (close to PI) when dot < -0.999999
     if (1 + dot <= EPSILON) {
+
       // Rotate 180° around any orthogonal vector
-      return Quaternion['fromAxisAngle'](Math.abs(ux) > Math.abs(uz) ? [-uy, ux, 0] : [0, -uz, uy], Math.PI);
-      // alternative: return Quaternion.fromAxisAngle(Math.abs(ux) > Math.abs(uz) ? [ uy, -ux, 0] : [0,  uz, -uy ], Math.PI);
+      // axis = len(cross([1, 0, 0], u)) == 0 ? cross([0, 1, 0], u) : cross([1, 0, 0], u) and therefore
+      //    return Quaternion['fromAxisAngle'](Math.abs(ux) > Math.abs(uz) ? [-uy, ux, 0] : [0, -uz, uy], Math.PI)
+      // or return Quaternion['fromAxisAngle'](Math.abs(ux) > Math.abs(uz) ? [ uy,-ux, 0] : [0,  uz,-uy], Math.PI)
+      // or ...
+
+      // Since fromAxisAngle(axis, PI) == Quaternion(0, axis).normalize(),
+      if (Math.abs(ux) > Math.abs(uz)) {
+        return newNormalized(0, -uy, ux, 0);
+      } else {
+        return newNormalized(0, 0, -uz, uy);
+      }
     }
 
+    // w = cross(u, v)
     var wx = uy * vz - uz * vy;
     var wy = uz * vx - ux * vz;
     var wz = ux * vy - uy * vx;
 
-    return newQuaternion(1 + dot, wx, wy, wz)['normalize']();
+    return newNormalized(1 + dot, wx, wy, wz);
   };
 
   /**
@@ -1130,6 +1164,8 @@
     var sX = Math.sin(_x);
     var sY = Math.sin(_y);
     var sZ = Math.sin(_z);
+
+    // @TODO: Optimize by removing identical multiplications
 
     if (order === undefined || order === 'ZXY') {
       // axisAngle([0, 0, 1], x) * axisAngle([1, 0, 0], y) * axisAngle([0, 1, 0], z)
