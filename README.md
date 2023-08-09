@@ -26,7 +26,7 @@ var rad = Math.PI / 180;
 window.addEventListener("deviceorientation", function(ev) {
 
   // Update the rotation object
-  var q = Quaternion.fromEuler(ev.alpha * rad, ev.beta * rad, ev.gamma * rad, 'ZXY');
+  var q = Quaternion.fromEuler(ev.alpha * rad, ev.beta * rad, -ev.gamma * rad, 'ZXY');
 
   // Set the CSS style to the element you want to rotate
   elm.style.transform = q.toCSSTransform();
