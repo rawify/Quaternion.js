@@ -29,7 +29,7 @@ window.addEventListener("deviceorientation", function(ev) {
   var q = Quaternion.fromEuler(ev.alpha * rad, ev.beta * rad, ev.gamma * rad, 'ZXY');
 
   // Set the CSS style to the element you want to rotate
-  elm.style.transform = "matrix3d(" + q.conjugate().toMatrix4() + ")";
+  elm.style.transform = q.toCSSTransform();
 
 }, true);
 ```
@@ -205,6 +205,10 @@ Calculates the 3x3 rotation matrix for the current quat as a 9 element array or 
 Array toMatrix4(2d=false)
 ---
 Calculates the homogeneous 4x4 rotation matrix for the current quat as a 16 element array or alternatively as a 2d array
+
+String toCSSTransform()
+---
+Determines the homogeneous rotation matrix string used for CSS 3D transforms
 
 Array toAxisAngle()
 ---

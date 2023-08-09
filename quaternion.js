@@ -1,5 +1,5 @@
 /**
- * @license Quaternion.js v1.4.6 12/03/2023
+ * @license Quaternion.js v1.4.7 09/08/2023
  *
  * Copyright (c) 2023, Robert Eisele (raw.org)
  * Licensed under the MIT license.
@@ -843,6 +843,30 @@
         0, 0, 0, 1];
     },
     /**
+     * Determines the homogeneous rotation matrix string used for CSS 3D transforms
+     *
+     * @returns {string}
+     */
+    'toCSSTransform': function() {
+
+      var w = this['w'];
+      var x = this['x'];
+      var y = this['y'];
+      var z = this['z'];
+
+      var wx = w * x, wy = w * y, wz = w * z;
+      var xx = x * x, xy = x * y, xz = x * z;
+      var yy = y * y, yz = y * z, zz = z * z;
+
+      // It is basically the transpose of toMatrix4()
+      return "matrix3d(" + [
+        1 - 2 * (yy + zz), 2 * (xy + wz), 2 * (xz - wy), 0,
+        2 * (xy - wz), 1 - 2 * (xx + zz), 2 * (yz + wx), 0,
+        2 * (xz + wy), 2 * (yz - wx), 1 - 2 * (xx + yy), 0,
+        0, 0, 0, 1
+      ].join(",") + ")";
+    },
+    /**
      * Calculates the axis and angle representation of the quaternion
      *
      * @returns {Array}
@@ -1145,17 +1169,17 @@
   /**
    * Creates a quaternion by a rotation given by Euler angles
    *
-   * @param {number} phi
-   * @param {number} theta
-   * @param {number} psi
+   * @param {number} φ First angle
+   * @param {number} θ Second angle
+   * @param {number} ψ Third angle
    * @param {string=} order
    * @returns {Quaternion}
    */
-  Quaternion['fromEuler'] = function(phi, theta, psi, order) {
+  Quaternion['fromEuler'] = function(φ, θ, ψ, order) {
 
-    var _x = phi * 0.5;
-    var _y = theta * 0.5;
-    var _z = psi * 0.5;
+    var _x = φ * 0.5;
+    var _y = θ * 0.5;
+    var _z = ψ * 0.5;
 
     var cX = Math.cos(_x);
     var cY = Math.cos(_y);
@@ -1165,60 +1189,58 @@
     var sY = Math.sin(_y);
     var sZ = Math.sin(_z);
 
-    // @TODO: Optimize by removing identical multiplications
-
-    if (order === undefined || order === 'ZXY') {
-      // axisAngle([0, 0, 1], x) * axisAngle([1, 0, 0], y) * axisAngle([0, 1, 0], z)
+    if (order === undefined || order === 'ZXY') { // Same as left-hand RPY
+      // axisAngle([0, 0, 1], φ) * axisAngle([1, 0, 0], θ) * axisAngle([0, 1, 0], ψ)
       return newQuaternion(
         cX * cY * cZ - sX * sY * sZ,
-        cX * cZ * sY - cY * sX * sZ,
-        cX * cY * sZ + cZ * sX * sY,
-        cY * cZ * sX + cX * sY * sZ);
+        sY * cX * cZ - sX * sZ * cY,
+        sX * sY * cZ + sZ * cX * cY,
+        sX * cY * cZ + sY * sZ * cX);
     }
 
-    if (order === 'XYZ' || order === 'RPY') {
-      // axisAngle([1, 0, 0], x) * axisAngle([0, 1, 0], y) * axisAngle([0, 0, 1], z)
+    if (order === 'XYZ' || order === 'RPY') { // RPY assumes right-hand coordinate system
+      // axisAngle([1, 0, 0], φ) * axisAngle([0, 1, 0], θ) * axisAngle([0, 0, 1], ψ)
       return newQuaternion(
         cX * cY * cZ - sX * sY * sZ,
-        cY * cZ * sX + cX * sY * sZ,
-        cX * cZ * sY - cY * sX * sZ,
-        cX * cY * sZ + cZ * sX * sY);
+        sX * cY * cZ + sY * sZ * cX,
+        sY * cX * cZ - sX * sZ * cY,
+        sX * sY * cZ + sZ * cX * cY);
     }
 
-    if (order === 'YXZ') {
-      // axisAngle([0, 1, 0], x) * axisAngle([1, 0, 0], y) * axisAngle([0, 0, 1], z)
+    if (order === 'YXZ') { // Same as left-hand YPR
+      // axisAngle([0, 1, 0], φ) * axisAngle([1, 0, 0], θ) * axisAngle([0, 0, 1], ψ)
       return newQuaternion(
-        cX * cY * cZ + sX * sY * sZ,
-        cX * cZ * sY + cY * sX * sZ,
-        cY * cZ * sX - cX * sY * sZ,
-        cX * cY * sZ - cZ * sX * sY);
+        sX * sY * sZ + cX * cY * cZ,
+        sX * sZ * cY + sY * cX * cZ,
+        sX * cY * cZ - sY * sZ * cX,
+        sZ * cX * cY - sX * sY * cZ);
     }
 
-    if (order === 'ZYX' || order === 'YPR') {
-      // axisAngle([0, 0, 1], x) * axisAngle([0, 1, 0], y) * axisAngle([1, 0, 0], z)
+    if (order === 'ZYX' || order === 'YPR') { // YPR assumes right-hand coordinate system
+      // axisAngle([0, 0, 1], φ) * axisAngle([0, 1, 0], θ) * axisAngle([1, 0, 0], ψ)
       return newQuaternion(
-        cX * cY * cZ + sX * sY * sZ,
-        cX * cY * sZ - cZ * sX * sY,
-        cX * cZ * sY + cY * sX * sZ,
-        cY * cZ * sX - cX * sY * sZ);
+        sX * sY * sZ + cX * cY * cZ,
+        sZ * cX * cY - sX * sY * cZ,
+        sX * sZ * cY + sY * cX * cZ,
+        sX * cY * cZ - sY * sZ * cX);
     }
 
     if (order === 'YZX') {
-      // axisAngle([0, 1, 0], x) * axisAngle([0, 0, 1], y) * axisAngle([1, 0, 0], z)
+      // axisAngle([0, 1, 0], x) * axisAngle([0, 0, 1], θ) * axisAngle([1, 0, 0], ψ)
       return newQuaternion(
         cX * cY * cZ - sX * sY * sZ,
-        cX * cY * sZ + cZ * sX * sY,
-        cY * cZ * sX + cX * sY * sZ,
-        cX * cZ * sY - cY * sX * sZ);
+        sX * sY * cZ + sZ * cX * cY,
+        sX * cY * cZ + sY * sZ * cX,
+        sY * cX * cZ - sX * sZ * cY);
     }
 
     if (order === 'XZY') {
-      // axisAngle([1, 0, 0], x) * axisAngle([0, 0, 1], z) * axisAngle([0, 1, 0], y)
+      // axisAngle([1, 0, 0], x) * axisAngle([0, 0, 1], θ) * axisAngle([0, 1, 0], ψ)
       return newQuaternion(
-        cX * cY * cZ + sX * sY * sZ,
-        cY * cZ * sX - cX * sY * sZ,
-        cX * cY * sZ - cZ * sX * sY,
-        cX * cZ * sY + cY * sX * sZ);
+        sX * sY * sZ + cX * cY * cZ,
+        sX * cY * cZ - sY * sZ * cX,
+        sZ * cX * cY - sX * sY * cZ,
+        sX * sZ * cY + sY * cX * cZ);
     }
     return null;
   };
