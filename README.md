@@ -244,12 +244,12 @@ Quaternion.fromEuler(Φ, θ, ψ[, order="ZXY"])
 ---
 Gets a quaternion given three Euler angles. The angles are applied from right to left. 
 
-So, order `ZXY` for example means first rotate around Y by ψ then around X by θ and then around Z by Φ (`RotZ(Φ)RotX(θ)RotY(ψ)`). The order can take the string value `ZXY, XYZ or RPY, YXZ, ZYX or YPR, YZX, XZY`.
+So, order `ZXY` for example means first rotate around Y by ψ then around X by θ and then around Z by Φ (`RotZ(Φ)RotX(θ)RotY(ψ)`). The order can take the string value `ZXY or RPY, XYZ, YXZ or YPR, ZYX, YZX, XZY`.
 
 ### Relations
 
 - `axisAngle([0, 1, 0], x)axisAngle([0, 0, 1], y)axisAngle([1, 0, 0], z) = fromEuler(x, y, z, 'YZX')`
-- Mathematica `RollPitchYawMatrix[{α,β,γ}] = fromEuler(γ, β, α, 'RPY')`
+- Mathematica `RollPitchYawMatrix[{α, β, γ}] = fromEuler(α, β, γ, 'RPY')`
 
 
 

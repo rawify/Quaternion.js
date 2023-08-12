@@ -1,5 +1,5 @@
 /**
- * @license Quaternion.js v1.4.7 09/08/2023
+ * @license Quaternion.js v1.4.8 09/08/2023
  *
  * Copyright (c) 2023, Robert Eisele (raw.org)
  * Licensed under the MIT license.
@@ -1189,7 +1189,7 @@
     var sY = Math.sin(_y);
     var sZ = Math.sin(_z);
 
-    if (order === undefined || order === 'ZXY') { // Same as left-hand RPY
+    if (order === undefined || order === 'ZXY' || order === 'RPY') { // Same as left-hand RPY
       // axisAngle([0, 0, 1], φ) * axisAngle([1, 0, 0], θ) * axisAngle([0, 1, 0], ψ)
       return newQuaternion(
         cX * cY * cZ - sX * sY * sZ,
@@ -1198,7 +1198,7 @@
         sX * cY * cZ + sY * sZ * cX);
     }
 
-    if (order === 'XYZ' || order === 'RPY') { // RPY assumes right-hand coordinate system
+    if (order === 'XYZ') { // Same as right-hand RPY
       // axisAngle([1, 0, 0], φ) * axisAngle([0, 1, 0], θ) * axisAngle([0, 0, 1], ψ)
       return newQuaternion(
         cX * cY * cZ - sX * sY * sZ,
@@ -1207,7 +1207,7 @@
         sX * sY * cZ + sZ * cX * cY);
     }
 
-    if (order === 'YXZ') { // Same as left-hand YPR
+    if (order === 'YXZ' || order === 'YPR') { // Same as left-hand YPR
       // axisAngle([0, 1, 0], φ) * axisAngle([1, 0, 0], θ) * axisAngle([0, 0, 1], ψ)
       return newQuaternion(
         sX * sY * sZ + cX * cY * cZ,
@@ -1216,7 +1216,7 @@
         sZ * cX * cY - sX * sY * cZ);
     }
 
-    if (order === 'ZYX' || order === 'YPR') { // YPR assumes right-hand coordinate system
+    if (order === 'ZYX') { // Same as right-hand YPR
       // axisAngle([0, 0, 1], φ) * axisAngle([0, 1, 0], θ) * axisAngle([1, 0, 0], ψ)
       return newQuaternion(
         sX * sY * sZ + cX * cY * cZ,
