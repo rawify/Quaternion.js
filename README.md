@@ -198,13 +198,13 @@ Array toVector()
 ---
 Gets the actual quaternion as a 4D vector / array
 
-Array toMatrix(2d=false)
+Array toMatrix(2D=false)
 ---
-Calculates the 3x3 rotation matrix for the current quat as a 9 element array or alternatively as a 2d array
+Calculates the 3x3 rotation matrix for the current quat as a 9 element array or alternatively as a 2D array
 
-Array toMatrix4(2d=false)
+Array toMatrix4(2D=false)
 ---
-Calculates the homogeneous 4x4 rotation matrix for the current quat as a 16 element array or alternatively as a 2d array
+Calculates the homogeneous 4x4 rotation matrix for the current quat as a 16 element array or alternatively as a 2D array
 
 String toCSSTransform()
 ---
