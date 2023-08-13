@@ -1,9 +1,9 @@
 {
     "name": "quaternion",
     "title": "Quaternion.js",
-    "version": "1.4.8",
-    "homepage": "https://github.com/infusion/Quaternion.js",
-    "bugs": "https://github.com/infusion/Quaternion.js/issues",
+    "version": "1.4.9",
+    "homepage": "https://github.com/rawify/Quaternion.js",
+    "bugs": "https://github.com/rawify/Quaternion.js/issues",
     "description": "A rotation library using quaternions",
     "keywords": [
         "math",
@@ -26,7 +26,7 @@
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "git://github.com/infusion/Quaternion.js.git"
+        "url": "git://github.com/rawify/Quaternion.js.git"
     },
     "engines": {
         "node": "*"

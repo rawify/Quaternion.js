@@ -1,7 +1,6 @@
 # Quaternion.js - ℍ in JavaScript
 
 [![NPM Package](https://img.shields.io/npm/v/quaternion.svg?style=flat)](https://npmjs.org/package/quaternion "View this project on npm")
-[![Build Status](https://travis-ci.org/infusion/Quaternion.js.svg?branch=master)](https://travis-ci.org/infusion/Quaternion.js)
 [![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
 
 Quaternion.js is a well tested JavaScript library for 3D rotations. Quaternions can be used everywhere, from the rotation calculation of your mobile phone over computer games to the rotation of satellites and all by avoiding the [Gimbal lock](https://en.wikipedia.org/wiki/Gimbal_lock). The library comes with examples to make you get started much quicker without worrying about the math behind.
