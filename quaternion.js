@@ -1,5 +1,5 @@
 /**
- * @license Quaternion.js v1.4.10 09/08/2023
+ * @license Quaternion.js v1.4.11 09/08/2023
  *
  * Copyright (c) 2023, Robert Eisele (raw.org)
  * Licensed under the MIT license.

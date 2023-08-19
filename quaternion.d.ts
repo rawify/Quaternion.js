@@ -109,11 +109,7 @@ declare class Quaternion {
     toMatrix: <T extends boolean>(twoD: T) => T extends true ? Matrix3_2D : Matrix3;
     toMatrix4: <T extends boolean>(twoD: T) => T extends true ? Matrix4_2D : Matrix4;
     toCSSTransform: () => string;
-    toEuler: (order?: string) => {
-        roll: number;
-        pitch: number;
-        yaw: number;
-    };
+    toEuler: (order?: string) => [number, number, number];
     toAxisAngle: () => [[number, number, number], number];
     clone: () => Quaternion;
     rotateVector: (v: [number, number, number]) => [number, number, number];
