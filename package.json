@@ -1,7 +1,7 @@
 {
     "name": "quaternion",
     "title": "Quaternion.js",
-    "version": "1.4.9",
+    "version": "1.4.10",
     "homepage": "https://github.com/rawify/Quaternion.js",
     "bugs": "https://github.com/rawify/Quaternion.js/issues",
     "description": "A rotation library using quaternions",
@@ -13,9 +13,14 @@
         "spherical interpolation",
         "parser",
         "slerp",
-        "quat"
+        "quat",
+        "euler"
     ],
-    "author": "Robert Eisele <robert@raw.org> (https://raw.org/)",
+    "author": {
+        "name": "Robert Eisele",
+        "email": "robert@raw.org",
+        "url": "https://raw.org/"
+    },
     "main": "quaternion",
     "types": "./quaternion.d.ts",
     "private": false,
@@ -27,6 +32,10 @@
     "repository": {
         "type": "git",
         "url": "git://github.com/rawify/Quaternion.js.git"
+    },
+    "funding": {
+        "type": "patreon",
+        "url": "https://www.patreon.com/infusion"
     },
     "engines": {
         "node": "*"

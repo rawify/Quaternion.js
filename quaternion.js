@@ -1,5 +1,5 @@
 /**
- * @license Quaternion.js v1.4.9 09/08/2023
+ * @license Quaternion.js v1.4.10 09/08/2023
  *
  * Copyright (c) 2023, Robert Eisele (raw.org)
  * Licensed under the MIT license.
@@ -898,56 +898,60 @@
       var y = this['y'];
       var z = this['z'];
 
+      var wx = w * x, wy = w * y, wz = w * z;
+      var xx = x * x, xy = x * y, xz = x * z;
+      var yy = y * y, yz = y * z, zz = z * z;
+
       function asin(t) {
         return t >= 1 ? Math.PI / 2 : (t <= -1 ? -Math.PI / 2 : Math.asin(t));
       }
 
       if (order === undefined || order === 'ZXY') {
-        return {
-          "roll": Math.atan2(2 * (w * y - x * z), w * w - x * x - y * y + z * z),
-          "pitch": asin(2 * (y * z + w * x)),
-          "yaw": Math.atan2(2 * (w * z - x * y), w * w - x * x + y * y - z * z)
-        };
+        return [
+          -Math.atan2(2 * (xy - wz), 1 - 2 * (xx + zz)),
+          asin(2 * (yz + wx)),
+          -Math.atan2(2 * (xz - wy), 1 - 2 * (xx + yy)),
+        ];
       }
 
       if (order === 'XYZ') {
-        return {
-          "roll": Math.atan2(2 * (w * z - x * y), w * w + x * x - y * y - z * z),
-          "pitch": asin(2 * (x * z + w * y)),
-          "yaw": Math.atan2(2 * (w * x - y * z), w * w - x * x - y * y + z * z)
-        };
+        return [
+          -Math.atan2(2 * (yz - wx), 1 - 2 * (xx + yy)),
+          asin(2 * (xz + wy)),
+          -Math.atan2(2 * (xy - wz), 1 - 2 * (yy + zz)),
+        ];
       }
 
       if (order === 'YXZ') {
-        return {
-          "roll": Math.atan2(2 * (x * y + w * z), w * w - x * x + y * y - z * z),
-          "pitch": asin(2 * (w * x - y * z)),
-          "yaw": Math.atan2(2 * (x * z + w * y), w * w - x * x - y * y + z * z)
-        };
+        return [
+          Math.atan2(2 * (xz + wy), 1 - 2 * (xx + yy)),
+          -asin(2 * (yz - wx)),
+          Math.atan2(2 * (xy + wz), 1 - 2 * (xx + zz)),
+        ];
       }
 
-      if (order === 'ZYX') {
-        return {
-          "roll": Math.atan2(2 * (w * x + y * z), 1 - 2 * (x * x + y * y)), // or atan2(2 * (w * x + y * z), w * w - x * x - y * y + z * z),
-          "pitch": asin(2 * (w * y - x * z)),
-          "yaw": Math.atan2(2 * (x * y + w * z), 1 - 2 * (y * y + z * z)) // or atan2(2 * (x * y + w * z), w * w + x * x - y * y - z * z)
-        };
+      if (order === 'ZYX' || order === 'RPY') {
+        return [
+          Math.atan2(2 * (xy + wz), 1 - 2 * (yy + zz)),
+          -asin(2 * (xz - wy)),
+          Math.atan2(2 * (yz + wx), 1 - 2 * (xx + yy)),
+        ];
       }
 
       if (order === 'YZX') {
-        return {
-          "roll": Math.atan2(2 * (w * x - y * z), w * w - x * x + y * y - z * z), // Heading - or atan2(2 * (y * w - x * z), 1 - 2 * (y * y - z * z))
-          "pitch": asin(2 * (x * y + w * z)), // Attitude
-          "yaw": Math.atan2(2 * (w * y - x * z), w * w + x * x - y * y - z * z) // bank - or atan2(2 * (x * w - y * z), 1 - 2 * (x * x - z * z))
-        };
+        return [
+          -Math.atan2(2 * (xz - wy), 1 - 2 * (yy + zz)),
+          asin(2 * (xy + wz)),
+          -Math.atan2(2 * (yz - wx), 1 - 2 * (xx + zz)),
+        ];
       }
 
       if (order === 'XZY') {
-        return {
-          "roll": Math.atan2(2 * (x * z + w * y), w * w + x * x - y * y - z * z),
-          "pitch": asin(2 * (w * z - x * y)),
-          "yaw": Math.atan2(2 * (y * z + w * x), w * w - x * x + y * y - z * z)
-        };
+        return [
+          Math.atan2(2 * (yz + wx), 1 - 2 * (xx + zz)),
+          -asin(2 * (xy - wz)),
+          Math.atan2(2 * (xz + wy), 1 - 2 * (yy + zz)),
+        ];
       }
       return null;
     },
@@ -1189,7 +1193,7 @@
     var sY = Math.sin(_y);
     var sZ = Math.sin(_z);
 
-    if (order === undefined || order === 'ZXY' || order === 'RPY') { // Same as left-hand RPY
+    if (order === undefined || order === 'ZXY') {
       // axisAngle([0, 0, 1], φ) * axisAngle([1, 0, 0], θ) * axisAngle([0, 1, 0], ψ)
       return newQuaternion(
         cX * cY * cZ - sX * sY * sZ,
@@ -1198,7 +1202,7 @@
         sX * cY * cZ + sY * sZ * cX);
     }
 
-    if (order === 'XYZ') { // Same as right-hand RPY
+    if (order === 'XYZ') {
       // axisAngle([1, 0, 0], φ) * axisAngle([0, 1, 0], θ) * axisAngle([0, 0, 1], ψ)
       return newQuaternion(
         cX * cY * cZ - sX * sY * sZ,
@@ -1207,7 +1211,7 @@
         sX * sY * cZ + sZ * cX * cY);
     }
 
-    if (order === 'YXZ' || order === 'YPR') { // Same as left-hand YPR
+    if (order === 'YXZ') {
       // axisAngle([0, 1, 0], φ) * axisAngle([1, 0, 0], θ) * axisAngle([0, 0, 1], ψ)
       return newQuaternion(
         sX * sY * sZ + cX * cY * cZ,
@@ -1216,7 +1220,7 @@
         sZ * cX * cY - sX * sY * cZ);
     }
 
-    if (order === 'ZYX') { // Same as right-hand YPR
+    if (order === 'ZYX' || order === 'RPY') {
       // axisAngle([0, 0, 1], φ) * axisAngle([0, 1, 0], θ) * axisAngle([1, 0, 0], ψ)
       return newQuaternion(
         sX * sY * sZ + cX * cY * cZ,
