@@ -103,7 +103,7 @@
 
         if (angles !== null) {
           frameStyle.transform = Quaternion
-            .fromEuler(angles.alpha * DEG, angles.beta * DEG, -angles.gamma * DEG, 'ZXY')
+            .fromEuler(angles.alpha * DEG, angles.beta * DEG, angles.gamma * DEG, 'ZXY')
             .mul(Quaternion.fromAxisAngle([0, 0, 1], screen.orientation.angle * DEG))
             .toCSSTransform();
         }

@@ -21,11 +21,11 @@ HTML5 Device Orientation
 In order to create a HTML element, which always rotates in 3D with your mobile device, all you need is the following snippet. Look at the examples folder for a complete version.
 
 ```javascript
-var rad = Math.PI / 180;
+var deg = Math.PI / 180;
 window.addEventListener("deviceorientation", function(ev) {
 
   // Update the rotation object
-  var q = Quaternion.fromEuler(ev.alpha * rad, ev.beta * rad, -ev.gamma * rad, 'ZXY');
+  var q = Quaternion.fromEuler(ev.alpha * deg, ev.beta * deg, ev.gamma * deg, 'ZXY');
 
   // Set the CSS style to the element you want to rotate
   elm.style.transform = q.toCSSTransform();
@@ -215,7 +215,7 @@ Calculates the axis and angle representation of the current quaternion
 
 Array toEuler(order="ZXY")
 ---
-Calculates the Euler angles represented by the current quat in the given order
+Calculates the Euler angles represented by the current quat in the given Tait-Bryan order
 
 Quaternion clone()
 ---

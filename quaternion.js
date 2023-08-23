@@ -1,5 +1,5 @@
 /**
- * @license Quaternion.js v1.4.11 09/08/2023
+ * @license Quaternion.js v1.4.12 09/08/2023
  *
  * Copyright (c) 2023, Robert Eisele (raw.org)
  * Licensed under the MIT license.
@@ -154,9 +154,9 @@
 
       // Reset the current state
       dest['w'] =
-        dest['x'] =
-        dest['y'] =
-        dest['z'] = 0;
+      dest['x'] =
+      dest['y'] =
+      dest['z'] = 0;
 
       for (var i = 0; i < tokens.length; i++) {
 
@@ -574,7 +574,7 @@
 
       var vNorm = Math.sqrt(x * x + y * y + z * z);
       var wExp = Math.exp(w);
-      var scale = wExp / vNorm * Math.sin(vNorm);
+      var scale = wExp * Math.sin(vNorm) / vNorm;
 
       if (vNorm === 0) {
         //return newQuaternion(wExp * Math.cos(vNorm), 0, 0, 0);
@@ -608,7 +608,7 @@
       var qNorm2 = x * x + y * y + z * z + w * w;
       var vNorm = Math.sqrt(x * x + y * y + z * z);
 
-      var scale = Math.atan2(vNorm, w) / vNorm;
+      var scale = Math.atan2(vNorm, w) / vNorm; // Alternative: acos(w / qNorm) / vNorm
 
       return newQuaternion(
         Math.log(qNorm2) * 0.5,
@@ -930,19 +930,53 @@
         ];
       }
 
-      if (order === 'ZYX' || order === 'RPY') {
+      if (order === 'ZYX' || order === 'RPY') {  // roll around X, pitch around Y, yaw around Z
+        /*
+        if (2 * (xz - wy) > .999) {
+          return [
+            2 * Math.atan2(x, w),
+            -Math.PI / 2,
+            0
+          ];
+        }
+
+        if (2 * (xz - wy) < -.999) {
+          return [
+            -2 * Math.atan2(x, w),
+            Math.PI / 2,
+            0
+          ];
+        }
+        */
         return [
-          Math.atan2(2 * (xy + wz), 1 - 2 * (yy + zz)),
-          -asin(2 * (xz - wy)),
-          Math.atan2(2 * (yz + wx), 1 - 2 * (xx + yy)),
+          Math.atan2(2 * (xy + wz), 1 - 2 * (yy + zz)), // Heading / Yaw
+          -asin(2 * (xz - wy)), // Attitude / Pitch
+          Math.atan2(2 * (yz + wx), 1 - 2 * (xx + yy)), // Bank / Roll
         ];
       }
 
       if (order === 'YZX') {
+        /*
+        if (2 * (xy + wz) > .999) { // North pole
+          return [
+            2 * Math.atan2(x, w),
+            Math.PI / 2,
+            0
+          ];
+        }
+
+        if (2 * (xy + wz) < -.999) { // South pole
+          return [
+            -2 * Math.atan2(x, w),
+            -Math.PI / 2,
+            0
+          ];
+        }
+        */
         return [
-          -Math.atan2(2 * (xz - wy), 1 - 2 * (yy + zz)),
-          asin(2 * (xy + wz)),
-          -Math.atan2(2 * (yz - wx), 1 - 2 * (xx + zz)),
+          -Math.atan2(2 * (xz - wy), 1 - 2 * (yy + zz)), // Heading
+          asin(2 * (xy + wz)), // Attitude
+          -Math.atan2(2 * (yz - wx), 1 - 2 * (xx + zz)), // Bank
         ];
       }
 
@@ -1176,7 +1210,7 @@
    * @param {number} φ First angle
    * @param {number} θ Second angle
    * @param {number} ψ Third angle
-   * @param {string=} order
+   * @param {string=} order Axis order (Tait Bryan)
    * @returns {Quaternion}
    */
   Quaternion['fromEuler'] = function(φ, θ, ψ, order) {
@@ -1193,7 +1227,7 @@
     var sY = Math.sin(_y);
     var sZ = Math.sin(_z);
 
-    if (order === undefined || order === 'ZXY') {
+    if (order === undefined || order === 'ZXY') { 
       // axisAngle([0, 0, 1], φ) * axisAngle([1, 0, 0], θ) * axisAngle([0, 1, 0], ψ)
       return newQuaternion(
         cX * cY * cZ - sX * sY * sZ,
@@ -1220,7 +1254,7 @@
         sZ * cX * cY - sX * sY * cZ);
     }
 
-    if (order === 'ZYX' || order === 'RPY') {
+    if (order === 'ZYX' || order === 'RPY') { // roll around X, pitch around Y, yaw around Z
       // axisAngle([0, 0, 1], φ) * axisAngle([0, 1, 0], θ) * axisAngle([1, 0, 0], ψ)
       return newQuaternion(
         sX * sY * sZ + cX * cY * cZ,
@@ -1285,40 +1319,38 @@
       var m22 = matrix[2][2];
     }
 
-    var tr = m00 + m11 + m22;
+    var tr = m00 + m11 + m22; // 2 * w = sqrt(1 + tr)
 
-    if (tr > 0) {
-      var S = Math.sqrt(tr + 1.0) * 2; // S=4*qw
+    // Choose the element with the biggest value on the diagonal
 
-      return newQuaternion(
-        0.25 * S,
-        (m21 - m12) / S,
-        (m02 - m20) / S,
-        (m10 - m01) / S);
-    } else if ((m00 > m11) & (m00 > m22)) {
-      var S = Math.sqrt(1.0 + m00 - m11 - m22) * 2; // S=4*qx
-
-      return newQuaternion(
-        (m21 - m12) / S,
-        0.25 * S,
-        (m01 + m10) / S,
-        (m02 + m20) / S);
+    if (tr > 0) { // if trace is positive then "w" is biggest component
+      // |Q| = 2 * sqrt(1 + tr) = 4w
+      return newNormalized(
+        tr + 1.0,
+        m21 - m12,
+        m02 - m20,
+        m10 - m01);
+    } else if (m00 > m11 && m00 > m22) {
+      // |Q| = 2 * sqrt(1.0 + m00 - m11 - m22) = 4x
+      return newNormalized(
+        m21 - m12,
+        1.0 + m00 - m11 - m22,
+        m01 + m10,
+        m02 + m20);
     } else if (m11 > m22) {
-      var S = Math.sqrt(1.0 + m11 - m00 - m22) * 2; // S=4*qy
-
-      return newQuaternion(
-        (m02 - m20) / S,
-        (m01 + m10) / S,
-        0.25 * S,
-        (m12 + m21) / S);
+      // |Q| = 2 * sqrt(1.0 + m11 - m00 - m22) = 4y
+      return newNormalized(
+        m02 - m20,
+        m01 + m10,
+        1.0 + m11 - m00 - m22,
+        m12 + m21);
     } else {
-      var S = Math.sqrt(1.0 + m22 - m00 - m11) * 2; // S=4*qz
-
-      return newQuaternion(
-        (m10 - m01) / S,
-        (m02 + m20) / S,
-        (m12 + m21) / S,
-        0.25 * S);
+      // |Q| = 2 * sqrt(1.0 + m22 - m00 - m11) = 4z
+      return newNormalized(
+        m10 - m01,
+        m02 + m20,
+        m12 + m21,
+        1.0 + m22 - m00 - m11);
     }
   };
 
