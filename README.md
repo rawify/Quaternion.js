@@ -254,12 +254,12 @@ The order of `fromEuler()` can take the string value `ZXY (default), XYZ / RPY, 
 - Mathematica `RollPitchYawMatrix[{α, β, γ}] = fromEulerLogical(α, β, γ, 'ZYX')`
 - W3C devicemotion `fromEulerLogical(ev.alpha * DEG, anevgles.beta * DEG, -ev.gamma * DEG, 'ZXY')`
 - Three.js chose a different argument format:
-  - `fromEuler(x, y, z, 'XYZ') = ThreeJSfromEulerLogical(x, y, z, 'XYZ')`
-  - `fromEuler(x, y, z, 'YXZ') = ThreeJSfromEulerLogical(y, x, z, 'YXZ')`
-  - `fromEuler(x, y, z, 'ZXY') = ThreeJSfromEulerLogical(y, z, x, 'ZXY')`
-  - `fromEuler(x, y, z, 'ZYX') = ThreeJSfromEulerLogical(z, y, x, 'ZYX')`
-  - `fromEuler(x, y, z, 'YZX') = ThreeJSfromEulerLogical(z, x, y, 'YZX')`
-  - `fromEuler(x, y, z, 'XZY') = ThreeJSfromEulerLogical(x, z, y, 'XZY')`
+  - `fromEuler(x, y, z, 'XYZ') = ThreeJSfromEuler(x, y, z, 'XYZ')`
+  - `fromEuler(x, y, z, 'YXZ') = ThreeJSfromEuler(y, x, z, 'YXZ')`
+  - `fromEuler(x, y, z, 'ZXY') = ThreeJSfromEuler(y, z, x, 'ZXY')`
+  - `fromEuler(x, y, z, 'ZYX') = ThreeJSfromEuler(z, y, x, 'ZYX')`
+  - `fromEuler(x, y, z, 'YZX') = ThreeJSfromEuler(z, x, y, 'YZX')`
+  - `fromEuler(x, y, z, 'XZY') = ThreeJSfromEuler(x, z, y, 'XZY')`
 
 
 
