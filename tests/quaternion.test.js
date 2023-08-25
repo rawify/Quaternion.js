@@ -1,7 +1,7 @@
 var assert = require("assert");
 
 var Quaternion = require("../quaternion");
-var EPS = 1e-11;
+var EPS = 1e-4;
 
 assert.matrixEqual = function(mat1, mat2) {
 
@@ -11,12 +11,16 @@ assert.matrixEqual = function(mat1, mat2) {
   if (mat1.length <= 4) {
     mat1.forEach((array, idx1) => {
       array.forEach((value, idx2) => {
-        if (Math.abs(value - mat2[idx1][idx2]) > EPS) assert(false);
+        if (Math.abs(value - mat2[idx1][idx2]) > EPS) {
+          assert.equal(String(mat1), String(mat2));
+        }
       })
     });
   } else {
     mat1.forEach((value, idx1) => {
-      if (Math.abs(value - mat2[idx1]) > EPS) assert(false);
+      if (Math.abs(value - mat2[idx1]) > EPS) {
+        assert.equal(String(mat1), String(mat2));
+      }
     });
   }
 };
@@ -59,7 +63,7 @@ function CQ(a, b) {
   return true;
 }
 
-function RollPitchYaw1(α, β, γ) { // ZYX, yaw, pitch, roll
+function RollPitchYaw1(γ, β, α) { // XYZ
 
   var { sin, cos } = Math;
 
@@ -71,7 +75,7 @@ function RollPitchYaw1(α, β, γ) { // ZYX, yaw, pitch, roll
   ];
 }
 
-function RollPitchYaw2(α, β, γ) { // XYZ
+function RollPitchYaw2(α, β, γ) { // ZYX
 
   var { sin, cos } = Math;
 
@@ -80,6 +84,87 @@ function RollPitchYaw2(α, β, γ) { // XYZ
     [cos(α) * cos(β), -cos(β) * sin(α), sin(β)],
     [cos(γ) * sin(α) + cos(α) * sin(β) * sin(γ), cos(α) * cos(γ) - sin(α) * sin(β) * sin(γ), -cos(β) * sin(γ)],
     [-cos(α) * cos(γ) * sin(β) + sin(α) * sin(γ), cos(γ) * sin(α) * sin(β) + cos(α) * sin(γ), cos(β) * cos(γ)]];
+}
+
+function ThreeFromEuler(x, y, z, order) {
+
+  // https://github.com/mrdoob/three.js/blob/master/src/math/Quaternion.js
+
+  var { sin, cos } = Math;
+
+  const cX = cos(x / 2);
+  const cY = cos(y / 2);
+  const cZ = cos(z / 2);
+
+  const sX = sin(x / 2);
+  const sY = sin(y / 2);
+  const sZ = sin(z / 2);
+
+  switch (order) {
+
+    case 'XYZ':
+      return Quaternion(
+        cX * cY * cZ - sX * sY * sZ,
+        sX * cY * cZ + cX * sY * sZ,
+        cX * sY * cZ - sX * cY * sZ,
+        cX * cY * sZ + sX * sY * cZ
+      );
+
+    case 'YXZ':
+      return Quaternion(
+        cX * cY * cZ + sX * sY * sZ,
+        sX * cY * cZ + cX * sY * sZ,
+        cX * sY * cZ - sX * cY * sZ,
+        cX * cY * sZ - sX * sY * cZ
+      );
+
+    case 'ZXY':
+      return Quaternion(
+        cX * cY * cZ - sX * sY * sZ,
+        sX * cY * cZ - cX * sY * sZ,
+        cX * sY * cZ + sX * cY * sZ,
+        cX * cY * sZ + sX * sY * cZ
+      );
+
+    case 'ZYX':
+      return Quaternion(
+        cX * cY * cZ + sX * sY * sZ,
+        sX * cY * cZ - cX * sY * sZ,
+        cX * sY * cZ + sX * cY * sZ,
+        cX * cY * sZ - sX * sY * cZ
+      );
+
+    case 'YZX':
+      return Quaternion(
+        cX * cY * cZ - sX * sY * sZ,
+        sX * cY * cZ + cX * sY * sZ,
+        cX * sY * cZ + sX * cY * sZ,
+        cX * cY * sZ - sX * sY * cZ
+      );
+
+    case 'XZY':
+      return Quaternion(
+        cX * cY * cZ + sX * sY * sZ,
+        sX * cY * cZ - cX * sY * sZ,
+        cX * sY * cZ - sX * cY * sZ,
+        cX * cY * sZ + sX * sY * cZ
+      );
+  }
+}
+
+function TestFromEuler(roll, pitch, yaw) {
+  const cy = Math.cos(0.5 * yaw);
+  const cr = Math.cos(0.5 * roll);
+  const cp = Math.cos(0.5 * pitch);
+  const sy = Math.sin(0.5 * yaw);
+  const sr = Math.sin(0.5 * roll);
+  const sp = Math.sin(0.5 * pitch);
+
+  return Quaternion(
+    cp * cr * cy - sp * sr * sy,
+    cp * cy * sr - sp * cr * sy,
+    cp * sr * sy + cr * cy * sp,
+    cp * cr * sy + sp * cy * sr)
 }
 
 function getBaseQuaternion(alpha, beta, gamma) {
@@ -107,6 +192,23 @@ function getBaseQuaternion(alpha, beta, gamma) {
   var z = cX * cY * sZ + sX * sY * cZ;
 
   return Quaternion([w, x, y, z]);
+}
+
+function eulerToQuaternion(heading, attitude, bank) { // YZX
+  // http://www.euclideanspace.com/maths/geometry/rotations/conversions/eulerToQuaternion/index.htm
+  var c1 = Math.cos(heading / 2);
+  var s1 = Math.sin(heading / 2);
+  var c2 = Math.cos(attitude / 2);
+  var s2 = Math.sin(attitude / 2);
+  var c3 = Math.cos(bank / 2);
+  var s3 = Math.sin(bank / 2);
+  var c1c2 = c1 * c2;
+  var s1s2 = s1 * s2;
+  return Quaternion(
+    c1c2 * c3 - s1s2 * s3,
+    c1c2 * s3 + s1s2 * c3,
+    s1 * c2 * c3 + c1 * s2 * s3,
+    c1 * s2 * c3 - s1 * c2 * s3);
 }
 
 describe("Quaternions", function() {
@@ -541,51 +643,130 @@ describe("Quaternions", function() {
 
     var v = [1.0, 2.0, 3.0];
 
-    var q = Quaternion.fromEuler(0.0, Math.PI, 0.0, 'ZXY');
+    var q = Quaternion.fromEulerLogical(0.0, Math.PI, 0.0, 'ZXY');
     var p = q.rotateVector(v);
     assert.v(p, [1, -2, -3]);
 
-    var q = Quaternion.fromEuler(Math.PI, 0.0, 0.0, 'ZXY');
+    var q = Quaternion.fromEulerLogical(Math.PI, 0.0, 0.0, 'ZXY');
     var p = q.rotateVector(v);
     assert.v(p, [-1, -2, 3]);
 
-    var q = Quaternion.fromEuler(Math.PI, 0, Math.PI / 2, 'ZXY');
+    var q = Quaternion.fromEulerLogical(0.0, 0.0, Math.PI, 'ZXY');
     var p = q.rotateVector(v);
-    assert.v(p, [-3, -2, -1]);
+    assert.v(p, [-1, 2, -3]);
   });
 
   it("should rotate a vector correctly based on Euler angles II", function() {
 
     var v = [1.0, 2.0, 3.0];
 
-    var q = Quaternion.fromEuler(0.0, Math.PI, 0.0, 'XYZ');
+    var q = Quaternion.fromEulerLogical(0.0, Math.PI, 0.0, 'XYZ');
     var p = q.rotateVector(v);
     assert.v(p, [-1, 2, -3]);
 
-    var q = Quaternion.fromEuler(Math.PI, 0.0, 0.0, 'XYZ');
+    var q = Quaternion.fromEulerLogical(Math.PI, 0.0, 0.0, 'XYZ');
     var p = q.rotateVector(v);
     assert.v(p, [1, -2, -3]);
 
-    var q = Quaternion.fromEuler(Math.PI, 0, Math.PI / 2, 'XYZ');
+    var q = Quaternion.fromEulerLogical(0, 0, Math.PI, 'XYZ');
     var p = q.rotateVector(v);
-    assert.v(p, [-2, -1, -3]);
+    assert.v(p, [-1, -2, 3]);
   });
 
-  it("should rotate a vector correctly based on Euler angles II", function() {
+  it("should rotate a vector correctly based on Euler angles III", function() {
 
     var v = [1.0, 2.0, 3.0];
 
-    var q = Quaternion.fromEuler(0.0, Math.PI, 0.0, 'XZY');
+    var q = Quaternion.fromEulerLogical(0.0, Math.PI, 0.0, 'XZY');
     var p = q.rotateVector(v);
     assert.v(p, [-1, -2, 3]);
 
-    var q = Quaternion.fromEuler(Math.PI, 0.0, 0.0, 'XZY');
+    var q = Quaternion.fromEulerLogical(Math.PI, 0.0, 0.0, 'XZY');
     var p = q.rotateVector(v);
     assert.v(p, [1, -2, -3]);
 
-    var q = Quaternion.fromEuler(Math.PI, 0, Math.PI / 2, 'XZY');
+    var q = Quaternion.fromEulerLogical(0, 0, Math.PI, 'XZY');
     var p = q.rotateVector(v);
-    assert.v(p, [3, -2, 1]);
+    assert.v(p, [-1, 2, -3]);
+  });
+
+  it("should create a rotation matrix correctly based on Euler angles", function() {
+
+    // https://de.mathworks.com/matlabcentral/fileexchange/20696-function-to-convert-between-dcm-euler-angles-quaternions-and-euler-vectors
+
+    var a = -Math.PI / 3;
+    var b = Math.PI / 4;
+    var c = -Math.PI / 5;
+
+    var q = Quaternion.fromEuler(a, b, c, 'ZYX');
+    assert.matrixEqual(q.toMatrix(false), [ // fromEuler(a, b, c, 'ZYX')
+      0.3536, 0.4928, 0.7951,
+      -0.6124, 0.7645, -0.2015,
+      -0.7071, -0.4156, 0.5721
+    ]);
+  });
+
+  it("should test against Three.js implementation XYZ", function() {
+
+    var x = Math.random();
+    var y = Math.random();
+    var z = Math.random();
+
+    assert.q(Quaternion.fromEuler(x, y, z, 'XYZ'), ThreeFromEuler(x, y, z, 'XYZ'));
+  });
+
+  it("should test against Three.js implementation YXZ", function() {
+
+    var x = Math.random();
+    var y = Math.random();
+    var z = Math.random();
+
+    assert.q(Quaternion.fromEuler(x, y, z, 'YXZ'), ThreeFromEuler(y, x, z, 'YXZ'));
+  });
+
+  it("should test against Three.js implementation ZXY", function() {
+
+    var x = Math.random();
+    var y = Math.random();
+    var z = Math.random();
+
+    assert.q(Quaternion.fromEuler(x, y, z, 'ZXY'), ThreeFromEuler(y, z, x, 'ZXY')); // Bug in three.js?
+  });
+
+  it("should test against Three.js implementation ZYX", function() {
+
+    var x = Math.random();
+    var y = Math.random();
+    var z = Math.random();
+
+    assert.q(Quaternion.fromEuler(x, y, z, 'ZYX'), ThreeFromEuler(z, y, x, 'ZYX'));
+  });
+
+  it("should test against Three.js implementation YZX", function() {
+
+    var x = Math.random();
+    var y = Math.random();
+    var z = Math.random();
+
+    assert.q(Quaternion.fromEuler(x, y, z, 'YZX'), ThreeFromEuler(z, x, y, 'YZX')); // Bug in thre.js?
+  });
+
+  it("should test against Three.js implementation XZY", function() {
+
+    var x = Math.random();
+    var y = Math.random();
+    var z = Math.random();
+
+    assert.q(Quaternion.fromEuler(x, y, z, 'XZY'), ThreeFromEuler(x, z, y, 'XZY'));
+  });
+
+  it("should test against a fromEuler implementation with ZXY", function() {
+
+    var x = Math.random();
+    var y = Math.random();
+    var z = Math.random();
+
+    assert.q(Quaternion.fromEulerLogical(x, y, z, 'YXZ'), TestFromEuler(y, x, z));
   });
 
   it("should exp and log a quaternion", function() {
@@ -907,14 +1088,54 @@ describe("Quaternions", function() {
     assert.matrixEqual(r.toMatrix(), s.toMatrix());
   });
 
-  it("should work with deviceorientation", function() {
+  it("should work with fromEuler -> toEuler RPY", function() {
+
+    let t = [
+      Math.PI * 2 * Math.random() - Math.PI,
+      Math.PI * 2 * Math.random() - Math.PI,
+      Math.PI * 2 * Math.random() - Math.PI
+    ];
+
+    let r = Quaternion.fromEuler(...t, 'RPY');
+    let s = Quaternion.fromEuler(...r.toEuler('RPY'), 'RPY');
+
+    assert.matrixEqual(r.toMatrix(), s.toMatrix());
+  });
+
+  it("should work with fromEuler -> toEuler YPR", function() {
+
+    let t = [
+      Math.PI * 2 * Math.random() - Math.PI,
+      Math.PI * 2 * Math.random() - Math.PI,
+      Math.PI * 2 * Math.random() - Math.PI
+    ];
+
+    let r = Quaternion.fromEuler(...t, 'YPR');
+    let s = Quaternion.fromEuler(...r.toEuler('YPR'), 'YPR');
+
+    assert.matrixEqual(r.toMatrix(), s.toMatrix());
+  });
+
+  it("should work with deviceorientation from Opera Site", function() {
 
     var alpha = Math.random() * 360;
     var beta = Math.random() * 360;
     var gamma = Math.random() * 360;
 
-    let r = getBaseQuaternion(alpha, beta, gamma);
+    let r = getBaseQuaternion(alpha, beta, gamma); // Bug: Wrong order on Opera site!
     let s = Quaternion.fromEuler(alpha * Math.PI / 180, beta * Math.PI / 180, gamma * Math.PI / 180, 'ZXY');
+
+    assert.q(r, s);
+  });
+
+  it("should work with euclideanspace.com", function() {
+
+    var alpha = Math.random() * 360;
+    var beta = Math.random() * 360;
+    var gamma = Math.random() * 360;
+
+    let r = eulerToQuaternion(alpha * Math.PI / 180, beta * Math.PI / 180, gamma * Math.PI / 180);
+    let s = Quaternion.fromEuler(alpha * Math.PI / 180, beta * Math.PI / 180, gamma * Math.PI / 180, 'YZX');
 
     assert.q(r, s);
   });
@@ -1028,7 +1249,7 @@ describe("Quaternions", function() {
     var γ = Math.random() * 2 * Math.PI;
     var β = Math.random() * 2 * Math.PI;
 
-    var quat = Quaternion.fromEuler(α, β, γ, "ZYX");
+    var quat = Quaternion.fromEulerLogical(α, β, γ, "XYZ");
     assert.matrixEqual(quat.toMatrix(true), RollPitchYaw1(α, β, γ));
   });
 
@@ -1038,7 +1259,7 @@ describe("Quaternions", function() {
     var β = Math.random() * 2 * Math.PI;
     var γ = Math.random() * 2 * Math.PI;
 
-    var quat = Quaternion.fromEuler(γ, β, α, "XYZ");
+    var quat = Quaternion.fromEulerLogical(α, β, γ, "ZYX");
     assert.matrixEqual(quat.toMatrix(true), RollPitchYaw2(α, β, γ));
   });
 
@@ -1642,5 +1863,4 @@ describe("Quaternions", function() {
   it('Should fuzz 597# XZY', function() { assert.v(Quaternion.fromEuler(0.06128793542062194, -1.6550387045501092, 0.2620015066356465, 'XZY').rotateVector([2, 3, 5]), [2.71784768781296, -3.72536023560033, 4.09084283013385]) });
   it('Should fuzz 598# XZY', function() { assert.v(Quaternion.fromEuler(-2.7970690646418648, -2.1145081558201992, -1.1003221311449205, 'XZY').rotateVector([2, 3, 5]), [4.40393251736572, -0.0312841672064552, -4.31328177648656]) });
   it('Should fuzz 599# XZY', function() { assert.v(Quaternion.fromEuler(0.841500655858253, 0.29212647853743157, 2.0304048257103977, 'XZY').rotateVector([2, 3, 5]), [2.57770683384306, 5.59437814430447, 0.241579505105912]) });
-
 });

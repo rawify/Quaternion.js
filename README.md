@@ -25,7 +25,7 @@ var deg = Math.PI / 180;
 window.addEventListener("deviceorientation", function(ev) {
 
   // Update the rotation object
-  var q = Quaternion.fromEuler(ev.alpha * deg, ev.beta * deg, ev.gamma * deg, 'ZXY');
+  var q = Quaternion.fromEulerLogical(ev.alpha * deg, ev.beta * deg, -ev.gamma * deg, 'ZXY');
 
   // Set the CSS style to the element you want to rotate
   elm.style.transform = q.toCSSTransform();
@@ -239,16 +239,28 @@ Quaternion.fromMatrix(matrix)
 Gets a quaternion given a rotation matrix, either as a 1x9 array or a 3x3 array.
 
 
-Quaternion.fromEuler(Φ, θ, ψ[, order="ZXY"])
+Quaternion.fromEuler(φ, θ, ψ[, order="ZXY"]) / Quaternion.fromEulerLogical(ψ, θ, φ[, order="YXZ"])
 ---
-Gets a quaternion given three Euler angles. The angles are applied from right to left. 
+Euler angles are probably the reason to use quaternions. The definition is mostly sloppy and you can only decide how it was defined based on the matrix representation. A `ZXY` in one definition is the multiplication order read from right to left and in another the execution order from left to right. Quaternion.js provides two functions, `fromEulerLogical()`, where the angles and order are applied from left to right (logical application order) and `fromEuler()` which reverses the order of the argument list (technical multiplication order).
 
-So, order `ZXY` for example means first rotate around Y by ψ then around X by θ and then around Z by Φ (`RotZ(Φ)RotX(θ)RotY(ψ)`). The order can take the string value `ZXY, XYZ, YXZ, ZYX, YZX or RPY, XZY`.
+So for `fromEulerLogical(φ, θ, ψ, "ZXY")`, for example means first rotate around Z by φ then around X by θ and then around Y by ψ (`RotY(ψ)RotX(θ)RotZ(φ)`).
+
+The order of `fromEuler()` can take the string value `ZXY (default), XYZ / RPY, YXZ, ZYX / YPR, YZX, XZY, ZYZ, ZXZ, YXY, YZY, XYX, XZX`.
 
 ### Relations
 
-- `axisAngle([0, 1, 0], x)axisAngle([0, 0, 1], y)axisAngle([1, 0, 0], z) = fromEuler(x, y, z, 'YZX')`
-- Mathematica `RollPitchYawMatrix[{α, β, γ}] = fromEuler(γ, β, α, 'XYZ')`
+- `fromEulerLogical(φ, θ, ψ, 'ZYX') = axisAngle([1, 0, 0], ψ) axisAngle([0, 1, 0], θ) axisAngle([0, 0, 1], φ)`
+- `fromEulerLogical(φ, θ, ψ, 'ZYX') = fromEuler(ψ, θ, φ, 'YXZ')`
+- Mathematica `RollPitchYawMatrix[{α, β, γ}] = fromEulerLogical(α, β, γ, 'ZYX')`
+- W3C devicemotion `fromEulerLogical(ev.alpha * DEG, anevgles.beta * DEG, -ev.gamma * DEG, 'ZXY')`
+- Three.js chose a different argument format:
+  - `fromEuler(x, y, z, 'XYZ') = ThreeJSfromEulerLogical(x, y, z, 'XYZ')`
+  - `fromEuler(x, y, z, 'YXZ') = ThreeJSfromEulerLogical(y, x, z, 'YXZ')`
+  - `fromEuler(x, y, z, 'ZXY') = ThreeJSfromEulerLogical(y, z, x, 'ZXY')`
+  - `fromEuler(x, y, z, 'ZYX') = ThreeJSfromEulerLogical(z, y, x, 'ZYX')`
+  - `fromEuler(x, y, z, 'YZX') = ThreeJSfromEulerLogical(z, x, y, 'YZX')`
+  - `fromEuler(x, y, z, 'XZY') = ThreeJSfromEulerLogical(x, z, y, 'XZY')`
+
 
 
 
@@ -334,5 +346,5 @@ npm test
 
 Copyright and licensing
 ===
-Copyright (c) 2023, [Robert Eisele](http://raw.org/)
-Dual licensed under the MIT or GPL Version 2 licenses.
+Copyright (c) 2023, [Robert Eisele](https://raw.org/)
+Licensed under the MIT license.

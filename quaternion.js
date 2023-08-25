@@ -1,5 +1,5 @@
 /**
- * @license Quaternion.js v1.4.12 09/08/2023
+ * @license Quaternion.js v1.4.13 25/08/2023
  *
  * Copyright (c) 2023, Robert Eisele (raw.org)
  * Licensed under the MIT license.
@@ -887,8 +887,9 @@
       return [[this['x'] * sin, this['y'] * sin, this['z'] * sin], angle];
     },
     /**
-     * Calculates the Euler angles represented by the current quat
+     * Calculates the Euler angles represented by the current quat (multiplication order from right to left)
      * 
+     * @param {string=} order Axis order (Tait Bryan)
      * @returns {Object}
      */
     'toEuler': function(order) {
@@ -914,7 +915,7 @@
         ];
       }
 
-      if (order === 'XYZ') {
+      if (order === 'XYZ' || order === 'RPY') {
         return [
           -Math.atan2(2 * (yz - wx), 1 - 2 * (xx + yy)),
           asin(2 * (xz + wy)),
@@ -930,7 +931,7 @@
         ];
       }
 
-      if (order === 'ZYX' || order === 'RPY') {  // roll around X, pitch around Y, yaw around Z
+      if (order === 'ZYX' || order === 'YPR') {  // roll around X, pitch around Y, yaw around Z
         /*
         if (2 * (xz - wy) > .999) {
           return [
@@ -1205,7 +1206,21 @@
   };
 
   /**
-   * Creates a quaternion by a rotation given by Euler angles
+   * Creates a quaternion by a rotation given by Euler angles (logical application order from left to right)
+   *
+   * @param {number} ψ First angle
+   * @param {number} θ Second angle
+   * @param {number} φ Third angle
+   * @param {string=} order Axis order (Tait Bryan)
+   * @returns {Quaternion}
+   */
+  Quaternion['fromEulerLogical'] = function(ψ, θ, φ, order) {
+
+    return Quaternion['fromEuler'](φ, θ, ψ, order !== undefined ? order[2] + order[1] + order[0] : order);
+  };
+
+  /**
+   * Creates a quaternion by a rotation given by Euler angles (multiplication order from right to left)
    *
    * @param {number} φ First angle
    * @param {number} θ Second angle
@@ -1227,7 +1242,7 @@
     var sY = Math.sin(_y);
     var sZ = Math.sin(_z);
 
-    if (order === undefined || order === 'ZXY') { 
+    if (order === undefined || order === 'ZXY') {
       // axisAngle([0, 0, 1], φ) * axisAngle([1, 0, 0], θ) * axisAngle([0, 1, 0], ψ)
       return newQuaternion(
         cX * cY * cZ - sX * sY * sZ,
@@ -1236,7 +1251,7 @@
         sX * cY * cZ + sY * sZ * cX);
     }
 
-    if (order === 'XYZ') {
+    if (order === 'XYZ' || order === 'RPY') { // roll around X, pitch around Y, yaw around Z
       // axisAngle([1, 0, 0], φ) * axisAngle([0, 1, 0], θ) * axisAngle([0, 0, 1], ψ)
       return newQuaternion(
         cX * cY * cZ - sX * sY * sZ,
@@ -1245,7 +1260,7 @@
         sX * sY * cZ + sZ * cX * cY);
     }
 
-    if (order === 'YXZ') {
+    if (order === 'YXZ') { // deviceorientation
       // axisAngle([0, 1, 0], φ) * axisAngle([1, 0, 0], θ) * axisAngle([0, 0, 1], ψ)
       return newQuaternion(
         sX * sY * sZ + cX * cY * cZ,
@@ -1254,7 +1269,7 @@
         sZ * cX * cY - sX * sY * cZ);
     }
 
-    if (order === 'ZYX' || order === 'RPY') { // roll around X, pitch around Y, yaw around Z
+    if (order === 'ZYX' || order === 'YPR') {
       // axisAngle([0, 0, 1], φ) * axisAngle([0, 1, 0], θ) * axisAngle([1, 0, 0], ψ)
       return newQuaternion(
         sX * sY * sZ + cX * cY * cZ,
@@ -1264,7 +1279,7 @@
     }
 
     if (order === 'YZX') {
-      // axisAngle([0, 1, 0], x) * axisAngle([0, 0, 1], θ) * axisAngle([1, 0, 0], ψ)
+      // axisAngle([0, 1, 0], φ) * axisAngle([0, 0, 1], θ) * axisAngle([1, 0, 0], ψ)
       return newQuaternion(
         cX * cY * cZ - sX * sY * sZ,
         sX * sY * cZ + sZ * cX * cY,
@@ -1273,12 +1288,66 @@
     }
 
     if (order === 'XZY') {
-      // axisAngle([1, 0, 0], x) * axisAngle([0, 0, 1], θ) * axisAngle([0, 1, 0], ψ)
+      // axisAngle([1, 0, 0], φ) * axisAngle([0, 0, 1], θ) * axisAngle([0, 1, 0], ψ)
       return newQuaternion(
         sX * sY * sZ + cX * cY * cZ,
         sX * cY * cZ - sY * sZ * cX,
         sZ * cX * cY - sX * sY * cZ,
         sX * sZ * cY + sY * cX * cZ);
+    }
+
+    if (order === 'ZYZ') {
+      // axisAngle([0, 0, 1], φ) * axisAngle([0, 1, 0], θ) * axisAngle([0, 0, 1], ψ)
+      return newQuaternion(
+        cX * cY * cZ - sX * sZ * cY,
+        sY * sZ * cX - sX * sY * cZ,
+        sX * sY * sZ + sY * cX * cZ,
+        sX * cY * cZ + sZ * cX * cY);
+    }
+
+    if (order === 'ZXZ') {
+      // axisAngle([0, 0, 1], φ) * axisAngle([1, 0, 0], θ) * axisAngle([0, 0, 1], ψ)
+      return newQuaternion(
+        cX * cY * cZ - sX * sZ * cY,
+        sX * sY * sZ + sY * cX * cZ,
+        sX * sY * cZ - sY * sZ * cX,
+        sX * cY * cZ + sZ * cX * cY);
+    }
+
+    if (order === 'YXY') {
+      // axisAngle([0, 1, 0], φ) * axisAngle([1, 0, 0], θ) * axisAngle([0, 1, 0], ψ)
+      return newQuaternion(
+        cX * cY * cZ - sX * sZ * cY,
+        sX * sY * sZ + sY * cX * cZ,
+        sX * cY * cZ + sZ * cX * cY,
+        sY * sZ * cX - sX * sY * cZ);
+    }
+
+    if (order === 'YZY') {
+      // axisAngle([0, 1, 0], φ) * axisAngle([0, 0, 1], θ) * axisAngle([0, 1, 0], ψ)
+      return newQuaternion(
+        cX * cY * cZ - sX * sZ * cY,
+        sX * sY * cZ - sY * sZ * cX,
+        sX * cY * cZ + sZ * cX * cY,
+        sX * sY * sZ + sY * cX * cZ);
+    }
+
+    if (order === 'XYX') {
+      // axisAngle([1, 0, 0], φ) * axisAngle([0, 1, 0], θ) * axisAngle([1, 0, 0], ψ)
+      return newQuaternion(
+        cX * cY * c - sX * sZ * cYZ,
+        sX * cY * cZ + sZ * cX * cY,
+        sX * sY * sZ + sY * cX * cZ,
+        sX * sY * cZ - sY * sZ * cX);
+    }
+
+    if (order === 'XZX') {
+      // axisAngle([1, 0, 0], φ) * axisAngle([0, 0, 1], θ) * axisAngle([1, 0, 0], ψ)
+      return newQuaternion(
+        cX * cY * cZ - sX * sZ * cY,
+        sX * cY * cZ + sZ * cX * cY,
+        sY * sZ * cX - sX * sY * cZ,
+        sX * sY * sZ + sY * cX * cZ);
     }
     return null;
   };

@@ -133,6 +133,7 @@ declare namespace Quaternion {
     function fromBetweenVectors(u: [number, number, number], v: [number, number, number]): Quaternion;
     function random(): Quaternion;
     function fromEuler(phi: number, theta: number, psi: number, order?: string): Quaternion;
+    function fromEulerLogical(psi: number, theta: number, phi: number, order?: string): Quaternion;
     function fromMatrix(matrix: Matrix3 | Matrix3_2D): Quaternion;
 }
 

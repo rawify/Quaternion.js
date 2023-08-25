@@ -1,7 +1,7 @@
 {
     "name": "quaternion",
     "title": "Quaternion.js",
-    "version": "1.4.12",
+    "version": "1.4.13",
     "homepage": "https://github.com/rawify/Quaternion.js",
     "bugs": "https://github.com/rawify/Quaternion.js/issues",
     "description": "A rotation library using quaternions",
