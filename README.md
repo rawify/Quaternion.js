@@ -239,18 +239,18 @@ Quaternion.fromMatrix(matrix)
 Gets a quaternion given a rotation matrix, either as a 1x9 array or a 3x3 array.
 
 
-Quaternion.fromEuler(φ, θ, ψ[, order="ZXY"]) / Quaternion.fromEulerLogical(ψ, θ, φ[, order="YXZ"])
+Quaternion.fromEuler(ϕ, θ, ψ[, order="ZXY"]) / Quaternion.fromEulerLogical(ψ, θ, ϕ[, order="YXZ"])
 ---
 Euler angles are probably the reason to use quaternions. The definition is mostly sloppy and you can only decide how it was defined based on the matrix representation. A `ZXY` in one definition is the multiplication order read from right to left and in another the execution order from left to right. Quaternion.js provides two functions, `fromEulerLogical()`, where the angles and order are applied from left to right (logical application order) and `fromEuler()` which reverses the order of the argument list (technical multiplication order).
 
-So for `fromEulerLogical(φ, θ, ψ, "ZXY")`, for example means first rotate around Z by φ then around X by θ and then around Y by ψ (`RotY(ψ)RotX(θ)RotZ(φ)`).
+So for `fromEulerLogical(ϕ, θ, ψ, "ZXY")`, for example means first rotate around Z by ϕ then around X by θ and then around Y by ψ (`RotY(ψ)RotX(θ)RotZ(ϕ)`).
 
 The order of `fromEuler()` can take the string value `ZXY (default), XYZ / RPY, YXZ, ZYX / YPR, YZX, XZY, ZYZ, ZXZ, YXY, YZY, XYX, XZX`.
 
 ### Relations
 
-- `fromEulerLogical(φ, θ, ψ, 'ZYX') = axisAngle([1, 0, 0], ψ) axisAngle([0, 1, 0], θ) axisAngle([0, 0, 1], φ)`
-- `fromEulerLogical(φ, θ, ψ, 'ZYX') = fromEuler(ψ, θ, φ, 'YXZ')`
+- `fromEulerLogical(ϕ, θ, ψ, 'ZYX') = axisAngle([1, 0, 0], ψ) axisAngle([0, 1, 0], θ) axisAngle([0, 0, 1], ϕ)`
+- `fromEulerLogical(ϕ, θ, ψ, 'ZYX') = fromEuler(ψ, θ, ϕ, 'YXZ')`
 - Mathematica `RollPitchYawMatrix[{α, β, γ}] = fromEulerLogical(α, β, γ, 'ZYX')`
 - W3C devicemotion `fromEulerLogical(ev.alpha * DEG, anevgles.beta * DEG, -ev.gamma * DEG, 'ZXY')`
 - Three.js chose a different argument format:
