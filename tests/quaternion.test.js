@@ -600,6 +600,18 @@ describe("Quaternions", function() {
     assert.v(r, [1, 1, 1]);
   });
 
+  it("should work with fromAxisAngle -> toAxisAngle", function() {
+
+    var angle = Math.random();
+    var axis = [Math.random(), Math.random(), Math.random()];
+    var axisNorm = Math.hypot(...axis);
+
+    var [v, a] = Quaternion.fromAxisAngle(axis, angle).toAxisAngle();
+
+    assert((a - angle) < EPS);
+    assert.v(v, axis.map(x => x / axisNorm));
+  });
+
   it("should generate a unit quaternion from euler angle", function() {
 
     var n = Quaternion.fromEuler(Math.PI, Math.PI, Math.PI).norm();

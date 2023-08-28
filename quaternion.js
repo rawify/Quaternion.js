@@ -1,5 +1,5 @@
 /**
- * @license Quaternion.js v1.4.13 25/08/2023
+ * @license Quaternion.js v1.5.0 28/08/2023
  *
  * Copyright (c) 2023, Robert Eisele (raw.org)
  * Licensed under the MIT license.
@@ -850,21 +850,17 @@
     'toCSSTransform': function() {
 
       var w = this['w'];
-      var x = this['x'];
-      var y = this['y'];
-      var z = this['z'];
 
-      var wx = w * x, wy = w * y, wz = w * z;
-      var xx = x * x, xy = x * y, xz = x * z;
-      var yy = y * y, yz = y * z, zz = z * z;
+      var angle = 2 * Math.acos(w);
+      var sin2 = 1 - w * w;
 
-      // It is basically the transpose of toMatrix4()
-      return "matrix3d(" + [
-        1 - 2 * (yy + zz), 2 * (xy + wz), 2 * (xz - wy), 0,
-        2 * (xy - wz), 1 - 2 * (xx + zz), 2 * (yz + wx), 0,
-        2 * (xz + wy), 2 * (yz - wx), 1 - 2 * (xx + yy), 0,
-        0, 0, 0, 1
-      ].join(",") + ")";
+      if (sin2 < EPSILON) {
+        angle = 0;
+        sin2 = 1;
+      } else {
+        sin2 = 1 / Math.sqrt(sin2); // Re-use variable sin^2 for 1 / sin
+      }
+      return "rotate3d(" + this['x'] * sin2 + "," + this['y'] * sin2 + "," + this['z'] * sin2 + "," + angle + "rad)";
     },
     /**
      * Calculates the axis and angle representation of the quaternion
@@ -876,15 +872,17 @@
       var w = this['w'];
 
       var angle = 2 * Math.acos(w); // Alternatively: 2 * atan2(|v|, w)
+      var sin2 = 1 - w * w; // sin(angle / 2) = sin(acos(w)) = sqrt(1 - w^2) = |v|, since 1 = dot(Q) <=> dot(v) = 1 - w^2
 
-      var sin = Math.sqrt(1 - w * w); // sin(angle / 2) = sin(acos(w)) = sqrt(1 - w^2) = |v|, since 1 = dot(Q) <=> dot(v) = 1 - w^2
-
-      if (sin < EPSILON) { // Alternatively |v| == 0
+      if (sin2 < EPSILON) { // Alternatively |v| == 0
         // If the sine is close to 0, we're close to the unit quaternion and the direction does not matter
-        return [[this['x'], this['y'], this['z']], 0]; // or [[1, 0, 0], 0] ?  or [[0, 0, 0], 0] ?
+        //return [[this['x'], this['y'], this['z']], 0]; // or [[1, 0, 0], 0] ?  or [[0, 0, 0], 0] ?
+        angle = 0;
+        sin2 = 1;
+      } else {
+        sin2 = 1 / Math.sqrt(sin2); // Re-use variable sin^2 for 1 / sin
       }
-      sin = 1 / sin;
-      return [[this['x'] * sin, this['y'] * sin, this['z'] * sin], angle];
+      return [[this['x'] * sin2, this['y'] * sin2, this['z'] * sin2], angle];
     },
     /**
      * Calculates the Euler angles represented by the current quat (multiplication order from right to left)
