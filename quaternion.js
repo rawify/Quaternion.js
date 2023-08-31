@@ -1,5 +1,5 @@
 /**
- * @license Quaternion.js v1.5.0 28/08/2023
+ * @license Quaternion.js v1.5.1 31/08/2023
  *
  * Copyright (c) 2023, Robert Eisele (raw.org)
  * Licensed under the MIT license.
@@ -870,19 +870,16 @@
     'toAxisAngle': function() {
 
       var w = this['w'];
-
-      var angle = 2 * Math.acos(w); // Alternatively: 2 * atan2(|v|, w)
       var sin2 = 1 - w * w; // sin(angle / 2) = sin(acos(w)) = sqrt(1 - w^2) = |v|, since 1 = dot(Q) <=> dot(v) = 1 - w^2
 
       if (sin2 < EPSILON) { // Alternatively |v| == 0
         // If the sine is close to 0, we're close to the unit quaternion and the direction does not matter
-        //return [[this['x'], this['y'], this['z']], 0]; // or [[1, 0, 0], 0] ?  or [[0, 0, 0], 0] ?
-        angle = 0;
-        sin2 = 1;
-      } else {
-        sin2 = 1 / Math.sqrt(sin2); // Re-use variable sin^2 for 1 / sin
+        return [[this['x'], this['y'], this['z']], 0]; // or [[1, 0, 0], 0] ?  or [[0, 0, 0], 0] ?
       }
-      return [[this['x'] * sin2, this['y'] * sin2, this['z'] * sin2], angle];
+
+      var isin = 1 / Math.sqrt(sin2);
+      var angle = 2 * Math.acos(w); // Alternatively: 2 * atan2(|v|, w)      
+      return [[this['x'] * isin, this['y'] * isin, this['z'] * isin], angle];
     },
     /**
      * Calculates the Euler angles represented by the current quat (multiplication order from right to left)
@@ -1179,6 +1176,7 @@
     var wy = uz * vx - ux * vz;
     var wz = ux * vy - uy * vx;
 
+    // |Q| = sqrt((1.0 + dot) * 2.0)
     return newNormalized(1 + dot, wx, wy, wz);
   };
 
@@ -1421,11 +1419,7 @@
     }
   };
 
-  if (typeof define === 'function' && define['amd']) {
-    define([], function() {
-      return Quaternion;
-    });
-  } else if (typeof exports === 'object') {
+  if (typeof exports === 'object') {
     Object.defineProperty(Quaternion, "__esModule", { 'value': true });
     Quaternion['default'] = Quaternion;
     Quaternion['Quaternion'] = Quaternion;
