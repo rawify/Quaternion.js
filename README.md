@@ -252,7 +252,7 @@ The order of `fromEuler()` can take the string value `ZXY (default), XYZ / RPY, 
 - `fromEulerLogical(ϕ, θ, ψ, 'ZYX') = axisAngle([1, 0, 0], ψ) axisAngle([0, 1, 0], θ) axisAngle([0, 0, 1], ϕ)`
 - `fromEulerLogical(ϕ, θ, ψ, 'ZYX') = fromEuler(ψ, θ, ϕ, 'YXZ')`
 - Mathematica `RollPitchYawMatrix[{α, β, γ}] = fromEulerLogical(α, β, γ, 'ZYX')`
-- W3C devicemotion `fromEulerLogical(ev.alpha * DEG, anevgles.beta * DEG, -ev.gamma * DEG, 'ZXY')`
+- W3C devicemotion `fromEulerLogical(ev.alpha * DEG, ev.beta * DEG, -ev.gamma * DEG, 'ZXY')`
 - Three.js chose a different argument format:
   - `fromEuler(x, y, z, 'XYZ') = ThreeJSfromEuler(x, y, z, 'XYZ')`
   - `fromEuler(x, y, z, 'YXZ') = ThreeJSfromEuler(y, x, z, 'YXZ')`
