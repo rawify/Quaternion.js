@@ -147,7 +147,7 @@ Calculates the dot product of two quaternions
 
 Quaternion inverse()
 ---
-Calculates the inverse of a quat for non-normalized quats such that *Q^-1 * Q = 1* and *Q * Q^-1 = 1*
+Calculates the inverse of a quat for non-normalized quats such that *Q<sup>-1</sup> * Q = 1* and *Q * Q<sup>-1</sup> = 1*
 
 Quaternion div(n)
 ---
