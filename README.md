@@ -45,7 +45,7 @@ You can pass either Objects, Doubles or Strings.
 Arguments
 ---
 
-Calling the constructor will create a quaternion 1-element.
+Calling the constructor with no parameters will create a unit quaternion.
 
 ```javascript
 new Quaternion() // 1 + 0i + 0j + 0k
