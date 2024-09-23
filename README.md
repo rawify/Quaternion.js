@@ -70,7 +70,7 @@ Quaternion as an object (it's ok to leave components out)
 new Quaternion({w: w, x: x, y: y, z: z})
 ```
 
-Quaternion out of a complex number, e.g. [Complex.js](https://github.com/infusion/Complex.js).
+Quaternion out of a complex number, e.g. [Complex.js](https://github.com/infusion/Complex.js), with `y=z=0`.
 ```javascript
 new Quaternion({re: real, im: imaginary})
 ```
