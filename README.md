@@ -315,11 +315,11 @@ npm install quaternion
 ```
 
 
-##Coding Style
+## Coding Style
 
 As every library I publish, Quaternion.js is also built to be as small as possible after compressing it with Google Closure Compiler in advanced mode. Thus the coding style orientates a little on maxing-out the compression rate. Please make sure you keep this style if you plan to extend the library.
 
-##Building the library
+## Building the library
 
 After cloning the Git repository run:
 
@@ -328,7 +328,7 @@ npm install
 npm run build
 ```
 
-##Run a test
+## Run a test
 
 Testing the source against the shipped test suite is as easy as
 
