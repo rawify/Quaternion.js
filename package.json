@@ -1,7 +1,7 @@
 {
     "name": "quaternion",
     "title": "Quaternion.js",
-    "version": "1.5.1",
+    "version": "1.6.0",
     "homepage": "https://github.com/rawify/Quaternion.js",
     "bugs": "https://github.com/rawify/Quaternion.js/issues",
     "description": "A rotation library using quaternions",
@@ -20,34 +20,46 @@
         "vector",
         "matrix"
     ],
+    "private": false,
+    "main": "./dist/quaternion.js",
+    "module": "./dist/quaternion.mjs",
+    "types": "./quaternion.d.ts",
+    "browser": "./dist/quaternion.min.js",
+    "unpkg": "./dist/quaternion.min.js",
+    "readmeFilename": "README.md",
+    "exports": {
+        ".": {
+            "types": "./quaternion.d.ts",
+            "require": "./dist/quaternion.js",
+            "import": "./dist/quaternion.mjs"
+        }
+    },
+    "repository": {
+        "type": "git",
+        "url": "git@github.com:rawify/Quaternion.js.git"
+    },
+    "funding": {
+        "type": "github",
+        "url": "https://github.com/sponsors/rawify"
+    },
     "author": {
         "name": "Robert Eisele",
         "email": "robert@raw.org",
         "url": "https://raw.org/"
     },
-    "main": "quaternion",
-    "types": "./quaternion.d.ts",
-    "private": false,
-    "readmeFilename": "README.md",
-    "directories": {
-        "example": "examples"
-    },
     "license": "MIT",
-    "repository": {
-        "type": "git",
-        "url": "git://github.com/rawify/Quaternion.js.git"
-    },
-    "funding": {
-        "type": "patreon",
-        "url": "https://www.patreon.com/infusion"
-    },
     "engines": {
         "node": "*"
     },
     "scripts": {
+        "build": "crude-build Quaternion",
         "test": "mocha tests/*.js"
     },
+    "directories": {
+        "example": "examples"
+    },
     "devDependencies": {
+        "crude-build": "^0.0.1",
         "mocha": "*"
     }
 }

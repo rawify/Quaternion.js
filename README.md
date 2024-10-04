@@ -3,10 +3,10 @@
 [![NPM Package](https://img.shields.io/npm/v/quaternion.svg?style=flat)](https://npmjs.org/package/quaternion "View this project on npm")
 [![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
 
-Quaternion.js is a well tested JavaScript library for 3D rotations. Quaternions can be used everywhere, from the rotation calculation of your mobile phone over computer games to the rotation of satellites and all by avoiding the [Gimbal lock](https://en.wikipedia.org/wiki/Gimbal_lock). The library comes with examples to make you get started much quicker without worrying about the math behind.
+Quaternion.js is a well tested JavaScript library for 3D rotations. Quaternions can be used everywhere, from the rotation calculation of your mobile phone over computer games to the rotation of satellites and all by avoiding the [Gimbal lock](https://en.wikipedia.org/wiki/Gimbal_lock). The library comes with examples to make you get started much quicker without worrying about the math behind. But if you care, have a look at the [Quaternion Introduction](https://raw.org/book/algebra/quaternions/).
 
 
-# Examples
+## Examples
 
 ```js
 var Quaternion = require('quaternion');
@@ -34,8 +34,8 @@ window.addEventListener("deviceorientation", function(ev) {
 ```
 
 
-Parser
-===
+## Parser
+
 
 Any function (see below) as well as the constructor of the *Quaternion* class parses its input like this.
 
@@ -100,8 +100,8 @@ new Quaternion("i");
 ```
 
 
-Functions
-===
+## Functions
+
 
 Every stated parameter *n* in the following list of functions behaves in the same way as the constructor examples above
 
@@ -223,7 +223,7 @@ Clones the actual object
 
 Array rotateVector(v)
 ---
-Rotates a 3 component vector, represented as an array by the current quaternion
+Rotates a 3 component vector, represented as an array by the current quaternion in an [efficient manner](https://raw.org/proof/vector-rotation-using-quaternions/).
 
 Quaternion slerp(q)(pct)
 ---
@@ -243,7 +243,7 @@ Quaternion.fromEuler(ϕ, θ, ψ[, order="ZXY"]) / Quaternion.fromEulerLogical(ψ
 ---
 Euler angles are probably the reason to use quaternions. The definition is mostly sloppy and you can only decide how it was defined based on the matrix representation. A `ZXY` in one definition is the multiplication order read from right to left and in another the execution order from left to right. Quaternion.js provides two functions, `fromEulerLogical()`, where the angles and order are applied from left to right (logical application order) and `fromEuler()` which reverses the order of the argument list (technical multiplication order).
 
-So for `fromEulerLogical(ϕ, θ, ψ, "ZXY")`, for example means first rotate around Z by ϕ then around X by θ and then around Y by ψ (`RotY(ψ)RotX(θ)RotZ(ϕ)`).
+So for `fromEulerLogical(ϕ, θ, ψ, "ZXY")`, for example means first rotate around Z axis by ϕ then around X axis by θ and then around axis Y by ψ (`RotY(ψ)RotX(θ)RotZ(ϕ)`).
 
 The order of `fromEuler()` can take the string value `ZXY (default), XYZ / RPY, YXZ, ZYX / YPR, YZX, XZY, ZYZ, ZXZ, YXY, YZY, XYX, XZX`.
 
@@ -262,18 +262,16 @@ The order of `fromEuler()` can take the string value `ZXY (default), XYZ / RPY, 
   - `fromEuler(x, y, z, 'XZY') = ThreeJSfromEuler(x, z, y, 'XZY')`
 
 
-
-
 Quaternion.fromBetweenVectors(u, v)
 ---
-Calculates the quaternion to rotate vector `u` onto vector `v`, represented as 3 element arrays.
+Calculates the quaternion to rotate vector `u` onto vector `v`, represented as 3 element arrays, which can be done [elegantly using quaternions](https://raw.org/proof/quaternion-from-two-vectors/).
 
 Quaternion.random()
 ---
 Gets a spherical random number
 
-Constants
-===
+## Constants
+
 
 Quaternion.ZERO
 ---
@@ -298,53 +296,47 @@ An imaginary number k instance
 
 
 
-Installation
-===
-Installing Quaternion.js is as easy as cloning this repo or use one of the following commands:
+## Installation
 
-```
-bower install quaternion
-```
-or
+Installing Quaternion.js is as easy as cloning this repo or use one of the following command:
 
-```
+
+```bash
 npm install quaternion
 ```
 
-Using Quaternion.js with the browser
-===
+## Using Quaternion.js with the browser
+
 ```html
-<script src="quaternion.js"></script>
+<script src="quaternion.min.js"></script>
 <script>
     console.log(Quaternion("1 + 2i - 3j + 4k"));
 </script>
 ```
 
-Using Quaternion.js with require.js
-===
-```html
-<script src="require.js"></script>
-<script>
-requirejs(['quaternion.js'],
-function(Quaternion) {
-    console.log(Quaternion("1 + 2i - 3j + 4k"));
-});
-</script>
-```
-Coding Style
-===
+
+##Coding Style
+
 As every library I publish, Quaternion.js is also built to be as small as possible after compressing it with Google Closure Compiler in advanced mode. Thus the coding style orientates a little on maxing-out the compression rate. Please make sure you keep this style if you plan to extend the library.
 
-Testing
-===
-If you plan to enhance the library, make sure you add test cases and all the previous tests are passing. You can test the library with
+##Building the library
+
+After cloning the Git repository run:
 
 ```
-npm test
+npm install
+npm run build
 ```
 
+##Run a test
 
-Copyright and licensing
-===
-Copyright (c) 2023, [Robert Eisele](https://raw.org/)
+Testing the source against the shipped test suite is as easy as
+
+```
+npm run test
+```
+
+## Copyright and licensing
+
+Copyright (c) 2025, [Robert Eisele](https://raw.org/)
 Licensed under the MIT license.

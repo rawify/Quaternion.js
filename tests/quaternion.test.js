@@ -1,6 +1,6 @@
 var assert = require("assert");
 
-var Quaternion = require("../quaternion");
+var Quaternion = require("quaternion");
 var EPS = 1e-4;
 
 assert.matrixEqual = function(mat1, mat2) {
