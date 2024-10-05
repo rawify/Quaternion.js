@@ -1,7 +1,7 @@
 {
     "name": "quaternion",
     "title": "Quaternion.js",
-    "version": "1.6.0",
+    "version": "1.6.1",
     "homepage": "https://github.com/rawify/Quaternion.js",
     "bugs": "https://github.com/rawify/Quaternion.js/issues",
     "description": "A rotation library using quaternions",
@@ -59,7 +59,7 @@
         "example": "examples"
     },
     "devDependencies": {
-        "crude-build": "^0.0.1",
+        "crude-build": "^0.0.3",
         "mocha": "*"
     }
 }

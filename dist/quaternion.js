@@ -1411,8 +1411,7 @@ Quaternion['fromMatrix'] = function (matrix) {
   }
 };
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = Quaternion;
-module.exports = Quaternion; 
+Object.defineProperty(Quaternion, "__esModule", { 'value': true });
+Quaternion['default'] = Quaternion;
+Quaternion['Quaternion'] = Quaternion;
+module['exports'] = Quaternion;
