@@ -1411,5 +1411,5 @@ Quaternion['fromMatrix'] = function (matrix) {
   }
 };
 export {
-  Quaternion as default
+  Quaternion as default, Quaternion
 };
