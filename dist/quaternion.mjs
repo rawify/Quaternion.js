@@ -10,7 +10,7 @@
  * @returns 
  */
 function newQuaternion(w, x, y, z) {
-  var f = Object.create(Quaternion.prototype);
+  const f = Object.create(Quaternion.prototype);
 
   f['w'] = w;
   f['x'] = x;
@@ -30,10 +30,10 @@ function newQuaternion(w, x, y, z) {
  * @returns
  */
 function newNormalized(w, x, y, z) {
-  var f = Object.create(Quaternion.prototype);
+  const f = Object.create(Quaternion.prototype);
 
   // We assume |Q| > 0 for internal usage
-  var il = 1 / Math.sqrt(w * w + x * x + y * y + z * z);
+  const il = 1 / Math.sqrt(w * w + x * x + y * y + z * z);
 
   f['w'] = w * il;
   f['x'] = x * il;
@@ -52,8 +52,8 @@ function newNormalized(w, x, y, z) {
  */
 function logHypot(a, b) {
 
-  var _a = Math.abs(a);
-  var _b = Math.abs(b);
+  const _a = Math.abs(a);
+  const _b = Math.abs(b);
 
   if (a === 0) {
     return Math.log(_b);
@@ -77,7 +77,7 @@ function logHypot(a, b) {
  * Temporary parsing object to avoid re-allocations
  *
  */
-var P = Object.create(Quaternion.prototype);
+const P = Object.create(Quaternion.prototype);
 
 function parse(dest, w, x, y, z) {
 
@@ -134,11 +134,11 @@ function parse(dest, w, x, y, z) {
   // Parse string values
   if (typeof w === 'string' && y === undefined) {
 
-    var tokens = w.match(/\d+\.?\d*e[+-]?\d+|\d+\.?\d*|\.\d+|./g);
-    var plus = 1;
-    var minus = 0;
+    const tokens = w.match(/\d+\.?\d*e[+-]?\d+|\d+\.?\d*|\.\d+|./g);
+    let plus = 1;
+    let minus = 0;
 
-    var iMap = { 'i': 'x', 'j': 'y', 'k': 'z' };
+    const iMap = { 'i': 'x', 'j': 'y', 'k': 'z' };
 
     if (tokens === null) {
       throw new Error('Parse error');
@@ -150,10 +150,10 @@ function parse(dest, w, x, y, z) {
       dest['y'] =
       dest['z'] = 0;
 
-    for (var i = 0; i < tokens.length; i++) {
+    for (let i = 0; i < tokens.length; i++) {
 
-      var c = tokens[i];
-      var d = tokens[i + 1];
+      let c = tokens[i];
+      let d = tokens[i + 1];
 
       if (c === ' ' || c === '\t' || c === '\n') {
         /* void */
@@ -166,7 +166,7 @@ function parse(dest, w, x, y, z) {
         if (plus + minus === 0) {
           throw new Error('Parse error' + c);
         }
-        var g = iMap[c];
+        let g = iMap[c];
 
         // Is the current token an imaginary sign?
         if (g !== undefined) {
@@ -229,7 +229,7 @@ function parse(dest, w, x, y, z) {
 
 function numToStr(n, char, prev) {
 
-  var ret = '';
+  let ret = '';
 
   if (n !== 0) {
 
@@ -264,7 +264,7 @@ function Quaternion(w, x, y, z) {
   if (this instanceof Quaternion) {
     parse(this, w, x, y, z);
   } else {
-    var t = Object.create(Quaternion.prototype);
+    const t = Object.create(Quaternion.prototype);
     parse(t, w, x, y, z);
     return t;
   }
@@ -340,10 +340,10 @@ Quaternion.prototype = {
 
     // The unit quaternion has |Q| = 1
 
-    var w = this['w'];
-    var x = this['x'];
-    var y = this['y'];
-    var z = this['z'];
+    const w = this['w'];
+    const x = this['x'];
+    const y = this['y'];
+    const z = this['z'];
 
     return Math.sqrt(w * w + x * x + y * y + z * z);
   },
@@ -361,10 +361,10 @@ Quaternion.prototype = {
     //        = dot(Q, Q)
     //        = Q * Q'
 
-    var w = this['w'];
-    var x = this['x'];
-    var y = this['y'];
-    var z = this['z'];
+    const w = this['w'];
+    const x = this['x'];
+    const y = this['y'];
+    const z = this['z'];
 
     return w * w + x * x + y * y + z * z;
   },
@@ -380,12 +380,12 @@ Quaternion.prototype = {
 
     // unrolled Q.scale(1 / Q.norm())
 
-    var w = this['w'];
-    var x = this['x'];
-    var y = this['y'];
-    var z = this['z'];
+    const w = this['w'];
+    const x = this['x'];
+    const y = this['y'];
+    const z = this['z'];
 
-    var norm = Math.sqrt(w * w + x * x + y * y + z * z);
+    let norm = Math.sqrt(w * w + x * x + y * y + z * z);
 
     if (norm < EPSILON) {
       return Quaternion['ZERO'];
@@ -413,15 +413,15 @@ Quaternion.prototype = {
 
     // Not commutative because cross(v1, v2) != cross(v2, v1)!
 
-    var w1 = this['w'];
-    var x1 = this['x'];
-    var y1 = this['y'];
-    var z1 = this['z'];
+    const w1 = this['w'];
+    const x1 = this['x'];
+    const y1 = this['y'];
+    const z1 = this['z'];
 
-    var w2 = P['w'];
-    var x2 = P['x'];
-    var y2 = P['y'];
-    var z2 = P['z'];
+    const w2 = P['w'];
+    const x2 = P['x'];
+    const y2 = P['y'];
+    const z2 = P['z'];
 
     return newQuaternion(
       w1 * w2 - x1 * x2 - y1 * y2 - z1 * z2,
@@ -477,12 +477,12 @@ Quaternion.prototype = {
     // Q^-1 * Q = [w / (w^2 + |v|^2), -v / (w^2 + |v|^2)] * [w, v]
     //          = [1, 0].
 
-    var w = this['w'];
-    var x = this['x'];
-    var y = this['y'];
-    var z = this['z'];
+    const w = this['w'];
+    const x = this['x'];
+    const y = this['y'];
+    const z = this['z'];
 
-    var normSq = w * w + x * x + y * y + z * z;
+    let normSq = w * w + x * x + y * y + z * z;
 
     if (normSq === 0) {
       return Quaternion['ZERO']; // TODO: Is the result zero or one when the norm is zero?
@@ -507,17 +507,17 @@ Quaternion.prototype = {
 
     // Q1 / Q2 := Q1 * Q2^-1
 
-    var w1 = this['w'];
-    var x1 = this['x'];
-    var y1 = this['y'];
-    var z1 = this['z'];
+    const w1 = this['w'];
+    const x1 = this['x'];
+    const y1 = this['y'];
+    const z1 = this['z'];
 
-    var w2 = P['w'];
-    var x2 = P['x'];
-    var y2 = P['y'];
-    var z2 = P['z'];
+    const w2 = P['w'];
+    const x2 = P['x'];
+    const y2 = P['y'];
+    const z2 = P['z'];
 
-    var normSq = w2 * w2 + x2 * x2 + y2 * y2 + z2 * z2;
+    let normSq = w2 * w2 + x2 * x2 + y2 * y2 + z2 * z2;
 
     if (normSq === 0) {
       return Quaternion['ZERO']; // TODO: Is the result zero or one when the norm is zero?
@@ -559,14 +559,14 @@ Quaternion.prototype = {
    */
   'exp': function () {
 
-    var w = this['w'];
-    var x = this['x'];
-    var y = this['y'];
-    var z = this['z'];
+    const w = this['w'];
+    const x = this['x'];
+    const y = this['y'];
+    const z = this['z'];
 
-    var vNorm = Math.sqrt(x * x + y * y + z * z);
-    var wExp = Math.exp(w);
-    var scale = wExp * Math.sin(vNorm) / vNorm;
+    const vNorm = Math.sqrt(x * x + y * y + z * z);
+    const wExp = Math.exp(w);
+    const scale = wExp * Math.sin(vNorm) / vNorm;
 
     if (vNorm === 0) {
       //return newQuaternion(wExp * Math.cos(vNorm), 0, 0, 0);
@@ -586,10 +586,10 @@ Quaternion.prototype = {
    */
   'log': function () {
 
-    var w = this['w'];
-    var x = this['x'];
-    var y = this['y'];
-    var z = this['z'];
+    const w = this['w'];
+    const x = this['x'];
+    const y = this['y'];
+    const z = this['z'];
 
     if (y === 0 && z === 0) {
       return newQuaternion(
@@ -597,10 +597,10 @@ Quaternion.prototype = {
         Math.atan2(x, w), 0, 0);
     }
 
-    var qNorm2 = x * x + y * y + z * z + w * w;
-    var vNorm = Math.sqrt(x * x + y * y + z * z);
+    const qNorm2 = x * x + y * y + z * z + w * w;
+    const vNorm = Math.sqrt(x * x + y * y + z * z);
 
-    var scale = Math.atan2(vNorm, w) / vNorm; // Alternative: acos(w / qNorm) / vNorm
+    const scale = Math.atan2(vNorm, w) / vNorm; // Alternative: acos(w / qNorm) / vNorm
 
     return newQuaternion(
       Math.log(qNorm2) * 0.5,
@@ -635,15 +635,15 @@ Quaternion.prototype = {
       // Borrowed from complex.js
       if (this['y'] === 0 && this['z'] === 0) {
 
-        var a = this['w'];
-        var b = this['x'];
+        let a = this['w'];
+        let b = this['x'];
 
         if (a === 0 && b === 0) {
           return Quaternion['ZERO'];
         }
 
-        var arg = Math.atan2(b, a);
-        var loh = logHypot(a, b);
+        let arg = Math.atan2(b, a);
+        let loh = logHypot(a, b);
 
         if (P['x'] === 0) {
 
@@ -691,7 +691,7 @@ Quaternion.prototype = {
 
     parse(P, w, x, y, z);
 
-    var eps = EPSILON;
+    const eps = EPSILON;
 
     // maybe check for NaN's here?
     return Math.abs(P['w'] - this['w']) < eps
@@ -724,11 +724,11 @@ Quaternion.prototype = {
    */
   'toString': function () {
 
-    var w = this['w'];
-    var x = this['x'];
-    var y = this['y'];
-    var z = this['z'];
-    var ret = '';
+    const w = this['w'];
+    const x = this['x'];
+    const y = this['y'];
+    const z = this['z'];
+    let ret = '';
 
     if (isNaN(w) || isNaN(x) || isNaN(y) || isNaN(z)) {
       return 'NaN';
@@ -782,14 +782,14 @@ Quaternion.prototype = {
    */
   'toMatrix': function (twoD) {
 
-    var w = this['w'];
-    var x = this['x'];
-    var y = this['y'];
-    var z = this['z'];
+    const w = this['w'];
+    const x = this['x'];
+    const y = this['y'];
+    const z = this['z'];
 
-    var wx = w * x, wy = w * y, wz = w * z;
-    var xx = x * x, xy = x * y, xz = x * z;
-    var yy = y * y, yz = y * z, zz = z * z;
+    const wx = w * x, wy = w * y, wz = w * z;
+    const xx = x * x, xy = x * y, xz = x * z;
+    const yy = y * y, yz = y * z, zz = z * z;
 
     if (twoD) {
       return [
@@ -811,14 +811,14 @@ Quaternion.prototype = {
    */
   'toMatrix4': function (twoD) {
 
-    var w = this['w'];
-    var x = this['x'];
-    var y = this['y'];
-    var z = this['z'];
+    const w = this['w'];
+    const x = this['x'];
+    const y = this['y'];
+    const z = this['z'];
 
-    var wx = w * x, wy = w * y, wz = w * z;
-    var xx = x * x, xy = x * y, xz = x * z;
-    var yy = y * y, yz = y * z, zz = z * z;
+    const wx = w * x, wy = w * y, wz = w * z;
+    const xx = x * x, xy = x * y, xz = x * z;
+    const yy = y * y, yz = y * z, zz = z * z;
 
     if (twoD) {
       return [
@@ -841,10 +841,10 @@ Quaternion.prototype = {
    */
   'toCSSTransform': function () {
 
-    var w = this['w'];
+    const w = this['w'];
 
-    var angle = 2 * Math.acos(w);
-    var sin2 = 1 - w * w;
+    let angle = 2 * Math.acos(w);
+    let sin2 = 1 - w * w;
 
     if (sin2 < EPSILON) {
       angle = 0;
@@ -861,16 +861,16 @@ Quaternion.prototype = {
    */
   'toAxisAngle': function () {
 
-    var w = this['w'];
-    var sin2 = 1 - w * w; // sin(angle / 2) = sin(acos(w)) = sqrt(1 - w^2) = |v|, since 1 = dot(Q) <=> dot(v) = 1 - w^2
+    const w = this['w'];
+    const sin2 = 1 - w * w; // sin(angle / 2) = sin(acos(w)) = sqrt(1 - w^2) = |v|, since 1 = dot(Q) <=> dot(v) = 1 - w^2
 
     if (sin2 < EPSILON) { // Alternatively |v| == 0
       // If the sine is close to 0, we're close to the unit quaternion and the direction does not matter
       return [[this['x'], this['y'], this['z']], 0]; // or [[1, 0, 0], 0] ?  or [[0, 0, 0], 0] ?
     }
 
-    var isin = 1 / Math.sqrt(sin2);
-    var angle = 2 * Math.acos(w); // Alternatively: 2 * atan2(|v|, w)      
+    const isin = 1 / Math.sqrt(sin2);
+    const angle = 2 * Math.acos(w); // Alternatively: 2 * atan2(|v|, w)
     return [[this['x'] * isin, this['y'] * isin, this['z'] * isin], angle];
   },
   /**
@@ -881,14 +881,14 @@ Quaternion.prototype = {
    */
   'toEuler': function (order) {
 
-    var w = this['w'];
-    var x = this['x'];
-    var y = this['y'];
-    var z = this['z'];
+    const w = this['w'];
+    const x = this['x'];
+    const y = this['y'];
+    const z = this['z'];
 
-    var wx = w * x, wy = w * y, wz = w * z;
-    var xx = x * x, xy = x * y, xz = x * z;
-    var yy = y * y, yz = y * z, zz = z * z;
+    const wx = w * x, wy = w * y, wz = w * z;
+    const xx = x * x, xy = x * y, xz = x * z;
+    const yy = y * y, yz = y * z, zz = z * z;
 
     function asin(t) {
       return t >= 1 ? Math.PI / 2 : (t <= -1 ? -Math.PI / 2 : Math.asin(t));
@@ -995,25 +995,25 @@ Quaternion.prototype = {
    */
   'rotateVector': function (v) {
 
-    var qw = this['w'];
-    var qx = this['x'];
-    var qy = this['y'];
-    var qz = this['z'];
+    const qw = this['w'];
+    const qx = this['x'];
+    const qy = this['y'];
+    const qz = this['z'];
 
-    var vx = v[0];
-    var vy = v[1];
-    var vz = v[2];
+    const vx = v[0];
+    const vy = v[1];
+    const vz = v[2];
 
-    // t = 2q x v
-    var tx = 2 * (qy * vz - qz * vy);
-    var ty = 2 * (qz * vx - qx * vz);
-    var tz = 2 * (qx * vy - qy * vx);
+    // t = q x v
+    const tx = qy * vz - qz * vy;
+    const ty = qz * vx - qx * vz;
+    const tz = qx * vy - qy * vx;
 
-    // v + w t + q x t
+    // v + w 2t + q x 2t
     return [
-      vx + qw * tx + qy * tz - qz * ty,
-      vy + qw * ty + qz * tx - qx * tz,
-      vz + qw * tz + qx * ty - qy * tx];
+      vx + qw * (tx + tx) + qy * (tz + tz) - qz * (ty + ty),
+      vy + qw * (ty + ty) + qz * (tx + tx) - qx * (tz + tz),
+      vz + qw * (tz + tz) + qx * (ty + ty) - qy * (tx + tx)];
   },
 
   /**
@@ -1027,17 +1027,17 @@ Quaternion.prototype = {
 
     // slerp(Q1, Q2, t) := Q1(Q1^-1 Q2)^t
 
-    var w1 = this['w'];
-    var x1 = this['x'];
-    var y1 = this['y'];
-    var z1 = this['z'];
+    let w1 = this['w'];
+    let x1 = this['x'];
+    let y1 = this['y'];
+    let z1 = this['z'];
 
-    var w2 = P['w'];
-    var x2 = P['x'];
-    var y2 = P['y'];
-    var z2 = P['z'];
+    let w2 = P['w'];
+    let x2 = P['x'];
+    let y2 = P['y'];
+    let z2 = P['z'];
 
-    var cosTheta0 = w1 * w2 + x1 * x2 + y1 * y2 + z1 * z2;
+    let cosTheta0 = w1 * w2 + x1 * x2 + y1 * y2 + z1 * z2;
 
     if (cosTheta0 < 0) {
       w1 = -w1;
@@ -1057,17 +1057,17 @@ Quaternion.prototype = {
       };
     }
 
-    var Theta0 = Math.acos(cosTheta0);
-    var sinTheta0 = Math.sin(Theta0);
+    let Theta0 = Math.acos(cosTheta0);
+    let sinTheta0 = Math.sin(Theta0);
 
     return function (pct) {
 
-      var Theta = Theta0 * pct;
-      var sinTheta = Math.sin(Theta);
-      var cosTheta = Math.cos(Theta);
+      let Theta = Theta0 * pct;
+      let sinTheta = Math.sin(Theta);
+      let cosTheta = Math.cos(Theta);
 
-      var s0 = cosTheta - cosTheta0 * sinTheta / sinTheta0;
-      var s1 = sinTheta / sinTheta0;
+      let s0 = cosTheta - cosTheta0 * sinTheta / sinTheta0;
+      let s1 = sinTheta / sinTheta0;
 
       return newQuaternion(
         s0 * w1 + s1 * w2,
@@ -1087,7 +1087,7 @@ Quaternion['K'] = newQuaternion(0, 0, 0, 1);
 /**
  * @const
  */
-var EPSILON = 1e-16;
+const EPSILON = 1e-16;
 
 /**
  * Creates quaternion by a rotation given as axis-angle orientation
@@ -1100,16 +1100,16 @@ Quaternion['fromAxisAngle'] = function (axis, angle) {
 
   // Q = [cos(angle / 2), v * sin(angle / 2)]
 
-  var a = axis[0];
-  var b = axis[1];
-  var c = axis[2];
+  const a = axis[0];
+  const b = axis[1];
+  const c = axis[2];
 
-  var halfAngle = angle * 0.5;
+  const halfAngle = angle * 0.5;
 
-  var sin_2 = Math.sin(halfAngle);
-  var cos_2 = Math.cos(halfAngle);
+  const sin_2 = Math.sin(halfAngle);
+  const cos_2 = Math.cos(halfAngle);
 
-  var sin_norm = sin_2 / Math.sqrt(a * a + b * b + c * c);
+  const sin_norm = sin_2 / Math.sqrt(a * a + b * b + c * c);
 
   return newQuaternion(cos_2, a * sin_norm, b * sin_norm, c * sin_norm);
 };
@@ -1123,23 +1123,23 @@ Quaternion['fromAxisAngle'] = function (axis, angle) {
  */
 Quaternion['fromBetweenVectors'] = function (u, v) {
 
-  var ux = u[0];
-  var uy = u[1];
-  var uz = u[2];
+  let ux = u[0];
+  let uy = u[1];
+  let uz = u[2];
 
-  var vx = v[0];
-  var vy = v[1];
-  var vz = v[2];
+  let vx = v[0];
+  let vy = v[1];
+  let vz = v[2];
 
-  var uLen = Math.sqrt(ux * ux + uy * uy + uz * uz);
-  var vLen = Math.sqrt(vx * vx + vy * vy + vz * vz);
+  const uLen = Math.sqrt(ux * ux + uy * uy + uz * uz);
+  const vLen = Math.sqrt(vx * vx + vy * vy + vz * vz);
 
   // Normalize u and v
   if (uLen > 0) ux /= uLen, uy /= uLen, uz /= uLen;
   if (vLen > 0) vx /= vLen, vy /= vLen, vz /= vLen;
 
   // Calculate dot product of normalized u and v
-  var dot = ux * vx + uy * vy + uz * vz;
+  const dot = ux * vx + uy * vy + uz * vz;
 
   // Parallel when dot > 0.999999
   if (dot >= 1 - EPSILON) {
@@ -1164,9 +1164,9 @@ Quaternion['fromBetweenVectors'] = function (u, v) {
   }
 
   // w = cross(u, v)
-  var wx = uy * vz - uz * vy;
-  var wy = uz * vx - ux * vz;
-  var wz = ux * vy - uy * vx;
+  const wx = uy * vz - uz * vy;
+  const wy = uz * vx - ux * vz;
+  const wz = ux * vy - uy * vx;
 
   // |Q| = sqrt((1.0 + dot) * 2.0)
   return newNormalized(1 + dot, wx, wy, wz);
@@ -1178,12 +1178,12 @@ Quaternion['fromBetweenVectors'] = function (u, v) {
  */
 Quaternion['random'] = function () {
 
-  var u1 = Math.random();
-  var u2 = Math.random();
-  var u3 = Math.random();
+  const u1 = Math.random();
+  const u2 = Math.random();
+  const u3 = Math.random();
 
-  var s = Math.sqrt(1 - u1);
-  var t = Math.sqrt(u1);
+  const s = Math.sqrt(1 - u1);
+  const t = Math.sqrt(u1);
 
   return newQuaternion(
     t * Math.cos(2 * Math.PI * u3),
@@ -1218,17 +1218,17 @@ Quaternion['fromEulerLogical'] = function (ψ, θ, φ, order) {
  */
 Quaternion['fromEuler'] = function (φ, θ, ψ, order) {
 
-  var _x = φ * 0.5;
-  var _y = θ * 0.5;
-  var _z = ψ * 0.5;
+  const _x = φ * 0.5;
+  const _y = θ * 0.5;
+  const _z = ψ * 0.5;
 
-  var cX = Math.cos(_x);
-  var cY = Math.cos(_y);
-  var cZ = Math.cos(_z);
+  const cX = Math.cos(_x);
+  const cY = Math.cos(_y);
+  const cZ = Math.cos(_z);
 
-  var sX = Math.sin(_x);
-  var sY = Math.sin(_y);
-  var sZ = Math.sin(_z);
+  const sX = Math.sin(_x);
+  const sY = Math.sin(_y);
+  const sZ = Math.sin(_z);
 
   if (order === undefined || order === 'ZXY') {
     // axisAngle([0, 0, 1], φ) * axisAngle([1, 0, 0], θ) * axisAngle([0, 1, 0], ψ)
@@ -1348,35 +1348,36 @@ Quaternion['fromEuler'] = function (φ, θ, ψ, order) {
  */
 Quaternion['fromMatrix'] = function (matrix) {
 
+  let m00, m01, m02, m10, m11, m12, m20, m21, m22;
+
   if (matrix.length === 9) {
+    m00 = matrix[0];
+    m01 = matrix[1];
+    m02 = matrix[2];
 
-    var m00 = matrix[0];
-    var m01 = matrix[1];
-    var m02 = matrix[2];
+    m10 = matrix[3];
+    m11 = matrix[4];
+    m12 = matrix[5];
 
-    var m10 = matrix[3];
-    var m11 = matrix[4];
-    var m12 = matrix[5];
-
-    var m20 = matrix[6];
-    var m21 = matrix[7];
-    var m22 = matrix[8];
+    m20 = matrix[6];
+    m21 = matrix[7];
+    m22 = matrix[8];
 
   } else {
-    var m00 = matrix[0][0];
-    var m01 = matrix[0][1];
-    var m02 = matrix[0][2];
+    m00 = matrix[0][0];
+    m01 = matrix[0][1];
+    m02 = matrix[0][2];
 
-    var m10 = matrix[1][0];
-    var m11 = matrix[1][1];
-    var m12 = matrix[1][2];
+    m10 = matrix[1][0];
+    m11 = matrix[1][1];
+    m12 = matrix[1][2];
 
-    var m20 = matrix[2][0];
-    var m21 = matrix[2][1];
-    var m22 = matrix[2][2];
+    m20 = matrix[2][0];
+    m21 = matrix[2][1];
+    m22 = matrix[2][2];
   }
 
-  var tr = m00 + m11 + m22; // 2 * w = sqrt(1 + tr)
+  const tr = m00 + m11 + m22; // 2 * w = sqrt(1 + tr)
 
   // Choose the element with the biggest value on the diagonal
 
