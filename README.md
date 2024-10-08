@@ -16,8 +16,8 @@ c.mul(1,2,3,4).div([3,4,1]).sub(7, [1, 2, 3]);
 ```
 
 
-HTML5 Device Orientation
----
+### HTML5 Device Orientation
+
 In order to create a HTML element, which always rotates in 3D with your mobile device, all you need is the following snippet. Look at the examples folder for a complete version.
 
 ```javascript
@@ -42,8 +42,8 @@ Any function (see below) as well as the constructor of the *Quaternion* class pa
 You can pass either Objects, Doubles or Strings.
 
 
-Arguments
----
+### Arguments
+
 
 Calling the constructor with no parameters will create a unit quaternion.
 
@@ -57,8 +57,8 @@ The typical use case contains all quaternion parameters
 new Quaternion(w, x, y, z)
 ```
 
-Objects
----
+### Objects
+
 Quaternion as angle and vector. **Note:** This is not equivalent to *Quaternion.fromAxisAngle()*!
 
 ```javascript
@@ -84,14 +84,14 @@ Augmented Quaternion out of a 3 elements vector
 new Quaternion([x, y, z])
 ```
 
-Doubles
----
+### Doubles
+
 ```javascript
 new Quaternion(55.4);
 ```
 
-Strings
----
+### Strings
+
 ```javascript
 new Quaternion('1 - 2i - 3j - 4k')
 new Quaternion("123.45");
@@ -107,147 +107,147 @@ Every stated parameter *n* in the following list of functions behaves in the sam
 
 **Note:** Calling a method like *add()* without parameters passes a quaternion with all elements zero, not one!
 
-Quaternion add(n)
----
+### Quaternion add(n)
+
 Adds two quaternions Q1 and Q2
 
-Quaternion sub(n)
----
+### Quaternion sub(n)
+
 Subtracts a quaternions Q2 from Q1
 
-Quaternion neg()
----
+### Quaternion neg()
+
 Calculates the additive inverse, or simply it negates the quaternion
 
-Quaternion norm()
----
+### Quaternion norm()
+
 Calculates the length/modulus/magnitude or the norm of a quaternion
 
-Quaternion normSq()
----
+### Quaternion normSq()
+
 Calculates the squared length/modulus/magnitude or the norm of a quaternion
 
-Quaternion normalize()
----
+### Quaternion normalize()
+
 Normalizes the quaternion to have |Q| = 1 as long as the norm is not zero. Alternative names are the signum, unit or versor
 
-Quaternion mul(n)
----
+### Quaternion mul(n)
+
 Calculates the Hamilton product of two quaternions. Leaving out the imaginary part results in just scaling the quat.
 
 **Note:** This function is not commutative, i.e. order matters!
 
-Quaternion scale(s)
----
+### Quaternion scale(s)
+
 Scales a quaternion by a scalar, faster than using multiplication
 
-Quaternion dot()
----
+### Quaternion dot()
+
 Calculates the dot product of two quaternions
 
-Quaternion inverse()
----
+### Quaternion inverse()
+
 Calculates the inverse of a quat for non-normalized quats such that *Q<sup>-1</sup> * Q = 1* and *Q * Q<sup>-1</sup> = 1*
 
-Quaternion div(n)
----
+### Quaternion div(n)
+
 Multiplies a quaternion with the inverse of a second quaternion
 
-Quaternion conjugate()
----
+### Quaternion conjugate()
+
 Calculates the conjugate of a quaternion. If the quaternion is normalized, the conjugate is the inverse of the quaternion - but faster.
 
-Quaternion pow(n)
----
+### Quaternion pow(n)
+
 Calculates the power of a quaternion raised to the quaternion n
 
-Quaternion exp()
----
+### Quaternion exp()
+
 Calculates the natural exponentiation of the quaternion
 
-Quaternion log()
----
+### Quaternion log()
+
 Calculates the natural logarithm of the quaternion
 
-double real()
----
+### double real()
+
 Returns the real `w` part of the quaternion
 
-Quaternion imag()
----
+### Quaternion imag()
+
 Returns the imaginary part `[x, y, z]` of the quaternion as a 3D vector / array
 
-boolean equals(n)
----
+### boolean equals(n)
+
 Checks if two quats are the same
 
-boolean isFinite
----
+### boolean isFinite()
+
 Checks if all parts of a quaternion are finite
 
-boolean isNaN
----
+### boolean isNaN()
+
 Checks if any of the parts of the quaternion is not a number
 
-String toString()
----
+### String toString()
+
 Gets the Quaternion as a well formatted string
 
-Array toVector()
----
+### Array toVector()
+
 Gets the actual quaternion as a 4D vector / array
 
-Array toMatrix(2D=false)
----
+### Array toMatrix(2D=false)
+
 Calculates the 3x3 rotation matrix for the current quat as a 9 element array or alternatively as a 2D array
 
-Array toMatrix4(2D=false)
----
+### Array toMatrix4(2D=false)
+
 Calculates the homogeneous 4x4 rotation matrix for the current quat as a 16 element array or alternatively as a 2D array
 
-String toCSSTransform()
----
+### String toCSSTransform()
+
 Determines the homogeneous rotation matrix string used for CSS 3D transforms
 
-Array toAxisAngle()
----
+### Array toAxisAngle()
+
 Calculates the axis and angle representation of the current quaternion
 
-Array toEuler(order="ZXY")
----
+### Array toEuler(order="ZXY")
+
 Calculates the Euler angles represented by the current quat in the given Tait-Bryan order
 
-Quaternion clone()
----
-Clones the actual object
+### Quaternion clone()
 
-Array rotateVector(v)
----
+Clones the current object
+
+### Array rotateVector(v)
+
 Rotates a 3 component vector, represented as an array by the current quaternion in an [efficient manner](https://raw.org/proof/vector-rotation-using-quaternions/).
 
-Quaternion slerp(q)(pct)
----
+### Quaternion slerp(q)(pct)
+
 Returns a function to spherically interpolate between two quaternions. Called with a percentage `[0-1]`, the function returns the interpolated Quaternion.
 
-Quaternion.fromAxisAngle(axis, angle)
----
+### Quaternion.fromAxisAngle(axis, angle)
+
 Gets a quaternion by a rotation given as an axis and angle
 
 
-Quaternion.fromMatrix(matrix)
----
+### Quaternion.fromMatrix(matrix)
+
 Gets a quaternion given a rotation matrix, either as a 1x9 array or a 3x3 array.
 
 
-Quaternion.fromEuler(ϕ, θ, ψ[, order="ZXY"]) / Quaternion.fromEulerLogical(ψ, θ, ϕ[, order="YXZ"])
----
+### Quaternion.fromEuler(ϕ, θ, ψ[, order="ZXY"]) / Quaternion.fromEulerLogical(ψ, θ, ϕ[, order="YXZ"])
+
 Euler angles are probably the reason to use quaternions. The definition is mostly sloppy and you can only decide how it was defined based on the matrix representation. A `ZXY` in one definition is the multiplication order read from right to left and in another the execution order from left to right. Quaternion.js provides two functions, `fromEulerLogical()`, where the angles and order are applied from left to right (logical application order) and `fromEuler()` which reverses the order of the argument list (technical multiplication order).
 
 So for `fromEulerLogical(ϕ, θ, ψ, "ZXY")`, for example means first rotate around Z axis by ϕ then around X axis by θ and then around axis Y by ψ (`RotY(ψ)RotX(θ)RotZ(ϕ)`).
 
 The order of `fromEuler()` can take the string value `ZXY (default), XYZ / RPY, YXZ, ZYX / YPR, YZX, XZY, ZYZ, ZXZ, YXY, YZY, XYX, XZX`.
 
-### Relations
+#### Relations
 
 - `fromEulerLogical(ϕ, θ, ψ, 'ZYX') = axisAngle([1, 0, 0], ψ) axisAngle([0, 1, 0], θ) axisAngle([0, 0, 1], ϕ)`
 - `fromEulerLogical(ϕ, θ, ψ, 'ZYX') = fromEuler(ψ, θ, ϕ, 'YXZ')`
@@ -262,35 +262,35 @@ The order of `fromEuler()` can take the string value `ZXY (default), XYZ / RPY, 
   - `fromEuler(x, y, z, 'XZY') = ThreeJSfromEuler(x, z, y, 'XZY')`
 
 
-Quaternion.fromBetweenVectors(u, v)
----
+### Quaternion.fromBetweenVectors(u, v)
+
 Calculates the quaternion to rotate vector `u` onto vector `v`, represented as 3 element arrays, which can be done [elegantly using quaternions](https://raw.org/proof/quaternion-from-two-vectors/).
 
-Quaternion.random()
----
+### Quaternion.random()
+
 Gets a spherical random number
 
 ## Constants
 
 
-Quaternion.ZERO
----
+### Quaternion.ZERO
+
 A quaternion zero instance (additive identity)
 
-Quaternion.ONE
----
+### Quaternion.ONE
+
 A quaternion one instance (multiplicative identity)
 
-Quaternion.I
----
+### Quaternion.I
+
 An imaginary number i instance
 
-Quaternion.J
----
+### Quaternion.J
+
 An imaginary number j instance
 
-Quaternion.K
----
+### Quaternion.K
+
 An imaginary number k instance
 
 

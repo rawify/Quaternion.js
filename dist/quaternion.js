@@ -1005,15 +1005,20 @@ Quaternion.prototype = {
     const vz = v[2];
 
     // t = q x v
-    const tx = qy * vz - qz * vy;
-    const ty = qz * vx - qx * vz;
-    const tz = qx * vy - qy * vx;
+    let tx = qy * vz - qz * vy;
+    let ty = qz * vx - qx * vz;
+    let tz = qx * vy - qy * vx;
 
-    // v + w 2t + q x 2t
+    // t = 2t
+    tx = tx + tx;
+    ty = ty + ty;
+    tz = tz + tz;
+
+    // v + w t + q x t
     return [
-      vx + qw * (tx + tx) + qy * (tz + tz) - qz * (ty + ty),
-      vy + qw * (ty + ty) + qz * (tx + tx) - qx * (tz + tz),
-      vz + qw * (tz + tz) + qx * (ty + ty) - qy * (tx + tx)];
+      vx + qw * tx + qy * tz - qz * ty,
+      vy + qw * ty + qz * tx - qx * tz,
+      vz + qw * tz + qx * ty - qy * tx];
   },
 
   /**
