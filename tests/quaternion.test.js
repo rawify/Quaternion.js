@@ -946,7 +946,7 @@ describe("Quaternions", function() {
     var u = [Math.random() * 100, Math.random() * 100, Math.random() * 100];
     var v = [Math.random() * 100, Math.random() * 100, Math.random() * 100];
 
-    var q = Quaternion.fromBetweenVectors(u, v);
+    var q = Quaternion.fromVectors(u, v);
     var vPrime = q.rotateVector(u);
 
     // Is the length of rotated equal to the original?
@@ -961,7 +961,7 @@ describe("Quaternions", function() {
     var u = [10, 0, 0];
     var v = [-12, 0, 0];
 
-    var q = Quaternion.fromBetweenVectors(u, v);
+    var q = Quaternion.fromVectors(u, v);
     var vPrime = q.rotateVector(u);
 
     // Is the length of rotated equal to the original?
@@ -973,7 +973,7 @@ describe("Quaternions", function() {
     var u = [0, 10, 0];
     var v = [0, -12, 0];
 
-    var q = Quaternion.fromBetweenVectors(u, v);
+    var q = Quaternion.fromVectors(u, v);
     var vPrime = q.rotateVector(u);
 
     // Is the length of rotated equal to the original?
@@ -985,7 +985,7 @@ describe("Quaternions", function() {
     var u = [0, 0, 10];
     var v = [0, 0, 150];
 
-    var q = Quaternion.fromBetweenVectors(u, v);
+    var q = Quaternion.fromVectors(u, v);
     var vPrime = q.rotateVector(u);
 
     // Is the length of rotated equal to the original?
