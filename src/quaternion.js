@@ -1,5 +1,5 @@
 /**
- * @license Quaternion.js v2.0.0 10/28/2024
+ * @license Quaternion.js v2.0.1 10/28/2024
  * https://github.com/rawify/Quaternion.js
  *
  * Copyright (c) 2024, Robert Eisele (https://raw.org/)
