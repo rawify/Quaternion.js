@@ -262,7 +262,7 @@ The order of `fromEuler()` can take the string value `ZXY (default), XYZ / RPY, 
   - `fromEuler(x, y, z, 'XZY') = ThreeJSfromEuler(x, z, y, 'XZY')`
 
 
-### Quaternion.fromBetweenVectors(u, v)
+### Quaternion.fromVectors(u, v)
 
 Calculates the quaternion to rotate vector `u` onto vector `v`, represented as 3 element arrays, which can be done [elegantly using quaternions](https://raw.org/proof/quaternion-from-two-vectors/).
 

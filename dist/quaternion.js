@@ -1126,7 +1126,7 @@ Quaternion['fromAxisAngle'] = function (axis, angle) {
  * @param {Array} u
  * @param {Array} v
  */
-Quaternion['fromBetweenVectors'] = function (u, v) {
+Quaternion['fromVectors'] = function (u, v) {
 
   let ux = u[0];
   let uy = u[1];
