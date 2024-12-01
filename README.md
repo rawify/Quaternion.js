@@ -9,9 +9,9 @@ Quaternion.js is a well tested JavaScript library for 3D rotations. Quaternions 
 ## Examples
 
 ```js
-var Quaternion = require('quaternion');
+const Quaternion = require('quaternion');
 
-var q = new Quaternion("99.3+8i");
+const q = new Quaternion("99.3+8i");
 c.mul(1,2,3,4).div([3,4,1]).sub(7, [1, 2, 3]);
 ```
 
@@ -21,11 +21,11 @@ c.mul(1,2,3,4).div([3,4,1]).sub(7, [1, 2, 3]);
 In order to create a HTML element, which always rotates in 3D with your mobile device, all you need is the following snippet. Look at the examples folder for a complete version.
 
 ```javascript
-var deg = Math.PI / 180;
+const deg = Math.PI / 180;
 window.addEventListener("deviceorientation", function(ev) {
 
   // Update the rotation object
-  var q = Quaternion.fromEulerLogical(ev.alpha * deg, ev.beta * deg, -ev.gamma * deg, 'ZXY');
+  const q = Quaternion.fromEulerLogical(ev.alpha * deg, ev.beta * deg, -ev.gamma * deg, 'ZXY');
 
   // Set the CSS style to the element you want to rotate
   elm.style.transform = q.toCSSTransform();

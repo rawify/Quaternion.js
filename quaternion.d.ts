@@ -41,7 +41,7 @@ type QuaternionAugmentedArray = [number, number, number];
 
 type AnyQuaternionArray = QuaternionArray | QuaternionAugmentedArray;
 
-declare class Quaternion {
+export class Quaternion {
     constructor(w?: number, x?: number, y?: number, z?: number);
     constructor(quaternion: string | AnyQuaternionArray | QuaternionRecord);
     // tslint:disable-next-line:unified-signatures Avoid union of QuaternionRecord and QuaternionComplexRecord fields
@@ -137,4 +137,4 @@ declare namespace Quaternion {
     function fromMatrix(matrix: Matrix3 | Matrix3_2D): Quaternion;
 }
 
-export = Quaternion;
+export default Quaternion;

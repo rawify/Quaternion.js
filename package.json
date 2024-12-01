@@ -1,8 +1,8 @@
 {
     "name": "quaternion",
     "title": "Quaternion.js",
-    "version": "2.0.1",
-    "homepage": "https://github.com/rawify/Quaternion.js",
+    "version": "2.0.2",
+    "homepage": "https://raw.org/book/algebra/quaternions/",
     "bugs": "https://github.com/rawify/Quaternion.js/issues",
     "description": "A rotation library using quaternions",
     "keywords": [

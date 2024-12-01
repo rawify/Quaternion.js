@@ -1,6 +1,6 @@
 /**
- * @license Quaternion.js v2.0.1 10/28/2024
- * https://github.com/rawify/Quaternion.js
+ * @license Quaternion.js v2.0.2 12/1/2024
+ * https://raw.org/book/algebra/quaternions/
  *
  * Copyright (c) 2024, Robert Eisele (https://raw.org/)
  * Licensed under the MIT license.
