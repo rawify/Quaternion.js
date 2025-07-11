@@ -4,7 +4,7 @@
     "version": "2.0.2",
     "homepage": "https://raw.org/book/algebra/quaternions/",
     "bugs": "https://github.com/rawify/Quaternion.js/issues",
-    "description": "A rotation library using quaternions",
+    "description": "The RAW rotation library using quaternions",
     "keywords": [
         "math",
         "quaternion",

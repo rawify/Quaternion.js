@@ -70,7 +70,7 @@ Quaternion as an object (it's ok to leave components out)
 new Quaternion({w: w, x: x, y: y, z: z})
 ```
 
-Quaternion out of a complex number, e.g. [Complex.js](https://github.com/infusion/Complex.js), with `y=z=0`.
+Quaternion out of a complex number, e.g. [Complex.js](https://github.com/rawify/Complex.js), with `y=z=0`.
 ```javascript
 new Quaternion({re: real, im: imaginary})
 ```
@@ -298,20 +298,45 @@ An imaginary number k instance
 
 ## Installation
 
-Installing Quaternion.js is as easy as cloning this repo or use one of the following command:
-
+You can install `Quaternion.js` via npm:
 
 ```bash
 npm install quaternion
 ```
 
-## Using Quaternion.js with the browser
+Or with yarn:
+
+```bash
+yarn add quaternion
+```
+
+Alternatively, download or clone the repository:
+
+```bash
+git clone https://github.com/rawify/Quaternion.js
+```
+
+## Usage
+
+Include the `quaternion.min.js` file in your project:
 
 ```html
 <script src="quaternion.min.js"></script>
 <script>
     console.log(Quaternion("1 + 2i - 3j + 4k"));
 </script>
+```
+
+Or in a Node.js project:
+
+```javascript
+const Quaternion = require('quaternion');
+```
+
+or
+
+```javascript
+import Quaternion from 'quaternion';
 ```
 
 
