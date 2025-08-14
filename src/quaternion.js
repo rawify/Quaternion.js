@@ -1,8 +1,8 @@
 /**
- * @license Quaternion.js v2.0.2 12/1/2024
+ * @license Quaternion.js v2.1.0 8/14/2025
  * https://raw.org/book/algebra/quaternions/
  *
- * Copyright (c) 2024, Robert Eisele (https://raw.org/)
+ * Copyright (c) 2025, Robert Eisele (https://raw.org/)
  * Licensed under the MIT license.
  **/
 
@@ -58,25 +58,11 @@ function newNormalized(w, x, y, z) {
  */
 function logHypot(a, b) {
 
-  const _a = Math.abs(a);
-  const _b = Math.abs(b);
-
-  if (a === 0) {
-    return Math.log(_b);
-  }
-
-  if (b === 0) {
-    return Math.log(_a);
-  }
-
-  if (_a < 3000 && _b < 3000) {
-    return 0.5 * Math.log(a * a + b * b);
-  }
-
-  a = a / 2;
-  b = b / 2;
-
-  return 0.5 * Math.log(a * a + b * b) + Math.LN2;
+  const ax = Math.abs(a), bx = Math.abs(b);
+  const m = Math.max(ax, bx);
+  if (m === 0) return -Infinity;
+  const ar = a / m, br = b / m;
+  return Math.log(m) + 0.5 * Math.log(ar * ar + br * br);
 }
 
 /*
@@ -140,7 +126,7 @@ function parse(dest, w, x, y, z) {
   // Parse string values
   if (typeof w === 'string' && y === undefined) {
 
-    const tokens = w.match(/\d+\.?\d*e[+-]?\d+|\d+\.?\d*|\.\d+|./g);
+    const tokens = w.toLowerCase().match(/\d+\.?\d*e[+-]?\d+|\d+\.?\d*|\.\d+|./g);
     let plus = 1;
     let minus = 0;
 
@@ -152,9 +138,9 @@ function parse(dest, w, x, y, z) {
 
     // Reset the current state
     dest['w'] =
-      dest['x'] =
-      dest['y'] =
-      dest['z'] = 0;
+    dest['x'] =
+    dest['y'] =
+    dest['z'] = 0;
 
     for (let i = 0; i < tokens.length; i++) {
 
@@ -429,6 +415,15 @@ Quaternion.prototype = {
     const y2 = P['y'];
     const z2 = P['z'];
 
+    // Just scale, fast path
+    if (x2 === 0 && y2 === 0 && z2 === 0) {
+      return newQuaternion(
+        this['w'] * w2,
+        this['x'] * w2,
+        this['y'] * w2,
+        this['z'] * w2);
+    }
+
     return newQuaternion(
       w1 * w2 - x1 * x2 - y1 * y2 - z1 * z2,
       w1 * x2 + x1 * w2 + y1 * z2 - z1 * y2,
@@ -572,12 +567,13 @@ Quaternion.prototype = {
 
     const vNorm = Math.sqrt(x * x + y * y + z * z);
     const wExp = Math.exp(w);
-    const scale = wExp * Math.sin(vNorm) / vNorm;
 
     if (vNorm === 0) {
       //return newQuaternion(wExp * Math.cos(vNorm), 0, 0, 0);
       return newQuaternion(wExp, 0, 0, 0);
     }
+
+    const scale = vNorm < 1e-8 ? wExp * (1 - (vNorm * vNorm) / 6) : wExp * Math.sin(vNorm) / vNorm;
 
     return newQuaternion(
       wExp * Math.cos(vNorm),
@@ -606,7 +602,9 @@ Quaternion.prototype = {
     const qNorm2 = x * x + y * y + z * z + w * w;
     const vNorm = Math.sqrt(x * x + y * y + z * z);
 
-    const scale = Math.atan2(vNorm, w) / vNorm; // Alternative: acos(w / qNorm) / vNorm
+    const scale = vNorm < EPSILON
+      ? 1 / Math.max(1, w)
+      : Math.atan2(vNorm, w) / vNorm; // Alternative: acos(w / qNorm) / vNorm
 
     return newQuaternion(
       Math.log(qNorm2) * 0.5,
@@ -654,21 +652,7 @@ Quaternion.prototype = {
         if (P['x'] === 0) {
 
           if (b === 0 && a >= 0) {
-
             return newQuaternion(Math.pow(a, P['w']), 0, 0, 0);
-
-          } else if (a === 0) {
-
-            switch (P['w'] % 4) {
-              case 0:
-                return newQuaternion(Math.pow(b, P['w']), 0, 0, 0);
-              case 1:
-                return newQuaternion(0, Math.pow(b, P['w']), 0, 0);
-              case 2:
-                return newQuaternion(-Math.pow(b, P['w']), 0, 0, 0);
-              case 3:
-                return newQuaternion(0, -Math.pow(b, P['w']), 0, 0);
-            }
           }
         }
 
@@ -697,13 +681,19 @@ Quaternion.prototype = {
 
     parse(P, w, x, y, z);
 
-    const eps = EPSILON;
-
-    // maybe check for NaN's here?
-    return Math.abs(P['w'] - this['w']) < eps
-      && Math.abs(P['x'] - this['x']) < eps
-      && Math.abs(P['y'] - this['y']) < eps
-      && Math.abs(P['z'] - this['z']) < eps;
+    return Math.abs(P['w'] - this['w']) < EPSILON
+      && Math.abs(P['x'] - this['x']) < EPSILON
+      && Math.abs(P['y'] - this['y']) < EPSILON
+      && Math.abs(P['z'] - this['z']) < EPSILON;
+  },
+  /**
+   * Checks if the quaternion is a unit quaternion (norm ≈ 1)
+   *
+   * @returns {boolean}
+   */
+  'isUnit': function () {
+    const n2 = this['w'] * this['w'] + this['x'] * this['x'] + this['y'] * this['y'] + this['z'] * this['z'];
+    return Math.abs(n2 - 1) < EPSILON * Math.max(1, n2);
   },
   /**
    * Checks if all parts of a quaternion are finite
@@ -847,7 +837,7 @@ Quaternion.prototype = {
    */
   'toCSSTransform': function () {
 
-    const w = this['w'];
+    const w = Math.max(-1, Math.min(1, this['w']));
 
     let angle = 2 * Math.acos(w);
     let sin2 = 1 - w * w;
@@ -867,7 +857,7 @@ Quaternion.prototype = {
    */
   'toAxisAngle': function () {
 
-    const w = this['w'];
+    const w = Math.max(-1, Math.min(1, this['w']));
     const sin2 = 1 - w * w; // sin(angle / 2) = sin(acos(w)) = sqrt(1 - w^2) = |v|, since 1 = dot(Q) <=> dot(v) = 1 - w^2
 
     if (sin2 < EPSILON) { // Alternatively |v| == 0
@@ -883,7 +873,7 @@ Quaternion.prototype = {
    * Calculates the Euler angles represented by the current quat (multiplication order from right to left)
    * 
    * @param {string=} order Axis order (Tait Bryan)
-   * @returns {Object}
+   * @returns {Array}
    */
   'toEuler': function (order) {
 
@@ -1095,10 +1085,16 @@ Quaternion['I'] = newQuaternion(0, 1, 0, 0);
 Quaternion['J'] = newQuaternion(0, 0, 1, 0);
 Quaternion['K'] = newQuaternion(0, 0, 0, 1);
 
+Object.freeze(Quaternion['ZERO']);
+Object.freeze(Quaternion['ONE']);
+Object.freeze(Quaternion['I']);
+Object.freeze(Quaternion['J']);
+Object.freeze(Quaternion['K']);
+
 /**
  * @const
  */
-const EPSILON = 1e-16;
+const EPSILON = 1e-12;
 
 /**
  * Creates quaternion by a rotation given as axis-angle orientation
@@ -1115,12 +1111,16 @@ Quaternion['fromAxisAngle'] = function (axis, angle) {
   const b = axis[1];
   const c = axis[2];
 
+  const n2 = a * a + b * b + c * c;
+
+  if (n2 === 0) return Quaternion['ONE']; // No rotation
+
   const halfAngle = angle * 0.5;
 
   const sin_2 = Math.sin(halfAngle);
   const cos_2 = Math.cos(halfAngle);
 
-  const sin_norm = sin_2 / Math.sqrt(a * a + b * b + c * c);
+  const sin_norm = sin_2 / Math.sqrt(n2);
 
   return newQuaternion(cos_2, a * sin_norm, b * sin_norm, c * sin_norm);
 };

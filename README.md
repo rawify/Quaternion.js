@@ -189,6 +189,10 @@ Checks if all parts of a quaternion are finite
 
 Checks if any of the parts of the quaternion is not a number
 
+### boolean isUnit()
+
+Checks if the quaternion is a unit quaternion of length 1.
+
 ### String toString()
 
 Gets the Quaternion as a well formatted string
@@ -215,7 +219,7 @@ Calculates the axis and angle representation of the current quaternion
 
 ### Array toEuler(order="ZXY")
 
-Calculates the Euler angles represented by the current quat in the given Tait-Bryan order
+Calculates the Euler angles represented by the current quat in the given Tait-Bryan order. The returned triplet order matches the `order` string.
 
 ### Quaternion clone()
 
@@ -363,5 +367,5 @@ npm run test
 
 ## Copyright and Licensing
 
-Copyright (c) 2024, [Robert Eisele](https://raw.org/)
+Copyright (c) 2025, [Robert Eisele](https://raw.org/)
 Licensed under the MIT license.
