@@ -1,10 +1,10 @@
 {
     "name": "quaternion",
     "title": "Quaternion.js",
-    "version": "2.1.0",
+    "version": "2.1.1",
+    "description": "The RAW rotation library using quaternions",
     "homepage": "https://raw.org/book/algebra/quaternions/",
     "bugs": "https://github.com/rawify/Quaternion.js/issues",
-    "description": "The RAW rotation library using quaternions",
     "keywords": [
         "math",
         "quaternion",
@@ -23,17 +23,38 @@
     "private": false,
     "main": "./dist/quaternion.js",
     "module": "./dist/quaternion.mjs",
-    "types": "./quaternion.d.ts",
     "browser": "./dist/quaternion.min.js",
     "unpkg": "./dist/quaternion.min.js",
-    "readmeFilename": "README.md",
+    "types": "./quaternion.d.ts",
     "exports": {
         ".": {
-            "types": "./quaternion.d.ts",
-            "require": "./dist/quaternion.js",
-            "import": "./dist/quaternion.mjs"
+            "import": {
+                "types": "./quaternion.d.mts",
+                "default": "./dist/quaternion.mjs"
+            },
+            "require": {
+                "types": "./quaternion.d.ts",
+                "default": "./dist/quaternion.js"
+            },
+            "browser": {
+                "types": "./quaternion.d.ts",
+                "default": "./dist/quaternion.min.js"
+            },
+            "default": {
+                "types": "./quaternion.d.ts",
+                "default": "./dist/quaternion.js"
+            }
+        },
+        "./package.json": "./package.json"
+    },
+    "typesVersions": {
+        "<4.7": {
+            "*": [
+                "quaternion.d.ts"
+            ]
         }
     },
+    "sideEffects": false,
     "repository": {
         "type": "git",
         "url": "git@github.com:rawify/Quaternion.js.git"

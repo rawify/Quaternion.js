@@ -137,4 +137,4 @@ declare namespace Quaternion {
     function fromMatrix(matrix: Matrix3 | Matrix3_2D): Quaternion;
 }
 
-export = Quaternion;
+export { Quaternion as default, Quaternion };

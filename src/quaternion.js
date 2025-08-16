@@ -1,5 +1,5 @@
 /**
- * @license Quaternion.js v2.1.0 8/14/2025
+ * @license Quaternion.js v2.1.1 8/16/2025
  * https://raw.org/book/algebra/quaternions/
  *
  * Copyright (c) 2025, Robert Eisele (https://raw.org/)
