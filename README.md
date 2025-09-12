@@ -346,7 +346,7 @@ import Quaternion from 'quaternion';
 
 ## Coding Style
 
-As every library I publish, Quaternion.js is also built to be as small as possible after compressing it with Google Closure Compiler in advanced mode. Thus the coding style orientates a little on maxing-out the compression rate. Please make sure you keep this style if you plan to extend the library.
+Like all my libraries, Quaternion.js is written to minimize size after compression with Google Closure Compiler in advanced mode. The code style is optimized to maximize compressibility. If you extend the library, please preserve this style.
 
 ## Building the library
 
