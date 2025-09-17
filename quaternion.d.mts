@@ -112,7 +112,7 @@ class Quaternion {
     toEuler: (order?: string) => [number, number, number];
     toAxisAngle: () => [[number, number, number], number];
     clone: () => Quaternion;
-    rotateVector: (v: [number, number, number]) => [number, number, number];
+    rotateVector: (v: [number, number, number] | { x: number, y: number, z: number }) => [number, number, number] | { x: number, y: number, z: number };
 
     slerp(w: number, x?: number, y?: number, z?: number): (pct: number) => Quaternion;
     slerp(quaternion: string | AnyQuaternionArray | QuaternionRecord): (pct: number) => Quaternion;

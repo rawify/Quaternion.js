@@ -980,7 +980,7 @@ Quaternion.prototype = {
    * Rotates a vector according to the current quaternion, assumes |q|=1
    * @link https://raw.org/proof/vector-rotation-using-quaternions/
    *
-   * @param {Array} v The vector to be rotated
+   * @param {Array|Object} v The vector to be rotated
    * @returns {Array}
    */
   'rotateVector': function (v) {
@@ -990,9 +990,10 @@ Quaternion.prototype = {
     const qy = this['y'];
     const qz = this['z'];
 
-    const vx = v[0];
-    const vy = v[1];
-    const vz = v[2];
+    // Hot path for @rawify/Vector3 like vectors
+    const vx = v['x'] ?? v[0];
+    const vy = v['y'] ?? v[1];
+    const vz = v['z'] ?? v[2];
 
     // t = q x v
     let tx = qy * vz - qz * vy;
@@ -1005,10 +1006,11 @@ Quaternion.prototype = {
     tz = tz + tz;
 
     // v + w t + q x t
-    return [
-      vx + qw * tx + qy * tz - qz * ty,
-      vy + qw * ty + qz * tx - qx * tz,
-      vz + qw * tz + qx * ty - qy * tx];
+    const rx = vx + qw * tx + qy * tz - qz * ty;
+    const ry = vy + qw * ty + qz * tx - qx * tz;
+    const rz = vz + qw * tz + qx * ty - qy * tx;
+
+    return Array.isArray(v) ? [rx, ry, rz] : { 'x': rx, 'y': ry, 'z': rz };
   },
 
   /**

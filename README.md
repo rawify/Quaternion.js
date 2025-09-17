@@ -227,11 +227,11 @@ Clones the current object
 
 ### Array rotateVector(v)
 
-Rotates a 3 component vector, represented as an array by the current quaternion in an [efficient manner](https://raw.org/proof/vector-rotation-using-quaternions/).
+Rotates a 3 component vector, represented as an `[x,y,z]` array or an `{x,y,z}` object using the current quaternion in an [efficient manner](https://raw.org/proof/vector-rotation-using-quaternions/).
 
 ### Quaternion slerp(q)(pct)
 
-Returns a function to spherically interpolate between two quaternions. Called with a percentage `[0-1]`, the function returns the interpolated Quaternion.
+Returns a function to spherically interpolate between two quaternions. Called with a percentage `[0, 1]`, the function returns the interpolated Quaternion.
 
 ### Quaternion.fromAxisAngle(axis, angle)
 
